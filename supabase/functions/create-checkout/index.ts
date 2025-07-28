@@ -17,21 +17,40 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Use ANON_KEY for proper JWT validation 
   const supabaseClient = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+    Deno.env.get("SUPABASE_ANON_KEY") ?? "",
     { auth: { persistSession: false } }
   );
 
   try {
     logStep("Function started");
 
-    const authHeader = req.headers.get("Authorization")!;
+    // Check authorization header
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      logStep("ERROR: No authorization header");
+      throw new Error("No authorization header provided");
+    }
+    
+    logStep("Authorization header found");
     const token = authHeader.replace("Bearer ", "");
-    const { data } = await supabaseClient.auth.getUser(token);
+    
+    // Get user with proper error handling
+    const { data, error: authError } = await supabaseClient.auth.getUser(token);
+    if (authError) {
+      logStep("ERROR: Authentication failed", { error: authError.message });
+      throw new Error(`Authentication failed: ${authError.message}`);
+    }
+    
     const user = data.user;
-    if (!user?.email) throw new Error("User not authenticated or email not available");
-    logStep("User authenticated", { userId: user.id, email: user.email });
+    if (!user?.email) {
+      logStep("ERROR: No user or email found");
+      throw new Error("User not authenticated or email not available");
+    }
+    
+    logStep("User authenticated successfully", { userId: user.id, email: user.email });
 
     const { planType } = await req.json();
     logStep("Plan type received", { planType });
