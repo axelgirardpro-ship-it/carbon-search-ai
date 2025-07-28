@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, Mail, Lock, Star, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft } from "lucide-react";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
