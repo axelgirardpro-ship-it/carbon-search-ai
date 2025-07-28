@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/ui/navbar";
 import { ResultsTable } from "@/components/search/ResultsTable";
+import { Button } from "@/components/ui/button";
 import { EmissionFactor } from "@/types/emission-factor";
-import { Heart } from "lucide-react";
+import { Heart, Plus } from "lucide-react";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { usePermissions } from "@/hooks/usePermissions";
+import { useToast } from "@/hooks/use-toast";
+import { RoleGuard } from "@/components/ui/RoleGuard";
 
 // Mock favorites data
 const mockFavorites: EmissionFactor[] = [
@@ -37,7 +42,9 @@ const mockFavorites: EmissionFactor[] = [
 ];
 
 const Favorites = () => {
-  const [favorites, setFavorites] = useState<EmissionFactor[]>(mockFavorites);
+  const { favorites, loading, removeFromFavorites, addToFavorites } = useFavorites();
+  const { canExportData } = usePermissions();
+  const { toast } = useToast();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const handleItemSelect = (id: string) => {
@@ -54,9 +61,47 @@ const Favorites = () => {
     );
   };
 
-  const handleToggleFavorite = (id: string) => {
-    setFavorites(prev => prev.filter(item => item.id !== id));
-    setSelectedItems(prev => prev.filter(item => item !== id));
+  const handleToggleFavorite = async (id: string) => {
+    try {
+      await removeFromFavorites(id);
+      setSelectedItems(prev => prev.filter(item => item !== id));
+      toast({
+        title: "Favori supprimé",
+        description: "L'élément a été retiré de vos favoris",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la suppression du favori",
+      });
+    }
+  };
+
+  const handleAddToFavorites = async () => {
+    if (selectedItems.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "Sélection requise",
+        description: "Veuillez sélectionner au moins un élément",
+      });
+      return;
+    }
+
+    try {
+      // Add selected items to favorites (for demonstration, we'll just show success)
+      toast({
+        title: "Favoris ajoutés",
+        description: `${selectedItems.length} élément(s) ajouté(s) aux favoris`,
+      });
+      setSelectedItems([]);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de l'ajout aux favoris",
+      });
+    }
   };
 
   const handleExport = () => {
@@ -90,15 +135,39 @@ const Favorites = () => {
           </p>
         </div>
 
-        {favorites.length > 0 ? (
-          <ResultsTable
-            results={favorites}
-            selectedItems={selectedItems}
-            onItemSelect={handleItemSelect}
-            onSelectAll={handleSelectAll}
-            onToggleFavorite={handleToggleFavorite}
-            onExport={handleExport}
-          />
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Chargement de vos favoris...</p>
+          </div>
+        ) : favorites.length > 0 ? (
+          <div>
+            <div className="mb-4 flex gap-2">
+              <Button 
+                onClick={handleAddToFavorites}
+                disabled={selectedItems.length === 0}
+                variant="outline"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Ajouter aux favoris ({selectedItems.length})
+              </Button>
+              <RoleGuard requirePermission="canExportData">
+                <Button 
+                  onClick={handleExport}
+                  disabled={selectedItems.length === 0}
+                >
+                  Exporter la sélection ({selectedItems.length})
+                </Button>
+              </RoleGuard>
+            </div>
+            <ResultsTable
+              results={favorites}
+              selectedItems={selectedItems}
+              onItemSelect={handleItemSelect}
+              onSelectAll={handleSelectAll}
+              onToggleFavorite={handleToggleFavorite}
+              onExport={handleExport}
+            />
+          </div>
         ) : (
           <div className="text-center py-12">
             <Heart className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />

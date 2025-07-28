@@ -105,9 +105,14 @@ const Profile = () => {
 
       if (error) throw error;
 
-      // Open Stripe checkout in a new tab
-      window.open(data.url, '_blank');
+      if (data?.url) {
+        // Open Stripe checkout in a new tab
+        window.open(data.url, '_blank');
+      } else {
+        throw new Error('URL de checkout manquante');
+      }
     } catch (error) {
+      console.error('Erreur upgrade:', error);
       toast({
         variant: "destructive",
         title: "Erreur",

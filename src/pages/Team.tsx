@@ -57,17 +57,28 @@ const Team = () => {
       // Load team members
       const { data: members, error: membersError } = await supabase
         .from('user_roles')
-        .select(`
-          *,
-          profiles (
-            first_name,
-            last_name
-          )
-        `)
+        .select('*')
         .eq('company_id', userRole.company_id);
 
       if (membersError) throw membersError;
-      setTeamMembers(members as TeamMember[] || []);
+
+      // Get profiles for each user
+      const membersWithProfiles = await Promise.all(
+        (members || []).map(async (member) => {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('first_name, last_name')
+            .eq('user_id', member.user_id)
+            .single();
+
+          return {
+            ...member,
+            profiles: profile || { first_name: '', last_name: '' }
+          };
+        })
+      );
+
+      setTeamMembers(membersWithProfiles as TeamMember[]);
 
       // Load pending invitations
       const { data: invitations, error: invitationsError } = await supabase

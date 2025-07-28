@@ -1,8 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { User, Settings, Heart, Upload, LogOut, Users } from "lucide-react";
+import { User, Settings, Heart, Upload, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { UpgradeButton } from "@/components/ui/UpgradeButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -73,15 +74,9 @@ export const Navbar = () => {
                 Import
               </Button>
             </Link>
-            <Link to="/team">
-              <Button 
-                variant={location.pathname === "/team" ? "default" : "ghost"}
-                size="sm"
-              >
-                <Users className="w-4 h-4 mr-2" />
-                Équipe
-              </Button>
-            </Link>
+            
+            {/* Upgrade button for non-premium users */}
+            <UpgradeButton />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
