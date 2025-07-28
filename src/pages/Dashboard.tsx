@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Navbar } from "@/components/ui/navbar";
 import { SearchBar } from "@/components/search/SearchBar";
 import { FilterPanel, Filters } from "@/components/search/FilterPanel";
@@ -94,22 +94,41 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const handleSearch = () => {
+  const performSearch = useCallback((query: string) => {
     setIsLoading(true);
     setHasSearched(true);
     
     // Simulate API call to Algolia
     setTimeout(() => {
-      if (searchQuery.toLowerCase().includes("glass") || searchQuery.toLowerCase().includes("verre")) {
+      if (query.toLowerCase().includes("glass") || query.toLowerCase().includes("verre")) {
         setResults(mockResults);
-      } else if (searchQuery === "") {
+      } else if (query === "") {
         setResults(mockResults);
       } else {
         setResults([]);
       }
       setIsLoading(false);
     }, 800);
+  }, []);
+
+  const handleSearch = () => {
+    performSearch(searchQuery);
   };
+
+  // Debounced search effect
+  useEffect(() => {
+    if (searchQuery.length >= 2) {
+      const timeoutId = setTimeout(() => {
+        performSearch(searchQuery);
+      }, 400);
+
+      return () => clearTimeout(timeoutId);
+    } else if (searchQuery.length === 0 && hasSearched) {
+      // Clear results when search is empty
+      setResults([]);
+      setHasSearched(false);
+    }
+  }, [searchQuery, performSearch, hasSearched]);
 
   const handleFilterChange = (key: keyof Filters, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
