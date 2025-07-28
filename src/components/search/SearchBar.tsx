@@ -52,7 +52,7 @@ export const SearchBar = ({
               }
             }}
             placeholder={placeholder}
-            className="pl-10 pr-10 h-12 text-lg"
+            className="pl-10 pr-10 h-12 text-lg bg-white text-foreground border-white/20 placeholder:text-muted-foreground focus:bg-white"
           />
           {value && (
             <button

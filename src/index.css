@@ -38,8 +38,8 @@ All colors MUST be HSL.
 
     --hero-bg: 258 90% 20%;
     --hero-gradient: linear-gradient(135deg, hsl(258 90% 20%) 0%, hsl(282 85% 25%) 100%);
-    --search-bg: hsl(258 90% 20%);
-    --filter-bg: hsl(0 0% 98%);
+    --search-bg: 258 90% 20%;
+    --filter-bg: 0 0% 98%;
     
     --radius: 0.5rem;
 
@@ -91,8 +91,8 @@ All colors MUST be HSL.
 
     --hero-bg: 258 90% 10%;
     --hero-gradient: linear-gradient(135deg, hsl(258 90% 10%) 0%, hsl(282 85% 15%) 100%);
-    --search-bg: hsl(258 90% 10%);
-    --filter-bg: hsl(217.2 32.6% 17.5%);
+    --search-bg: 258 90% 10%;
+    --filter-bg: 217.2 32.6% 17.5%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
