@@ -10,10 +10,24 @@ export const UpgradeButton = () => {
 
   const handleUpgrade = async () => {
     try {
+      // Vérifier que l'utilisateur est connecté
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: "Vous devez être connecté pour effectuer cette action",
+        });
+        return;
+      }
+
       const planType = subscriptionStatus.plan_type === 'freemium' ? 'standard' : 'premium';
       
       const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { planType }
+        body: { planType },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       });
 
       if (error) throw error;
