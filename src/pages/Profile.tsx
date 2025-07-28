@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/ui/navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,28 +8,129 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { User, Mail, Calendar, Building, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { useQuotas } from "@/contexts/QuotaContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { usePermissions } from "@/hooks/usePermissions";
+import { supabase } from "@/integrations/supabase/client";
+import { RoleGuard } from "@/components/ui/RoleGuard";
 
 const Profile = () => {
+  const { user, userRole, subscriptionStatus } = useAuth();
+  const { searchesUsed, searchesLimit } = useQuotas();
+  const { favorites } = useFavorites();
+  const { getRoleLabel } = usePermissions();
+  const { toast } = useToast();
+  
   const [formData, setFormData] = useState({
-    firstName: "Jean",
-    lastName: "Dupont",
-    email: "jean.dupont@email.com",
-    company: "EcoConsulting",
-    position: "Consultant Carbone"
+    firstName: "",
+    lastName: "",
+    email: "",
+    company: "",
+    position: ""
   });
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+  const [profileLoading, setProfileLoading] = useState(true);
 
-  const handleSave = () => {
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!user) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+
+        if (error) throw error;
+
+        if (data) {
+          setFormData({
+            firstName: data.first_name || "",
+            lastName: data.last_name || "",
+            email: user.email || "",
+            company: data.company || userRole?.companies.name || "",
+            position: data.position || ""
+          });
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, [user, userRole]);
+
+  const handleSave = async () => {
+    if (!user) return;
+    
     setIsLoading(true);
     
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .upsert({
+          user_id: user.id,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          company: formData.company,
+          position: formData.position
+        });
+
+      if (error) throw error;
+
       toast({
         title: "Profil mis à jour",
         description: "Vos informations ont été sauvegardées avec succès",
       });
-    }, 1000);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la sauvegarde du profil",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpgrade = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { planType: 'standard' }
+      });
+
+      if (error) throw error;
+
+      // Open Stripe checkout in a new tab
+      window.open(data.url, '_blank');
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la redirection vers le paiement",
+      });
+    }
+  };
+
+  const handleManageSubscription = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('customer-portal');
+
+      if (error) throw error;
+
+      // Open customer portal in a new tab
+      window.open(data.url, '_blank');
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de l'ouverture du portail client",
+      });
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -57,25 +158,64 @@ const Profile = () => {
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 Statut du compte
-                <Badge variant="secondary" className="bg-green-100 text-green-800">
-                  Actif
-                </Badge>
+                <div className="flex gap-2">
+                  <Badge variant="secondary" className="bg-green-100 text-green-800">
+                    Actif
+                  </Badge>
+                  {userRole && (
+                    <Badge variant="outline">
+                      {getRoleLabel()}
+                    </Badge>
+                  )}
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">256</div>
+                  <div className="text-2xl font-bold text-primary">{searchesUsed}</div>
                   <div className="text-sm text-muted-foreground">Recherches effectuées</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">23</div>
+                  <div className="text-2xl font-bold text-primary">{favorites.length}</div>
                   <div className="text-sm text-muted-foreground">Favoris sauvegardés</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">3</div>
+                  <div className="text-2xl font-bold text-primary">0</div>
                   <div className="text-sm text-muted-foreground">Datasets importés</div>
                 </div>
+              </div>
+
+              {/* Subscription Information */}
+              <div className="border-t pt-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h4 className="font-medium">Plan d'abonnement</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Plan actuel: <strong>{subscriptionStatus.plan_type || 'Gratuit'}</strong>
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    {!subscriptionStatus.subscribed ? (
+                      <Button onClick={handleUpgrade}>
+                        Passer au Premium
+                      </Button>
+                    ) : (
+                      <Button variant="outline" onClick={handleManageSubscription}>
+                        Gérer l'abonnement
+                      </Button>
+                    )}
+                  </div>
+                </div>
+                
+                {subscriptionStatus.subscribed && (
+                  <div className="text-sm text-muted-foreground">
+                    <p>Tier: {subscriptionStatus.subscription_tier}</p>
+                    {subscriptionStatus.trial_active && (
+                      <p className="text-orange-600">Période d'essai active</p>
+                    )}
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

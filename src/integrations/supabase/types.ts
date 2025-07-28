@@ -44,6 +44,151 @@ export type Database = {
         }
         Relationships: []
       }
+      companies: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          owner_id: string
+          plan_type: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          owner_id: string
+          plan_type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          owner_id?: string
+          plan_type?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      company_invitations: {
+        Row: {
+          company_id: string
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string
+          role: string
+          status: string | null
+          token: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+          invited_by: string
+          role: string
+          status?: string | null
+          token: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string
+          role?: string
+          status?: string | null
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_invitations_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      datasets: {
+        Row: {
+          company_id: string | null
+          created_at: string
+          file_name: string
+          file_size: number | null
+          id: string
+          name: string
+          status: string | null
+          updated_at: string
+          uploaded_by: string
+          user_id: string
+        }
+        Insert: {
+          company_id?: string | null
+          created_at?: string
+          file_name: string
+          file_size?: number | null
+          id?: string
+          name: string
+          status?: string | null
+          updated_at?: string
+          uploaded_by: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string | null
+          created_at?: string
+          file_name?: string
+          file_size?: number | null
+          id?: string
+          name?: string
+          status?: string | null
+          updated_at?: string
+          uploaded_by?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "datasets_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          item_data: Json
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_data: Json
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_data?: Json
+          item_id?: string
+          item_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company: string | null
@@ -160,6 +305,44 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      user_roles: {
+        Row: {
+          assigned_by: string | null
+          company_id: string
+          created_at: string
+          id: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          company_id: string
+          created_at?: string
+          id?: string
+          role: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          company_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

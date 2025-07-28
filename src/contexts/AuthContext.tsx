@@ -2,10 +2,23 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
+interface UserRole {
+  id: string;
+  company_id: string;
+  role: 'admin' | 'gestionnaire' | 'lecteur';
+  companies: {
+    id: string;
+    name: string;
+    owner_id: string;
+    plan_type: string;
+  };
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  userRole: UserRole | null;
   subscriptionStatus: {
     subscribed: boolean;
     subscription_tier: string | null;
@@ -13,6 +26,7 @@ interface AuthContextType {
     trial_active: boolean;
   };
   refreshSubscription: () => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,12 +47,42 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState({
     subscribed: false,
     subscription_tier: null,
     plan_type: 'freemium',
     trial_active: false,
   });
+
+  const refreshUserRole = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select(`
+          *,
+          companies (
+            id,
+            name,
+            owner_id,
+            plan_type
+          )
+        `)
+        .eq('user_id', userId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching user role:', error);
+        setUserRole(null);
+        return;
+      }
+
+      setUserRole(data as UserRole);
+    } catch (error) {
+      console.error('Error refreshing user role:', error);
+      setUserRole(null);
+    }
+  };
 
   const refreshSubscription = async () => {
     if (!session) return;
@@ -58,6 +102,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const signOut = async () => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error signing out:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -66,10 +122,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(session?.user ?? null);
         setLoading(false);
         
-        // Defer subscription check to avoid deadlock
+        // Reset user role when user changes
+        if (!session?.user) {
+          setUserRole(null);
+        }
+        
+        // Defer subscription and role check to avoid deadlock
         if (session?.user) {
           setTimeout(() => {
             refreshSubscription();
+            refreshUserRole(session.user.id);
           }, 0);
         } else {
           setSubscriptionStatus({
@@ -91,6 +153,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (session?.user) {
         setTimeout(() => {
           refreshSubscription();
+          refreshUserRole(session.user.id);
         }, 0);
       }
     });
@@ -103,8 +166,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       user,
       session,
       loading,
+      userRole,
       subscriptionStatus,
       refreshSubscription,
+      signOut,
     }}>
       {children}
     </AuthContext.Provider>
