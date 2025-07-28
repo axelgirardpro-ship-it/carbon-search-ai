@@ -52,6 +52,16 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				hero: {
+					bg: 'hsl(var(--hero-bg))',
+					gradient: 'var(--hero-gradient)'
+				},
+				search: {
+					bg: 'hsl(var(--search-bg))'
+				},
+				filter: {
+					bg: 'hsl(var(--filter-bg))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
