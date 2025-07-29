@@ -28,11 +28,11 @@ export const usePermissions = () => {
   };
 
   const isSuperAdmin = () => {
-    return userRole?.role === 'super_admin';
+    return userRole?.role === 'super_admin' as any;
   };
 
   const getRoleLabel = () => {
-    switch (userRole?.role) {
+    switch (userRole?.role as any) {
       case 'super_admin':
         return 'Super Administrateur';
       case 'admin':
