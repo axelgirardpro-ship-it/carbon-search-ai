@@ -73,7 +73,7 @@ vector_port = 54329
 gw_mode = "disabled"
 
 [functions.create-checkout]
-verify_jwt = true
+verify_jwt = false
 
 [functions.check-subscription]
 verify_jwt = true

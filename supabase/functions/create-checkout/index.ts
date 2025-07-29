@@ -17,50 +17,52 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Use ANON_KEY for proper JWT validation 
+  // Use SERVICE_ROLE_KEY for direct database access
   const supabaseClient = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
     { auth: { persistSession: false } }
   );
 
   try {
     logStep("Function started");
 
-    // Check authorization header
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      logStep("ERROR: No authorization header");
-      throw new Error("No authorization header provided");
-    }
-    
-    logStep("Authorization header found");
-    const token = authHeader.replace("Bearer ", "");
-    
-    // Get user with proper error handling
-    const { data, error: authError } = await supabaseClient.auth.getUser(token);
-    if (authError) {
-      logStep("ERROR: Authentication failed", { error: authError.message });
-      throw new Error(`Authentication failed: ${authError.message}`);
-    }
-    
-    const user = data.user;
-    if (!user?.email) {
-      logStep("ERROR: No user or email found");
-      throw new Error("User not authenticated or email not available");
-    }
-    
-    logStep("User authenticated successfully", { userId: user.id, email: user.email });
+    const { userId, planType } = await req.json();
+    logStep("Request body parsed", { userId, planType });
 
-    const { planType } = await req.json();
-    logStep("Plan type received", { planType });
+    if (!userId) {
+      logStep("ERROR: No userId provided");
+      throw new Error("User ID is required");
+    }
+
+    // Get user data from database
+    const { data: userData, error: userError } = await supabaseClient
+      .from('profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (userError) {
+      logStep("ERROR: Failed to get user profile", { error: userError.message });
+      throw new Error(`Failed to get user profile: ${userError.message}`);
+    }
+
+    // Get user email from auth.users
+    const { data: authData, error: authError } = await supabaseClient.auth.admin.getUserById(userId);
+    if (authError || !authData.user?.email) {
+      logStep("ERROR: Failed to get user email", { error: authError?.message });
+      throw new Error("Failed to get user email");
+    }
+
+    const userEmail = authData.user.email;
+    logStep("User data retrieved", { userId, email: userEmail });
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { 
       apiVersion: "2023-10-16" 
     });
 
     // Check if customer exists
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+    const customers = await stripe.customers.list({ email: userEmail, limit: 1 });
     let customerId;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
@@ -92,7 +94,7 @@ serve(async (req) => {
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      customer_email: customerId ? undefined : user.email,
+      customer_email: customerId ? undefined : userEmail,
       line_items: [{
         price_data: priceData,
         quantity: 1,
@@ -101,7 +103,7 @@ serve(async (req) => {
       success_url: `${req.headers.get("origin")}/dashboard?success=true`,
       cancel_url: `${req.headers.get("origin")}/profile?canceled=true`,
       metadata: {
-        user_id: user.id,
+        user_id: userId,
         plan_type: planType
       }
     });
