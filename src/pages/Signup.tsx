@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -15,28 +17,77 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
     acceptTerms: false,
+    company: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (formData.password !== formData.confirmPassword) {
-      alert("Les mots de passe ne correspondent pas");
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Les mots de passe ne correspondent pas",
+      });
       return;
     }
+    
     if (!formData.acceptTerms) {
-      alert("Veuillez accepter les conditions d'utilisation");
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Vous devez accepter les conditions d'utilisation",
+      });
       return;
     }
-
+    
     setIsLoading(true);
     
-    // Simulate signup
-    setTimeout(() => {
+    try {
+      const redirectUrl = `${window.location.origin}/dashboard`;
+      
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            company: formData.company,
+          }
+        }
+      });
+
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Erreur d'inscription",
+          description: error.message,
+        });
+        return;
+      }
+
+      if (data.user) {
+        toast({
+          title: "Inscription réussie",
+          description: "Vérifiez votre email pour confirmer votre compte.",
+        });
+        // Rediriger vers login après inscription
+        navigate("/login");
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Une erreur inattendue s'est produite",
+      });
+    } finally {
       setIsLoading(false);
-      navigate("/dashboard");
-    }, 1000);
+    }
   };
 
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -100,6 +151,16 @@ const Signup = () => {
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="company">Entreprise (optionnel)</Label>
+                <Input
+                  id="company"
+                  placeholder="Mon Entreprise"
+                  value={formData.company}
+                  onChange={(e) => handleInputChange("company", e.target.value)}
                 />
               </div>
               

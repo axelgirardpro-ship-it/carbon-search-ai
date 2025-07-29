@@ -27,8 +27,14 @@ export const usePermissions = () => {
     return userRole?.role === 'admin';
   };
 
+  const isSuperAdmin = () => {
+    return userRole?.role === 'super_admin';
+  };
+
   const getRoleLabel = () => {
     switch (userRole?.role) {
+      case 'super_admin':
+        return 'Super Administrateur';
       case 'admin':
         return 'Administrateur';
       case 'gestionnaire':
@@ -47,6 +53,7 @@ export const usePermissions = () => {
     canViewAllData,
     canManageCompany,
     canDeleteData,
+    isSuperAdmin,
     getRoleLabel,
     userRole,
   };

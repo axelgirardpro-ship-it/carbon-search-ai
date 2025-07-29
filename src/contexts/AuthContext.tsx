@@ -117,7 +117,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
+        console.log('Auth state change:', event, session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -125,27 +126,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         // Reset user role when user changes
         if (!session?.user) {
           setUserRole(null);
-        }
-        
-        // Defer subscription and role check to avoid deadlock
-        if (session?.user) {
-          setTimeout(() => {
-            refreshSubscription();
-            refreshUserRole(session.user.id);
-          }, 0);
-        } else {
           setSubscriptionStatus({
             subscribed: false,
             subscription_tier: null,
             plan_type: 'freemium',
             trial_active: false,
           });
+        } else {
+          // Defer subscription and role check to avoid deadlock
+          setTimeout(() => {
+            refreshSubscription();
+            refreshUserRole(session.user.id);
+          }, 100);
         }
       }
     );
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session check:', session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -154,7 +153,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setTimeout(() => {
           refreshSubscription();
           refreshUserRole(session.user.id);
-        }, 0);
+        }, 100);
       }
     });
 

@@ -115,6 +115,36 @@ export type Database = {
           },
         ]
       }
+      database_plan_access: {
+        Row: {
+          accessible: boolean
+          created_at: string
+          created_by: string | null
+          database_name: string
+          id: string
+          plan_tier: string
+          updated_at: string
+        }
+        Insert: {
+          accessible?: boolean
+          created_at?: string
+          created_by?: string | null
+          database_name: string
+          id?: string
+          plan_tier: string
+          updated_at?: string
+        }
+        Update: {
+          accessible?: boolean
+          created_at?: string
+          created_by?: string | null
+          database_name?: string
+          id?: string
+          plan_tier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       datasets: {
         Row: {
           company_id: string | null
@@ -127,6 +157,7 @@ export type Database = {
           updated_at: string
           uploaded_by: string
           user_id: string
+          workspace_id: string | null
         }
         Insert: {
           company_id?: string | null
@@ -139,6 +170,7 @@ export type Database = {
           updated_at?: string
           uploaded_by: string
           user_id: string
+          workspace_id?: string | null
         }
         Update: {
           company_id?: string | null
@@ -151,6 +183,7 @@ export type Database = {
           updated_at?: string
           uploaded_by?: string
           user_id?: string
+          workspace_id?: string | null
         }
         Relationships: [
           {
@@ -158,6 +191,88 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "datasets_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emission_factors: {
+        Row: {
+          categorie: string
+          created_at: string
+          dataset_id: string | null
+          date: string
+          description: string | null
+          fe: number
+          id: string
+          incertitude: string | null
+          is_public: boolean | null
+          localisation: string
+          nom: string
+          plan_tier: string | null
+          secteur: string
+          source: string
+          unite: string
+          updated_at: string
+          workspace_id: string | null
+        }
+        Insert: {
+          categorie: string
+          created_at?: string
+          dataset_id?: string | null
+          date: string
+          description?: string | null
+          fe: number
+          id?: string
+          incertitude?: string | null
+          is_public?: boolean | null
+          localisation: string
+          nom: string
+          plan_tier?: string | null
+          secteur: string
+          source: string
+          unite: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          categorie?: string
+          created_at?: string
+          dataset_id?: string | null
+          date?: string
+          description?: string | null
+          fe?: number
+          id?: string
+          incertitude?: string | null
+          is_public?: boolean | null
+          localisation?: string
+          nom?: string
+          plan_tier?: string | null
+          secteur?: string
+          source?: string
+          unite?: string
+          updated_at?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emission_factors_dataset_id_fkey"
+            columns: ["dataset_id"]
+            isOneToOne: false
+            referencedRelation: "datasets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emission_factors_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
@@ -343,6 +458,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      workspaces: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          owner_id: string
+          plan_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          owner_id: string
+          plan_type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          owner_id?: string
+          plan_type?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {

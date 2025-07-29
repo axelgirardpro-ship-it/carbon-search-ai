@@ -17,15 +17,43 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  const { toast } = useToast();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate login
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Erreur de connexion",
+          description: error.message,
+        });
+        return;
+      }
+
+      if (data.user) {
+        toast({
+          title: "Connexion réussie",
+          description: "Redirection vers le tableau de bord...",
+        });
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Une erreur inattendue s'est produite",
+      });
+    } finally {
       setIsLoading(false);
-      navigate("/dashboard");
-    }, 1000);
+    }
   };
 
   return (
