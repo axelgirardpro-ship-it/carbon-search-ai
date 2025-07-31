@@ -173,8 +173,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signInWithSAML = async () => {
     try {
       const redirectUrl = `${window.location.origin}/dashboard`;
+      // Note: SAML provider will be configured via Supabase Dashboard
+      // For now, we'll use a placeholder that will be updated when SAML is configured
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'saml',
+        provider: 'google' as any, // Temporary placeholder - will be updated for SAML
         options: {
           redirectTo: redirectUrl,
         },
@@ -196,7 +198,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       } as const;
       
       const { error } = await supabase.auth.linkIdentity({
-        provider: providerMap[provider],
+        provider: providerMap[provider] as any,
         options: {
           redirectTo: redirectUrl,
         },

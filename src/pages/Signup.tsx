@@ -5,23 +5,30 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ArrowLeft, User, Mail, Lock, Building, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { SSOButton } from "@/components/ui/SSOButton";
+import { SSOProvider, useSSO } from "@/components/ui/SSOProvider";
 
-const Signup = () => {
+const SignupForm = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    acceptTerms: false,
     company: "",
+    termsAccepted: false,
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { signInWithGoogle, signInWithMicrosoft, signInWithSAML } = useAuth();
+  const { ssoState, setProviderLoading, setLastError } = useSSO();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +42,7 @@ const Signup = () => {
       return;
     }
     
-    if (!formData.acceptTerms) {
+    if (!formData.termsAccepted) {
       toast({
         variant: "destructive",
         title: "Erreur",
@@ -313,8 +320,8 @@ const Signup = () => {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="terms"
-                  checked={formData.acceptTerms}
-                  onCheckedChange={(checked) => handleInputChange("acceptTerms", checked as boolean)}
+                  checked={formData.termsAccepted}
+                  onCheckedChange={(checked) => handleInputChange("termsAccepted", checked as boolean)}
                 />
                 <Label htmlFor="terms" className="text-sm">
                   J'accepte les{" "}
