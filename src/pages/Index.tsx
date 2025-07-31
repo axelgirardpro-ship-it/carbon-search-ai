@@ -8,22 +8,27 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4" style={{backgroundColor: '#d7caf5'}}>
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div className="space-y-6">
-              <h1 className="text-5xl font-bold text-[#2D3436] leading-tight">
+              <h1 className="font-montserrat font-bold text-[#2D3436] leading-tight" style={{fontSize: '48px'}}>
                 Le moteur de recherche<br />
                 de FE le plus puissant<br />
                 du marché
               </h1>
-              <p className="text-lg text-[#636E72]">
+              <p className="font-montserrat text-[#636E72]" style={{fontSize: '16px'}}>
                 Accédez à plus de 255 000 facteurs d'émissions français et internationaux<br />
                 agrégés et enrichis par nos experts.
               </p>
-              <Button className="bg-[#2D3436] hover:bg-[#2D3436]/90 text-white px-8 py-3 rounded-md font-semibold">
-                En savoir plus
-              </Button>
+              <div className="flex gap-4">
+                <Button className="bg-[#2D3436] hover:bg-[#2D3436]/90 text-white px-8 py-3 rounded-md font-semibold font-montserrat">
+                  Tester le moteur de recherche
+                </Button>
+                <Button variant="outline" className="border-[#2D3436] text-[#2D3436] hover:bg-[#2D3436] hover:text-white px-8 py-3 rounded-md font-semibold font-montserrat">
+                  Se connecter
+                </Button>
+              </div>
             </div>
             <div className="bg-[#F8F9FA] rounded-lg p-8">
               <div className="bg-white rounded-lg p-6 shadow-sm">
