@@ -123,21 +123,18 @@ const Profile = () => {
     }
   };
 
-  const handleUpgrade = async (plan: 'standard' | 'premium') => {
-    try {
-      await createCheckoutSession(plan);
-      toast({
-        title: "Redirection vers le paiement",
-        description: "Vous allez être redirigé vers Stripe pour finaliser votre abonnement",
-      });
-    } catch (error) {
-      console.error('Erreur upgrade:', error);
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Erreur lors de la redirection vers le paiement",
-      });
-    }
+  const handleUpgrade = (plan: 'standard' | 'premium') => {
+    const stripeUrls = {
+      standard: 'https://buy.stripe.com/test_aEU8AY1wW0xz8ogaEE',
+      premium: 'https://buy.stripe.com/test_7sI03q5Na4O1gQU7st'
+    };
+    
+    window.open(stripeUrls[plan], '_blank');
+    
+    toast({
+      title: "Redirection vers le paiement",
+      description: "Vous allez être redirigé vers Stripe pour finaliser votre abonnement",
+    });
   };
 
   const handleManageSubscription = async () => {
@@ -223,13 +220,11 @@ const Profile = () => {
                         <Button 
                           variant="outline" 
                           onClick={() => handleUpgrade('standard')}
-                          disabled={subscriptionLoading}
                         >
                           Standard (850€/an)
                         </Button>
                         <Button 
                           onClick={() => handleUpgrade('premium')}
-                          disabled={subscriptionLoading}
                         >
                           Premium (3000€/an)
                         </Button>

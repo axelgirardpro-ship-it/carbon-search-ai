@@ -9,8 +9,8 @@ export const UpgradeButton = () => {
   const { toast } = useToast();
 
   const handleUpgrade = () => {
-    // Rediriger vers la page profil
-    window.location.href = '/profile';
+    // Redirection directe vers Stripe pour l'abonnement Standard
+    window.open('https://buy.stripe.com/test_aEU8AY1wW0xz8ogaEE', '_blank');
   };
 
   // Don't show for premium users
