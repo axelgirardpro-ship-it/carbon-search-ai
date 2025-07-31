@@ -52,6 +52,23 @@ jwt_expiry = 3600
 enable_signup = true
 enable_anonymous_sign_ins = false
 
+[auth.external.google]
+enabled = false
+client_id = "env(GOOGLE_CLIENT_ID)"
+secret = "env(GOOGLE_CLIENT_SECRET)"
+redirect_uri = "http://127.0.0.1:3000/dashboard"
+
+[auth.external.azure]
+enabled = false
+client_id = "env(AZURE_CLIENT_ID)"
+secret = "env(AZURE_CLIENT_SECRET)"
+url = "env(AZURE_TENANT_URL)"
+redirect_uri = "http://127.0.0.1:3000/dashboard"
+
+[auth.external.saml]
+enabled = false
+# SAML configuration will be done via Supabase Dashboard
+
 [auth.email]
 enable_signup = true
 double_confirm_changes = true

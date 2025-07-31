@@ -32,6 +32,10 @@ interface AuthContextType {
   };
   refreshSubscription: () => Promise<void>;
   signOut: () => Promise<void>;
+  signInWithGoogle: () => Promise<{ error: any }>;
+  signInWithMicrosoft: () => Promise<{ error: any }>;
+  signInWithSAML: () => Promise<{ error: any }>;
+  linkSSOAccount: (provider: 'google' | 'microsoft' | 'saml') => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -134,6 +138,76 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      const redirectUrl = `${window.location.origin}/dashboard`;
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+        },
+      });
+      return { error };
+    } catch (error) {
+      console.error('Error signing in with Google:', error);
+      return { error };
+    }
+  };
+
+  const signInWithMicrosoft = async () => {
+    try {
+      const redirectUrl = `${window.location.origin}/dashboard`;
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'azure',
+        options: {
+          redirectTo: redirectUrl,
+        },
+      });
+      return { error };
+    } catch (error) {
+      console.error('Error signing in with Microsoft:', error);
+      return { error };
+    }
+  };
+
+  const signInWithSAML = async () => {
+    try {
+      const redirectUrl = `${window.location.origin}/dashboard`;
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'saml',
+        options: {
+          redirectTo: redirectUrl,
+        },
+      });
+      return { error };
+    } catch (error) {
+      console.error('Error signing in with SAML:', error);
+      return { error };
+    }
+  };
+
+  const linkSSOAccount = async (provider: 'google' | 'microsoft' | 'saml') => {
+    try {
+      const redirectUrl = `${window.location.origin}/profile`;
+      const providerMap = {
+        google: 'google',
+        microsoft: 'azure',
+        saml: 'saml'
+      } as const;
+      
+      const { error } = await supabase.auth.linkIdentity({
+        provider: providerMap[provider],
+        options: {
+          redirectTo: redirectUrl,
+        },
+      });
+      return { error };
+    } catch (error) {
+      console.error(`Error linking ${provider} account:`, error);
+      return { error };
+    }
+  };
+
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -191,6 +265,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       subscriptionStatus,
       refreshSubscription,
       signOut,
+      signInWithGoogle,
+      signInWithMicrosoft,
+      signInWithSAML,
+      linkSSOAccount,
     }}>
       {children}
     </AuthContext.Provider>
