@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import { QuotaProvider } from "@/contexts/QuotaContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
+import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -71,11 +72,12 @@ const App = () => (
     <AuthProvider>
       <WorkspaceProvider>
         <QuotaProvider>
-          <FavoritesProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
+          <SubscriptionProvider>
+            <FavoritesProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
@@ -93,9 +95,10 @@ const App = () => (
               </BrowserRouter>
             </TooltipProvider>
           </FavoritesProvider>
-        </QuotaProvider>
-      </WorkspaceProvider>
-    </AuthProvider>
+        </SubscriptionProvider>
+      </QuotaProvider>
+    </WorkspaceProvider>
+  </AuthProvider>
   </QueryClientProvider>
 );
 

@@ -11,14 +11,16 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuotas } from "@/contexts/QuotaContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 import { usePermissions } from "@/hooks/usePermissions";
 import { supabase } from "@/integrations/supabase/client";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 
 const Profile = () => {
-  const { user, userRole, subscriptionStatus } = useAuth();
+  const { user, userRole } = useAuth();
   const { searchesUsed, searchesLimit } = useQuotas();
   const { favorites } = useFavorites();
+  const { subscription, loading: subscriptionLoading, createCheckoutSession, openCustomerPortal, refreshSubscription } = useSubscription();
   const { getRoleLabel } = usePermissions();
   const { toast } = useToast();
   
@@ -97,39 +99,13 @@ const Profile = () => {
     }
   };
 
-  const handleUpgrade = async () => {
+  const handleUpgrade = async (plan: 'standard' | 'premium') => {
     try {
-      // Vérifier que l'utilisateur est connecté
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user?.id) {
-        toast({
-          variant: "destructive",
-          title: "Erreur",
-          description: "Vous devez être connecté pour effectuer cette action",
-        });
-        return;
-      }
-
-      const planType = subscriptionStatus.plan_type === 'freemium' ? 'standard' : 'premium';
-      
-      console.log('Sending to create-checkout:', { userId: user.id, planType });
-      
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { 
-          userId: user.id,
-          planType 
-        },
+      await createCheckoutSession(plan);
+      toast({
+        title: "Redirection vers le paiement",
+        description: "Vous allez être redirigé vers Stripe pour finaliser votre abonnement",
       });
-
-      console.log('Response from create-checkout:', { data, error });
-
-      if (error) throw error;
-
-      if (data?.url) {
-        window.open(data.url, '_blank');
-      } else {
-        throw new Error('URL de checkout manquante');
-      }
     } catch (error) {
       console.error('Erreur upgrade:', error);
       toast({
@@ -142,12 +118,7 @@ const Profile = () => {
 
   const handleManageSubscription = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('customer-portal');
-
-      if (error) throw error;
-
-      // Open customer portal in a new tab
-      window.open(data.url, '_blank');
+      await openCustomerPortal();
     } catch (error) {
       toast({
         variant: "destructive",
@@ -216,14 +187,29 @@ const Profile = () => {
                   <div>
                     <h4 className="font-medium">Plan d'abonnement</h4>
                     <p className="text-sm text-muted-foreground">
-                      Plan actuel: <strong>{subscriptionStatus.plan_type || 'Gratuit'}</strong>
+                      Plan actuel: <strong>{subscription?.plan_type || 'Gratuit'}</strong>
+                      {subscription?.subscription_tier && (
+                        <span className="ml-2 text-primary">({subscription.subscription_tier})</span>
+                      )}
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    {!subscriptionStatus.subscribed ? (
-                      <Button onClick={handleUpgrade}>
-                        Passer au Premium
-                      </Button>
+                    {!subscription?.subscribed ? (
+                      <>
+                        <Button 
+                          variant="outline" 
+                          onClick={() => handleUpgrade('standard')}
+                          disabled={subscriptionLoading}
+                        >
+                          Standard (850€/an)
+                        </Button>
+                        <Button 
+                          onClick={() => handleUpgrade('premium')}
+                          disabled={subscriptionLoading}
+                        >
+                          Premium (3000€/an)
+                        </Button>
+                      </>
                     ) : (
                       <Button variant="outline" onClick={handleManageSubscription}>
                         Gérer l'abonnement
@@ -232,12 +218,9 @@ const Profile = () => {
                   </div>
                 </div>
                 
-                {subscriptionStatus.subscribed && (
+                {subscription?.subscribed && subscription.subscription_end && (
                   <div className="text-sm text-muted-foreground">
-                    <p>Tier: {subscriptionStatus.subscription_tier}</p>
-                    {subscriptionStatus.trial_active && (
-                      <p className="text-orange-600">Période d'essai active</p>
-                    )}
+                    <p>Renouvellement: {new Date(subscription.subscription_end).toLocaleDateString('fr-FR')}</p>
                   </div>
                 )}
               </div>
@@ -333,7 +316,9 @@ const Profile = () => {
                   <CreditCard className="w-4 h-4 text-muted-foreground" />
                   <span>Plan actuel</span>
                 </div>
-                <Badge>Gratuit</Badge>
+                <Badge variant={subscription?.subscribed ? "default" : "secondary"}>
+                  {subscription?.subscription_tier || subscription?.plan_type || 'Gratuit'}
+                </Badge>
               </div>
 
               <Separator />
