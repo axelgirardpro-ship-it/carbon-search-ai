@@ -69,23 +69,29 @@ serve(async (req) => {
       logStep("Existing customer found", { customerId });
     }
 
-    // Define pricing based on plan
-    let priceData;
+    // Define pricing based on plan with correct Stripe Product IDs
+    let priceItem;
     switch (planType) {
       case 'standard':
-        priceData = {
-          currency: "eur",
-          product_data: { name: "EcoSearch Standard", description: "Accès complet aux facteurs d'émissions" },
-          unit_amount: 85000, // 850€ in cents
-          recurring: { interval: "year" },
+        priceItem = {
+          price_data: {
+            currency: "eur",
+            product: "prod_SlUB14ASR3vgpr", // Stripe Product ID for Standard
+            unit_amount: 85000, // 850€ in cents
+            recurring: { interval: "year" },
+          },
+          quantity: 1,
         };
         break;
       case 'premium':
-        priceData = {
-          currency: "eur",
-          product_data: { name: "EcoSearch Premium", description: "Accès premium avec données exclusives" },
-          unit_amount: 300000, // 3000€ in cents
-          recurring: { interval: "year" },
+        priceItem = {
+          price_data: {
+            currency: "eur",
+            product: "prod_SlUB37aA6zXGmY", // Stripe Product ID for Premium
+            unit_amount: 300000, // 3000€ in cents
+            recurring: { interval: "year" },
+          },
+          quantity: 1,
         };
         break;
       default:
@@ -95,10 +101,7 @@ serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : userEmail,
-      line_items: [{
-        price_data: priceData,
-        quantity: 1,
-      }],
+      line_items: [priceItem],
       mode: "subscription",
       success_url: `${req.headers.get("origin")}/dashboard?success=true`,
       cancel_url: `${req.headers.get("origin")}/profile?canceled=true`,

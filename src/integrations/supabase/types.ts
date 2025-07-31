@@ -378,6 +378,14 @@ export type Database = {
       }
       profiles: {
         Row: {
+          billing_address: string | null
+          billing_company: string | null
+          billing_country: string | null
+          billing_first_name: string | null
+          billing_last_name: string | null
+          billing_postal_code: string | null
+          billing_siren: string | null
+          billing_vat_number: string | null
           company: string | null
           created_at: string
           first_name: string | null
@@ -389,6 +397,14 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          billing_address?: string | null
+          billing_company?: string | null
+          billing_country?: string | null
+          billing_first_name?: string | null
+          billing_last_name?: string | null
+          billing_postal_code?: string | null
+          billing_siren?: string | null
+          billing_vat_number?: string | null
           company?: string | null
           created_at?: string
           first_name?: string | null
@@ -400,6 +416,14 @@ export type Database = {
           user_id: string
         }
         Update: {
+          billing_address?: string | null
+          billing_company?: string | null
+          billing_country?: string | null
+          billing_first_name?: string | null
+          billing_last_name?: string | null
+          billing_postal_code?: string | null
+          billing_siren?: string | null
+          billing_vat_number?: string | null
           company?: string | null
           created_at?: string
           first_name?: string | null

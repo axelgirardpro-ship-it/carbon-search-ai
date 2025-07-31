@@ -29,7 +29,15 @@ const Profile = () => {
     lastName: "",
     email: "",
     company: "",
-    position: ""
+    position: "",
+    billingFirstName: "",
+    billingLastName: "",
+    billingCompany: "",
+    billingAddress: "",
+    billingPostalCode: "",
+    billingCountry: "France",
+    billingVatNumber: "",
+    billingSiren: ""
   });
   const [isLoading, setIsLoading] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
@@ -53,7 +61,15 @@ const Profile = () => {
             lastName: data.last_name || "",
             email: user.email || "",
             company: data.company || userRole?.companies.name || "",
-            position: data.position || ""
+            position: data.position || "",
+            billingFirstName: data.billing_first_name || "",
+            billingLastName: data.billing_last_name || "",
+            billingCompany: data.billing_company || "",
+            billingAddress: data.billing_address || "",
+            billingPostalCode: data.billing_postal_code || "",
+            billingCountry: data.billing_country || "France",
+            billingVatNumber: data.billing_vat_number || "",
+            billingSiren: data.billing_siren || ""
           });
         }
       } catch (error) {
@@ -79,7 +95,15 @@ const Profile = () => {
           first_name: formData.firstName,
           last_name: formData.lastName,
           company: formData.company,
-          position: formData.position
+          position: formData.position,
+          billing_first_name: formData.billingFirstName,
+          billing_last_name: formData.billingLastName,
+          billing_company: formData.billingCompany,
+          billing_address: formData.billingAddress,
+          billing_postal_code: formData.billingPostalCode,
+          billing_country: formData.billingCountry,
+          billing_vat_number: formData.billingVatNumber,
+          billing_siren: formData.billingSiren
         });
 
       if (error) throw error;
@@ -227,115 +251,197 @@ const Profile = () => {
             </CardContent>
           </Card>
 
-          {/* Personal Information */}
+          {/* Personal and Billing Information */}
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>Informations personnelles</CardTitle>
+              <CardTitle>Informations personnelles et de facturation</CardTitle>
               <CardDescription>
-                Modifiez vos informations de profil
+                Modifiez vos informations de profil et de facturation
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+            <CardContent className="space-y-6">
+              {/* Personal Information Section */}
+              <div className="space-y-4">
+                <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Informations personnelles</h4>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">Prénom</Label>
+                    <Input
+                      id="firstName"
+                      value={formData.firstName}
+                      onChange={(e) => handleInputChange("firstName", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Nom</Label>
+                    <Input
+                      id="lastName"
+                      value={formData.lastName}
+                      onChange={(e) => handleInputChange("lastName", e.target.value)}
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">Prénom</Label>
-                  <Input
-                    id="firstName"
-                    value={formData.firstName}
-                    onChange={(e) => handleInputChange("firstName", e.target.value)}
-                  />
+                  <Label htmlFor="email">Email</Label>
+                  <div className="flex items-center space-x-2">
+                    <Mail className="w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      disabled
+                      className="bg-muted"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Nom</Label>
-                  <Input
-                    id="lastName"
-                    value={formData.lastName}
-                    onChange={(e) => handleInputChange("lastName", e.target.value)}
-                  />
-                </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="flex items-center space-x-2">
-                  <Mail className="w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="company">Entreprise</Label>
+                    <div className="flex items-center space-x-2">
+                      <Building className="w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="company"
+                        value={formData.company}
+                        onChange={(e) => handleInputChange("company", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="position">Poste</Label>
+                    <Input
+                      id="position"
+                      value={formData.position}
+                      onChange={(e) => handleInputChange("position", e.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="company">Entreprise</Label>
-                <div className="flex items-center space-x-2">
-                  <Building className="w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="company"
-                    value={formData.company}
-                    onChange={(e) => handleInputChange("company", e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="position">Poste</Label>
-                <Input
-                  id="position"
-                  value={formData.position}
-                  onChange={(e) => handleInputChange("position", e.target.value)}
-                />
-              </div>
-
-              <div className="pt-4">
-                <Button onClick={handleSave} disabled={isLoading}>
-                  {isLoading ? "Sauvegarde..." : "Sauvegarder les modifications"}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Account Information */}
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Informations du compte</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Calendar className="w-4 h-4 text-muted-foreground" />
-                  <span>Membre depuis</span>
-                </div>
-                <span className="text-sm text-muted-foreground">15 mars 2024</span>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <CreditCard className="w-4 h-4 text-muted-foreground" />
-                  <span>Plan actuel</span>
-                </div>
-                <Badge variant={subscription?.subscribed ? "default" : "secondary"}>
-                  {subscription?.subscription_tier || subscription?.plan_type || 'Gratuit'}
-                </Badge>
               </div>
 
               <Separator />
 
-              <div className="space-y-2">
-                <h4 className="font-medium">Actions du compte</h4>
+              {/* Billing Information Section */}
+              <div className="space-y-4">
+                <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Informations de facturation</h4>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="billingFirstName">Prénom à facturer</Label>
+                    <Input
+                      id="billingFirstName"
+                      value={formData.billingFirstName}
+                      onChange={(e) => handleInputChange("billingFirstName", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="billingLastName">Nom à facturer</Label>
+                    <Input
+                      id="billingLastName"
+                      value={formData.billingLastName}
+                      onChange={(e) => handleInputChange("billingLastName", e.target.value)}
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
+                  <Label htmlFor="billingCompany">Nom de l'entreprise</Label>
+                  <Input
+                    id="billingCompany"
+                    value={formData.billingCompany}
+                    onChange={(e) => handleInputChange("billingCompany", e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="billingAddress">Adresse</Label>
+                  <Input
+                    id="billingAddress"
+                    value={formData.billingAddress}
+                    onChange={(e) => handleInputChange("billingAddress", e.target.value)}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="billingPostalCode">Code postal</Label>
+                    <Input
+                      id="billingPostalCode"
+                      value={formData.billingPostalCode}
+                      onChange={(e) => handleInputChange("billingPostalCode", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="billingCountry">Pays</Label>
+                    <Input
+                      id="billingCountry"
+                      value={formData.billingCountry}
+                      onChange={(e) => handleInputChange("billingCountry", e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="billingVatNumber">Numéro de TVA (optionnel)</Label>
+                    <Input
+                      id="billingVatNumber"
+                      value={formData.billingVatNumber}
+                      onChange={(e) => handleInputChange("billingVatNumber", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="billingSiren">SIREN</Label>
+                    <Input
+                      id="billingSiren"
+                      value={formData.billingSiren}
+                      onChange={(e) => handleInputChange("billingSiren", e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Account Actions */}
+              <div className="space-y-4">
+                <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">Actions du compte</h4>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Calendar className="w-4 h-4 text-muted-foreground" />
+                    <span>Membre depuis</span>
+                  </div>
+                  <span className="text-sm text-muted-foreground">15 mars 2024</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <CreditCard className="w-4 h-4 text-muted-foreground" />
+                    <span>Plan actuel</span>
+                  </div>
+                  <Badge variant={subscription?.subscribed ? "default" : "secondary"}>
+                    {subscription?.subscription_tier || subscription?.plan_type || 'Gratuit'}
+                  </Badge>
+                </div>
+
+                <div className="flex gap-2 pt-2">
                   <Button variant="outline" size="sm">
                     Changer le mot de passe
                   </Button>
-                  <Button variant="outline" size="sm">
-                    Télécharger mes données
-                  </Button>
-                  <Button variant="destructive" size="sm">
-                    Supprimer le compte
-                  </Button>
+                  {subscription?.subscribed ? (
+                    <Button variant="destructive" size="sm" onClick={handleManageSubscription}>
+                      Annuler l'abonnement
+                    </Button>
+                  ) : null}
                 </div>
+              </div>
+
+              <div className="pt-4 border-t">
+                <Button onClick={handleSave} disabled={isLoading}>
+                  {isLoading ? "Sauvegarde..." : "Sauvegarder les modifications"}
+                </Button>
               </div>
             </CardContent>
           </Card>

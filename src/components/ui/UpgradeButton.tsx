@@ -8,47 +8,9 @@ export const UpgradeButton = () => {
   const { subscriptionStatus } = useAuth();
   const { toast } = useToast();
 
-  const handleUpgrade = async () => {
-    try {
-      // Vérifier que l'utilisateur est connecté
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user?.id) {
-        toast({
-          variant: "destructive",
-          title: "Erreur",
-          description: "Vous devez être connecté pour effectuer cette action",
-        });
-        return;
-      }
-
-      const planType = subscriptionStatus.plan_type === 'freemium' ? 'standard' : 'premium';
-      
-      console.log('Sending to create-checkout:', { userId: user.id, planType });
-      
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { 
-          userId: user.id,
-          planType 
-        },
-      });
-
-      console.log('Response from create-checkout:', { data, error });
-
-      if (error) throw error;
-
-      if (data?.url) {
-        window.open(data.url, '_blank');
-      } else {
-        throw new Error('URL de checkout manquante');
-      }
-    } catch (error) {
-      console.error('Erreur upgrade:', error);
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Erreur lors de la redirection vers le paiement",
-      });
-    }
+  const handleUpgrade = () => {
+    // Rediriger vers la page profil
+    window.location.href = '/profile';
   };
 
   // Don't show for premium users
