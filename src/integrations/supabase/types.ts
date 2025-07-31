@@ -115,6 +115,51 @@ export type Database = {
           },
         ]
       }
+      data_imports: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_details: Json | null
+          file_name: string
+          file_size: number | null
+          id: string
+          imported_by: string
+          records_failed: number | null
+          records_inserted: number | null
+          records_processed: number | null
+          records_updated: number | null
+          status: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_details?: Json | null
+          file_name: string
+          file_size?: number | null
+          id?: string
+          imported_by: string
+          records_failed?: number | null
+          records_inserted?: number | null
+          records_processed?: number | null
+          records_updated?: number | null
+          status?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_details?: Json | null
+          file_name?: string
+          file_size?: number | null
+          id?: string
+          imported_by?: string
+          records_failed?: number | null
+          records_inserted?: number | null
+          records_processed?: number | null
+          records_updated?: number | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       database_plan_access: {
         Row: {
           accessible: boolean
@@ -363,6 +408,36 @@ export type Database = {
           phone?: string | null
           position?: string | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      search_history: {
+        Row: {
+          company_id: string | null
+          created_at: string
+          id: string
+          results_count: number | null
+          search_filters: Json | null
+          search_query: string
+          user_id: string
+        }
+        Insert: {
+          company_id?: string | null
+          created_at?: string
+          id?: string
+          results_count?: number | null
+          search_filters?: Json | null
+          search_query: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string | null
+          created_at?: string
+          id?: string
+          results_count?: number | null
+          search_filters?: Json | null
+          search_query?: string
           user_id?: string
         }
         Relationships: []
