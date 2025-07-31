@@ -11,8 +11,9 @@ const Index = () => {
       {/* Hero Section */}
       <section className="py-20 px-4" style={{backgroundColor: '#d7caf5'}}>
         <div className="container mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Colonne gauche : H1, Paragraphe, CTAs */}
+            <div className="space-y-6 order-2 lg:order-1">
               <h1 className="font-montserrat font-bold text-[#2D3436] leading-tight" style={{fontSize: '48px'}}>
                 Le moteur de recherche<br />
                 de FE le plus puissant<br />
@@ -22,25 +23,29 @@ const Index = () => {
                 Accédez à plus de 255 000 facteurs d'émissions français et internationaux<br />
                 agrégés et enrichis par nos experts.
               </p>
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/signup">
-                  <Button className="bg-[#2D3436] hover:bg-[#2D3436]/90 text-white px-8 py-3 rounded-md font-semibold font-montserrat">
+                  <Button className="bg-[#2D3436] hover:bg-[#2D3436]/90 text-white px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto">
                     Tester le moteur de recherche
                   </Button>
                 </Link>
                 <Link to="/login">
-                  <Button variant="outline" className="border-[#2D3436] text-[#2D3436] hover:bg-[#2D3436] hover:text-white px-8 py-3 rounded-md font-semibold font-montserrat">
+                  <Button variant="outline" className="border-[#2D3436] text-[#2D3436] hover:bg-[#2D3436] hover:text-white px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto">
                     Se connecter
                   </Button>
                 </Link>
               </div>
             </div>
-            <div className="bg-white rounded-lg p-8 shadow-lg">
-              <img 
-                src="/lovable-uploads/5891d941-bc3a-4cef-a0f8-23e6e733d4b1.png" 
-                alt="Interface de recherche de facteurs d'émission"
-                className="w-full h-auto rounded-lg"
-              />
+            
+            {/* Colonne droite : Image */}
+            <div className="order-1 lg:order-2">
+              <div className="bg-white rounded-lg p-8 shadow-lg">
+                <img 
+                  src="/lovable-uploads/5891d941-bc3a-4cef-a0f8-23e6e733d4b1.png" 
+                  alt="Interface de recherche de facteurs d'émission"
+                  className="w-full h-auto rounded-lg"
+                />
+              </div>
             </div>
           </div>
         </div>
