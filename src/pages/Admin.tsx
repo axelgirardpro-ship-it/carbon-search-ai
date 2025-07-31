@@ -17,6 +17,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { usePermissions } from "@/hooks/usePermissions";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { CompaniesTable } from "@/components/admin/CompaniesTable";
+import { ContactsTable } from "@/components/admin/ContactsTable";
+import { SearchHistoryTable } from "@/components/admin/SearchHistoryTable";
+import { DatabaseAccessManager } from "@/components/admin/DatabaseAccessManager";
+import { CSVImporter } from "@/components/admin/CSVImporter";
 
 const Admin = () => {
   const { user, userRole, globalUserRole } = useAuth();
@@ -183,111 +188,13 @@ const Admin = () => {
           </Card>
         </div>
 
-        {/* Management Sections */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Gestion des entreprises */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Building className="w-5 h-5 mr-2" />
-                Gestion des entreprises
-              </CardTitle>
-              <CardDescription>
-                Consulter et gérer les entreprises clientes
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <Button variant="outline" className="w-full justify-start">
-                  Consulter les workspaces
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Gérer les accès aux bases
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Voir l'utilisation par client
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Gestion des données */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Database className="w-5 h-5 mr-2" />
-                Gestion des données
-              </CardTitle>
-              <CardDescription>
-                Import et mise à jour de la base globale
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <Button variant="outline" className="w-full justify-start">
-                  Importer des données CSV
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Gérer les sources de données
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Historique des imports
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Analytics */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Activity className="w-5 h-5 mr-2" />
-                Analytics et suivi
-              </CardTitle>
-              <CardDescription>
-                Métriques d'utilisation détaillées
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <Button variant="outline" className="w-full justify-start">
-                  Recherches par entreprise
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Utilisateurs actifs
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Tendances d'usage
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Système */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Shield className="w-5 h-5 mr-2" />
-                Administration système
-              </CardTitle>
-              <CardDescription>
-                Outils d'administration avancés
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <Button variant="outline" className="w-full justify-start">
-                  Gérer les rôles utilisateurs
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Logs système
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Configuration avancée
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Dynamic Admin Components */}
+        <div className="space-y-8">
+          <CompaniesTable />
+          <ContactsTable />
+          <SearchHistoryTable />
+          <DatabaseAccessManager />
+          <CSVImporter />
         </div>
 
         {/* Debug Info */}
