@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
@@ -22,12 +23,16 @@ const Index = () => {
                 agrégés et enrichis par nos experts.
               </p>
               <div className="flex gap-4">
-                <Button className="bg-[#2D3436] hover:bg-[#2D3436]/90 text-white px-8 py-3 rounded-md font-semibold font-montserrat">
-                  Tester le moteur de recherche
-                </Button>
-                <Button variant="outline" className="border-[#2D3436] text-[#2D3436] hover:bg-[#2D3436] hover:text-white px-8 py-3 rounded-md font-semibold font-montserrat">
-                  Se connecter
-                </Button>
+                <Link to="/signup">
+                  <Button className="bg-[#2D3436] hover:bg-[#2D3436]/90 text-white px-8 py-3 rounded-md font-semibold font-montserrat">
+                    Tester le moteur de recherche
+                  </Button>
+                </Link>
+                <Link to="/login">
+                  <Button variant="outline" className="border-[#2D3436] text-[#2D3436] hover:bg-[#2D3436] hover:text-white px-8 py-3 rounded-md font-semibold font-montserrat">
+                    Se connecter
+                  </Button>
+                </Link>
               </div>
             </div>
             <div className="bg-white rounded-lg p-8 shadow-lg">
