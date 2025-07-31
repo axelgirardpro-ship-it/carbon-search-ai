@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 
 export const usePermissions = () => {
-  const { userRole } = useAuth();
+  const { userRole, globalUserRole } = useAuth();
 
   const canAddUsers = () => {
     return userRole?.role === 'admin';
@@ -31,7 +31,15 @@ export const usePermissions = () => {
     return userRole?.role === 'super_admin' as any;
   };
 
+  const isSupraAdmin = () => {
+    return globalUserRole?.role === 'supra_admin';
+  };
+
   const getRoleLabel = () => {
+    if (globalUserRole?.role === 'supra_admin') {
+      return 'Supra Administrateur';
+    }
+    
     switch (userRole?.role as any) {
       case 'super_admin':
         return 'Super Administrateur';
@@ -54,7 +62,9 @@ export const usePermissions = () => {
     canManageCompany,
     canDeleteData,
     isSuperAdmin,
+    isSupraAdmin,
     getRoleLabel,
     userRole,
+    globalUserRole,
   };
 };

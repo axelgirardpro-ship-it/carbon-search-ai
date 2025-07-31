@@ -14,11 +14,16 @@ interface UserRole {
   };
 }
 
+interface GlobalUserRole {
+  role: 'supra_admin';
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
   userRole: UserRole | null;
+  globalUserRole: GlobalUserRole | null;
   subscriptionStatus: {
     subscribed: boolean;
     subscription_tier: string | null;
@@ -48,6 +53,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const [globalUserRole, setGlobalUserRole] = useState<GlobalUserRole | null>(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState({
     subscribed: false,
     subscription_tier: null,
@@ -57,7 +63,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const refreshUserRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      // Get workspace-specific role
+      const { data: workspaceRole, error: workspaceError } = await supabase
         .from('user_roles')
         .select(`
           *,
@@ -71,16 +78,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .eq('user_id', userId)
         .single();
 
-      if (error) {
-        console.error('Error fetching user role:', error);
-        setUserRole(null);
-        return;
+      if (workspaceError && workspaceError.code !== 'PGRST116') {
+        console.error('Error fetching user role:', workspaceError);
+      } else {
+        setUserRole(workspaceRole as UserRole);
       }
 
-      setUserRole(data as UserRole);
+      // Get global role
+      const { data: globalRole, error: globalError } = await supabase
+        .from('global_user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .single();
+
+      if (globalError && globalError.code !== 'PGRST116') {
+        console.error('Error fetching global user role:', globalError);
+        setGlobalUserRole(null);
+      } else {
+        setGlobalUserRole(globalRole as GlobalUserRole);
+      }
     } catch (error) {
       console.error('Error refreshing user role:', error);
       setUserRole(null);
+      setGlobalUserRole(null);
     }
   };
 
@@ -126,6 +146,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         // Reset user role when user changes
         if (!session?.user) {
           setUserRole(null);
+          setGlobalUserRole(null);
           setSubscriptionStatus({
             subscribed: false,
             subscription_tier: null,
@@ -166,6 +187,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       session,
       loading,
       userRole,
+      globalUserRole,
       subscriptionStatus,
       refreshSubscription,
       signOut,

@@ -19,8 +19,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 const Admin = () => {
-  const { user, userRole } = useAuth();
-  const { isSuperAdmin } = usePermissions();
+  const { user, userRole, globalUserRole } = useAuth();
+  const { isSupraAdmin } = usePermissions();
   const { toast } = useToast();
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -32,7 +32,7 @@ const Admin = () => {
 
   useEffect(() => {
     const loadAdminStats = async () => {
-      if (!user || !isSuperAdmin()) {
+      if (!user || !isSupraAdmin()) {
         setLoading(false);
         return;
       }
@@ -86,10 +86,10 @@ const Admin = () => {
     };
 
     loadAdminStats();
-  }, [user, isSuperAdmin, toast]);
+  }, [user, isSupraAdmin, toast]);
 
-  // Redirect if not super admin
-  if (!user || !isSuperAdmin()) {
+  // Redirect if not supra admin
+  if (!user || !isSupraAdmin()) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -97,7 +97,7 @@ const Admin = () => {
           <Alert className="max-w-2xl mx-auto">
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              Accès refusé. Cette page est réservée aux super administrateurs.
+              Accès refusé. Cette page est réservée aux supra administrateurs globaux.
             </AlertDescription>
           </Alert>
         </div>
@@ -119,8 +119,8 @@ const Admin = () => {
             Gestion avancée de la plateforme EcoSearch
           </p>
           <div className="mt-4">
-            <Badge variant="destructive" className="mr-2">
-              Super Admin
+            <Badge variant="default" className="mr-2 bg-gradient-to-r from-purple-600 to-blue-600">
+              Supra Admin
             </Badge>
             <Badge variant="outline">
               {user.email}
@@ -299,8 +299,9 @@ const Admin = () => {
             <div className="space-y-2 text-sm">
               <p><strong>User ID:</strong> {user.id}</p>
               <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Role:</strong> {userRole?.role || 'Pas de rôle'}</p>
-              <p><strong>Super Admin:</strong> {isSuperAdmin() ? 'Oui' : 'Non'}</p>
+              <p><strong>Workspace Role:</strong> {userRole?.role || 'Pas de rôle workspace'}</p>
+              <p><strong>Global Role:</strong> {globalUserRole?.role || 'Pas de rôle global'}</p>
+              <p><strong>Supra Admin:</strong> {isSupraAdmin() ? 'Oui' : 'Non'}</p>
               <p><strong>Company:</strong> {userRole?.companies?.name || 'Aucune'}</p>
             </div>
           </CardContent>

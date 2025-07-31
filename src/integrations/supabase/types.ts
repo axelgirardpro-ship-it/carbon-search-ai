@@ -304,6 +304,33 @@ export type Database = {
         }
         Relationships: []
       }
+      global_user_roles: {
+        Row: {
+          assigned_by: string | null
+          created_at: string
+          id: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          role: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company: string | null
@@ -501,6 +528,10 @@ export type Database = {
       }
       is_company_owner: {
         Args: { company_id: string }
+        Returns: boolean
+      }
+      is_supra_admin: {
+        Args: { user_uuid?: string }
         Returns: boolean
       }
     }
