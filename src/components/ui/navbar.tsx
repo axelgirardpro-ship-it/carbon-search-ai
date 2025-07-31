@@ -1,8 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { User, Settings, Heart, Upload, LogOut } from "lucide-react";
+import { User, Settings, Heart, Upload, LogOut, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { usePermissions } from "@/hooks/usePermissions";
 import { UpgradeButton } from "@/components/ui/UpgradeButton";
 import {
   DropdownMenu,
@@ -17,6 +18,7 @@ export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
+  const { isSuperAdmin } = usePermissions();
   const { toast } = useToast();
 
   const handleSignOut = async () => {
@@ -99,6 +101,14 @@ export const Navbar = () => {
                     <span>Paramètres</span>
                   </Link>
                 </DropdownMenuItem>
+                {isSuperAdmin() && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" className="cursor-pointer">
+                      <Shield className="mr-2 h-4 w-4" />
+                      <span>Admin</span>
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem 
                   className="cursor-pointer text-red-600"

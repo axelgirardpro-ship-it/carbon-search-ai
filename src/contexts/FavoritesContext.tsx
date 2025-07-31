@@ -33,16 +33,22 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
 
   const refreshFavorites = async () => {
     if (!user) {
+      console.log('🚀 FavoritesContext: No user, clearing favorites');
       setFavorites([]);
       return;
     }
 
     try {
       setLoading(true);
+      console.log('🚀 FavoritesContext: Fetching favorites for user:', user.id);
+      
       const { data, error } = await supabase
         .from('favorites')
         .select('*')
         .eq('user_id', user.id);
+
+      console.log('🚀 FavoritesContext: Raw favorites data:', data);
+      console.log('🚀 FavoritesContext: Error:', error);
 
       if (error) throw error;
 
@@ -55,6 +61,7 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
         };
       }) as EmissionFactor[];
 
+      console.log('🚀 FavoritesContext: Processed favorites:', favoritesData);
       setFavorites(favoritesData);
     } catch (error) {
       console.error('Error fetching favorites:', error);
@@ -64,9 +71,14 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
   };
 
   const addToFavorites = async (item: EmissionFactor) => {
-    if (!user) return;
+    if (!user) {
+      console.log('🚀 FavoritesContext: No user, cannot add favorite');
+      return;
+    }
 
     try {
+      console.log('🚀 FavoritesContext: Adding to favorites:', item);
+      
       const { error } = await supabase
         .from('favorites')
         .insert({
@@ -76,9 +88,12 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
           item_data: item as any
         });
 
+      console.log('🚀 FavoritesContext: Insert result, error:', error);
+
       if (error) throw error;
 
       setFavorites(prev => [...prev, item]);
+      console.log('🚀 FavoritesContext: Added to local favorites, new count:', favorites.length + 1);
     } catch (error) {
       console.error('Error adding to favorites:', error);
       throw error;

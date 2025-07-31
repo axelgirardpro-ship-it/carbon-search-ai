@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,21 @@ export const SearchBar = ({
   className 
 }: SearchBarProps) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleClear = () => {
     onChange("");
@@ -35,7 +50,7 @@ export const SearchBar = ({
   };
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative", className)} ref={dropdownRef}>
       <div className="relative flex">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -72,16 +87,16 @@ export const SearchBar = ({
       </div>
 
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute top-full left-0 right-16 bg-card border border-border rounded-md shadow-lg z-50 mt-1">
-          <div className="p-2 text-sm text-muted-foreground border-b">
+        <div className="absolute top-full left-0 right-16 bg-background border border-border rounded-md shadow-lg z-50 mt-1">
+          <div className="p-2 text-sm text-muted-foreground border-b bg-background">
             Suggestions : {suggestions.slice(0, 3).join(", ")}...
           </div>
-          <div className="max-h-48 overflow-y-auto">
+          <div className="max-h-48 overflow-y-auto bg-background">
             {suggestions.slice(0, 8).map((suggestion, index) => (
               <button
                 key={index}
                 onClick={() => handleSuggestionClick(suggestion)}
-                className="w-full text-left px-3 py-2 hover:bg-muted text-sm"
+                className="w-full text-left px-3 py-2 hover:bg-muted text-sm text-foreground bg-background"
               >
                 {suggestion}
               </button>
