@@ -30,47 +30,12 @@ const Index = () => {
                 </Button>
               </div>
             </div>
-            <div className="bg-[#F8F9FA] rounded-lg p-8">
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <div className="text-lg font-semibold mb-4">Rechercher un facteur d'émission</div>
-                <div className="mb-4">
-                  <input 
-                    type="text" 
-                    placeholder="acier"
-                    className="w-full p-3 border border-gray-300 rounded-md"
-                  />
-                </div>
-                <div className="flex gap-4 mb-6 text-sm">
-                  <span>Filtrer par :</span>
-                  <select className="border border-gray-300 rounded px-2 py-1">
-                    <option>Unité d'activité</option>
-                  </select>
-                  <select className="border border-gray-300 rounded px-2 py-1">
-                    <option>Source</option>
-                  </select>
-                  <select className="border border-gray-300 rounded px-2 py-1">
-                    <option>Localisation</option>
-                  </select>
-                  <select className="border border-gray-300 rounded px-2 py-1">
-                    <option>Secteur</option>
-                  </select>
-                  <select className="border border-gray-300 rounded px-2 py-1">
-                    <option>CO₂</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <div className="p-3 bg-gray-50 rounded">
-                    <div className="font-medium text-blue-600">Acier de ferraillage</div>
-                    <div className="text-sm text-gray-600">Acier de ferraillage</div>
-                  </div>
-                  <div className="text-right text-sm">
-                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded">FE = 2.00</span>
-                    <span className="ml-2">Source : Inies</span>
-                    <span className="ml-2">Localisation : France</span>
-                    <span className="ml-2">Année : 2022</span>
-                  </div>
-                </div>
-              </div>
+            <div className="bg-white rounded-lg p-8 shadow-lg">
+              <img 
+                src="/lovable-uploads/5891d941-bc3a-4cef-a0f8-23e6e733d4b1.png" 
+                alt="Interface de recherche de facteurs d'émission"
+                className="w-full h-auto rounded-lg"
+              />
             </div>
           </div>
         </div>
