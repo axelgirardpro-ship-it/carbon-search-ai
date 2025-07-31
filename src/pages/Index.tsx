@@ -53,7 +53,7 @@ const Index = () => {
                 </Button>
               </Link>
               <Link to="/login">
-                <Button size="lg" variant="outline" className="px-8 py-6 text-lg glass-effect text-white hover:bg-white/10 transition-smooth">
+                <Button size="lg" variant="outline" className="px-8 py-6 text-lg glass-effect text-primary-foreground hover:bg-white/10 transition-smooth border-white/30">
                   Se connecter
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>

@@ -4,6 +4,7 @@ import { SearchBar } from "@/components/search/SearchBar";
 import { FilterPanel, Filters } from "@/components/search/FilterPanel";
 import { ResultsTable } from "@/components/search/ResultsTable";
 import { EmissionFactor } from "@/types/emission-factor";
+import { useFavorites } from "@/contexts/FavoritesContext";
 
 // Mock data - à remplacer par l'API Algolia
 const mockResults: EmissionFactor[] = [
@@ -80,6 +81,7 @@ const suggestions = [
 ];
 
 const Dashboard = () => {
+  const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<Filters>({
     source: "",
@@ -100,13 +102,22 @@ const Dashboard = () => {
     
     // Simulate API call to Algolia
     setTimeout(() => {
+      let searchResults: EmissionFactor[] = [];
       if (query.toLowerCase().includes("glass") || query.toLowerCase().includes("verre")) {
-        setResults(mockResults);
+        searchResults = mockResults;
       } else if (query === "") {
-        setResults(mockResults);
+        searchResults = mockResults;
       } else {
-        setResults([]);
+        searchResults = [];
       }
+      
+      // Mark items as favorite based on context
+      const resultsWithFavorites = searchResults.map(item => ({
+        ...item,
+        isFavorite: isFavorite(item.id)
+      }));
+      
+      setResults(resultsWithFavorites);
       setIsLoading(false);
     }, 800);
   }, []);
@@ -159,10 +170,28 @@ const Dashboard = () => {
     );
   };
 
-  const handleToggleFavorite = (id: string) => {
-    setResults(prev => prev.map(item => 
-      item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
-    ));
+  const handleToggleFavorite = async (id: string) => {
+    const item = results.find(r => r.id === id);
+    if (!item) return;
+
+    try {
+      console.log('🚀 Dashboard: Toggling favorite for item:', item);
+      
+      if (item.isFavorite) {
+        await removeFromFavorites(id);
+        console.log('🚀 Dashboard: Removed from favorites');
+      } else {
+        await addToFavorites(item);
+        console.log('🚀 Dashboard: Added to favorites');
+      }
+      
+      // Update local state after successful DB operation
+      setResults(prev => prev.map(result => 
+        result.id === id ? { ...result, isFavorite: !result.isFavorite } : result
+      ));
+    } catch (error) {
+      console.error('🚨 Dashboard: Error toggling favorite:', error);
+    }
   };
 
   const handleExport = () => {

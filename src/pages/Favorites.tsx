@@ -9,43 +9,20 @@ import { usePermissions } from "@/hooks/usePermissions";
 import { useToast } from "@/hooks/use-toast";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 
-// Mock favorites data
-const mockFavorites: EmissionFactor[] = [
-  {
-    id: "1",
-    nom: "Flat glass average",
-    description: "Verre plat moyen",
-    fe: 1.62,
-    unite: "kgCO2e/kg",
-    source: "Base Impacts 3.0",
-    secteur: "Matériaux",
-    categorie: "Verre",
-    localisation: "Europe",
-    date: "2023",
-    incertitude: "±15%",
-    isFavorite: true
-  },
-  {
-    id: "3",
-    nom: "Toughened glass (ESG)",
-    description: "Verre renforcé (verre monocouche de sécurité-ESG) (épaisseur 1 mm; densité 2.5 kg/m2), RER",
-    fe: 1.84,
-    unite: "kgCO2e/kg",
-    source: "Base Impacts 3.0",
-    secteur: "Matériaux",
-    categorie: "Verre",
-    localisation: "Europe",
-    date: "2011",
-    incertitude: "±18%",
-    isFavorite: true
-  }
-];
+// Debug logging for favorites
+console.log('🚀 Favorites page loaded');
 
 const Favorites = () => {
   const { favorites, loading, removeFromFavorites, addToFavorites } = useFavorites();
   const { canExportData } = usePermissions();
   const { toast } = useToast();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  console.log('🚀 Favorites component render:', { 
+    favoritesCount: favorites.length, 
+    loading, 
+    favorites: favorites.map(f => ({ id: f.id, nom: f.nom }))
+  });
 
   const handleItemSelect = (id: string) => {
     setSelectedItems(prev => 
