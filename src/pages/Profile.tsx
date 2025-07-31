@@ -125,8 +125,8 @@ const Profile = () => {
 
   const handleUpgrade = (plan: 'standard' | 'premium') => {
     const stripeUrls = {
-      standard: 'https://buy.stripe.com/test_aEU8AY1wW0xz8ogaEE',
-      premium: 'https://buy.stripe.com/test_7sI03q5Na4O1gQU7st'
+      standard: 'https://buy.stripe.com/test_cNi00l65X7kz0RG88sbZe00',
+      premium: 'https://buy.stripe.com/test_28E28tcul6gv57WcoIbZe01'
     };
     
     window.open(stripeUrls[plan], '_blank');
