@@ -3,104 +3,127 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Navbar } from "@/components/ui/navbar";
 import { 
   Search, 
   Database, 
-  Heart, 
-  TrendingUp, 
   CheckCircle, 
   Star, 
   Users, 
-  Shield, 
-  Zap,
   ArrowRight,
   Globe,
   BarChart3,
-  FileSpreadsheet
+  Filter,
+  Download,
+  Settings,
+  Zap,
+  Calendar,
+  Phone
 } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <div className="hero-gradient text-white relative overflow-hidden">
+    <div className="min-h-screen font-montserrat">
+      <Navbar />
+      
+      {/* 1. HERO SECTION */}
+      <section className="hero-gradient text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/5"></div>
         <div className="container mx-auto px-4 py-24 relative">
-          <div className="text-center max-w-5xl mx-auto">
-            <Badge className="mb-6 bg-white/20 text-white border-white/30 hover:bg-white/25">
-              <Star className="w-4 h-4 mr-2" />
-              Le moteur de recherche de FE le plus puissant
-            </Badge>
-            
-            <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-              EcoSearch
-            </h1>
-            
-            <p className="text-2xl md:text-3xl mb-8 text-white/90 font-medium">
-              Accédez instantanément aux facteurs d'émissions carbone
-            </p>
-            
-            <p className="text-xl mb-12 text-white/80 max-w-3xl mx-auto leading-relaxed">
-              La plateforme de référence utilisée par les experts carbone pour accéder aux données 
-              ADEME, INIES, Base Impacts et bien plus. Recherche avancée, export Excel, API REST.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-              <Link to="/signup">
-                <Button size="lg" className="px-8 py-6 text-lg bg-white text-primary hover:bg-white/90 shadow-premium transition-bounce">
-                  <Zap className="w-5 h-5 mr-2" />
-                  Essai gratuit 7 jours
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button size="lg" variant="outline" className="px-8 py-6 text-lg glass-effect text-primary-foreground hover:bg-white/10 transition-smooth border-white/30">
-                  Se connecter
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Colonne gauche */}
+            <div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                Le moteur de recherche de FE le plus puissant du marché
+              </h1>
+              <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed">
+                Accédez à plus de 255 000 facteurs d'émissions français et internationaux 
+                agrégés et enrichis par nos experts.
+              </p>
+              <Button size="lg" className="px-8 py-6 text-lg bg-white text-primary hover:bg-white/90 shadow-premium transition-bounce">
+                <ArrowRight className="w-5 h-5 mr-2" />
+                En savoir plus
+              </Button>
             </div>
+            
+            {/* Colonne droite - Screenshot */}
+            <div className="relative">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 border border-white/20">
+                <img 
+                  src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=2160&h=1440&fit=crop" 
+                  alt="Interface EcoSearch" 
+                  className="rounded-lg shadow-2xl w-full h-auto"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            {/* Social Proof */}
-            <div className="text-center">
-              <p className="text-white/70 mb-6">Utilisé par plus de 2000+ experts carbone</p>
-              <div className="flex flex-wrap justify-center items-center gap-8 opacity-80">
-                <div className="flex items-center space-x-2">
-                  <Database className="w-6 h-6" />
-                  <span className="text-sm font-medium">ADEME</span>
+      {/* 2. SECTION LOGOS PARTENAIRES */}
+      <section className="py-16 bg-muted">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-foreground">
+              Retrouvez les plus grandes bases françaises et internationales
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 items-center justify-items-center">
+            {[
+              'Base Empreinte', 'Ecobalyse', 'Exiobase', 'Base Inies', 'Agribalyse', 
+              'Electricity Maps', 'PCAF', 'EcoInvent', 'AIB', 'Ember', 'Climate Trace', 
+              'EEA', 'BEIS', 'Eco-Platform'
+            ].map((logo, index) => (
+              <div key={index} className="text-center">
+                <div className="w-20 h-20 bg-white rounded-lg shadow-soft flex items-center justify-center mb-2">
+                  <Database className="w-8 h-8 text-muted-foreground" />
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Globe className="w-6 h-6" />
-                  <span className="text-sm font-medium">INIES</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <BarChart3 className="w-6 h-6" />
-                  <span className="text-sm font-medium">Base Impacts</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="w-6 h-6" />
-                  <span className="text-sm font-medium">Secteur Public</span>
+                <span className="text-sm font-medium text-muted-foreground">{logo}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. SECTION DÉMO INTERACTIVE */}
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+              Découvrez la puissance du moteur de recherche
+            </h2>
+          </div>
+          
+          <div className="max-w-5xl mx-auto">
+            <div className="relative bg-muted rounded-lg overflow-hidden shadow-elegant">
+              <div style={{ paddingBottom: '52.44%' }} className="relative">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
+                  <div className="text-center">
+                    <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Search className="w-12 h-12 text-primary" />
+                    </div>
+                    <p className="text-xl font-semibold text-foreground">Démo interactive</p>
+                    <p className="text-muted-foreground">Arcade embed à venir</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Tabbed Navigation Section */}
-      <div className="py-24 bg-background">
+      {/* 4. SECTION FONCTIONNALITÉS (TABS) */}
+      <section className="py-24 bg-muted">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Tout ce dont vous avez besoin
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+              Un moteur de recherche puissant et personnalisable
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Des données fiables aux outils d'analyse avancés, découvrez pourquoi 
-              EcoSearch est le choix des experts carbone.
-            </p>
           </div>
 
           <Tabs defaultValue="donnees" className="max-w-6xl mx-auto">
-            <TabsList className="grid w-full grid-cols-3 mb-12">
+            <TabsList className="grid w-full grid-cols-4 mb-12">
               <TabsTrigger value="donnees" className="text-lg py-4">
                 <Database className="w-5 h-5 mr-2" />
                 Données
@@ -110,308 +133,382 @@ const Index = () => {
                 Recherche
               </TabsTrigger>
               <TabsTrigger value="personnalisation" className="text-lg py-4">
-                <Shield className="w-5 h-5 mr-2" />
+                <Settings className="w-5 h-5 mr-2" />
                 Personnalisation
+              </TabsTrigger>
+              <TabsTrigger value="plus-loin" className="text-lg py-4">
+                <Zap className="w-5 h-5 mr-2" />
+                Pour aller plus loin
               </TabsTrigger>
             </TabsList>
             
             <TabsContent value="donnees" className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <Card className="card-hover">
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                      <Database className="w-6 h-6 text-primary" />
-                    </div>
-                    <CardTitle>Base ADEME</CardTitle>
-                    <CardDescription>
-                      Plus de 3000 facteurs d'émissions officiels français
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-                
-                <Card className="card-hover">
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                      <Globe className="w-6 h-6 text-primary" />
-                    </div>
-                    <CardTitle>INIES</CardTitle>
-                    <CardDescription>
-                      Données environnementales des produits de construction
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-                
-                <Card className="card-hover">
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                      <BarChart3 className="w-6 h-6 text-primary" />
-                    </div>
-                    <CardTitle>Base Impacts</CardTitle>
-                    <CardDescription>
-                      ACV alimentaire et agriculture française
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                  <img 
+                    src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&h=600&fit=crop" 
+                    alt="Données" 
+                    className="rounded-lg shadow-elegant w-full"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold mb-6 text-foreground">
+                    Guichet unique de vos données carbone
+                  </h3>
+                  <ul className="space-y-4">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5" />
+                      <span className="text-muted-foreground">Plus de 255 000 facteurs d'émissions agrégés</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5" />
+                      <span className="text-muted-foreground">Données enrichies et vérifiées par nos experts</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5" />
+                      <span className="text-muted-foreground">Mises à jour hebdomadaires automatiques</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </TabsContent>
             
             <TabsContent value="recherche" className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card className="text-center p-6 card-hover">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <Search className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold mb-2">Recherche intelligente</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Auto-complétion et suggestions contextuelles
-                  </p>
-                </Card>
-                
-                <Card className="text-center p-6 card-hover">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <TrendingUp className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold mb-2">Filtres avancés</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Source, secteur, géographie, incertitude
-                  </p>
-                </Card>
-                
-                <Card className="text-center p-6 card-hover">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <FileSpreadsheet className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold mb-2">Export Excel</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Téléchargement direct au format Excel
-                  </p>
-                </Card>
-                
-                <Card className="text-center p-6 card-hover">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <Heart className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold mb-2">Favoris</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Sauvegarde de vos FE les plus utilisés
-                  </p>
-                </Card>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                  <img 
+                    src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop" 
+                    alt="Recherche" 
+                    className="rounded-lg shadow-elegant w-full"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold mb-6 text-foreground">
+                    Moteur fluide et simple d'utilisation
+                  </h3>
+                  <ul className="space-y-4">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5" />
+                      <span className="text-muted-foreground">Recherche intelligente avec auto-complétion</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5" />
+                      <span className="text-muted-foreground">Filtres avancés par source, secteur et géographie</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5" />
+                      <span className="text-muted-foreground">Export Excel en un clic</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </TabsContent>
             
             <TabsContent value="personnalisation" className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <Card className="p-8 card-hover">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <Shield className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold mb-2">Sécurité entreprise</h3>
-                      <p className="text-muted-foreground mb-4">
-                        Conformité RGPD, hébergement français, audit logs complets
-                      </p>
-                      <ul className="space-y-2 text-sm">
-                        <li className="flex items-center">
-                          <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                          Headers de sécurité stricts
-                        </li>
-                        <li className="flex items-center">
-                          <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                          Session management avancé
-                        </li>
-                        <li className="flex items-center">
-                          <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                          Traçabilité complète des actions
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </Card>
-                
-                <Card className="p-8 card-hover">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <Database className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold mb-2">Données personnalisées</h3>
-                      <p className="text-muted-foreground mb-4">
-                        Importez et gérez vos propres facteurs d'émissions
-                      </p>
-                      <ul className="space-y-2 text-sm">
-                        <li className="flex items-center">
-                          <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                          Import CSV/Excel
-                        </li>
-                        <li className="flex items-center">
-                          <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                          Validation automatique
-                        </li>
-                        <li className="flex items-center">
-                          <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                          Gestion des versions
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </Card>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                  <img 
+                    src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=600&fit=crop" 
+                    alt="Personnalisation" 
+                    className="rounded-lg shadow-elegant w-full"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold mb-6 text-foreground">
+                    Personnalisez le moteur
+                  </h3>
+                  <ul className="space-y-4">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5" />
+                      <span className="text-muted-foreground">Interface adaptable à vos besoins</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5" />
+                      <span className="text-muted-foreground">Gestion des favoris et collections</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5" />
+                      <span className="text-muted-foreground">API REST pour intégration custom</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="plus-loin" className="space-y-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                  <img 
+                    src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop" 
+                    alt="Plus loin" 
+                    className="rounded-lg shadow-elegant w-full"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold mb-6 text-foreground">
+                    Allez plus loin que la recherche
+                  </h3>
+                  <ul className="space-y-4">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5" />
+                      <span className="text-muted-foreground">Accompagnement par nos experts carbone</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-6 h-6 text-green-500 mr-3 mt-0.5" />
+                      <span className="text-muted-foreground">Formation et méthodologie carbone</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </TabsContent>
           </Tabs>
         </div>
-      </div>
+      </section>
 
-      {/* Pricing Section */}
-      <div className="py-24 bg-muted/50">
+      {/* 5. SECTION BASES DE DONNÉES (TABS) */}
+      <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Tarification simple et transparente
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+              Toutes les bases de données sur une seule plateforme
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Commencez gratuitement, puis choisissez le plan qui correspond à vos besoins.
-            </p>
+          </div>
+
+          <Tabs defaultValue="standards" className="max-w-6xl mx-auto">
+            <TabsList className="grid w-full grid-cols-2 mb-12">
+              <TabsTrigger value="standards" className="text-lg py-4">
+                Datasets standards
+              </TabsTrigger>
+              <TabsTrigger value="premium" className="text-lg py-4">
+                Datasets premium
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="standards" className="space-y-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+                {Array.from({ length: 20 }, (_, i) => (
+                  <div key={i} className="text-center">
+                    <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mb-2">
+                      <Database className="w-8 h-8 text-muted-foreground" />
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">Dataset {i + 1}</span>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="premium" className="space-y-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+                {Array.from({ length: 4 }, (_, i) => (
+                  <div key={i} className="text-center">
+                    <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-2">
+                      <Star className="w-8 h-8 text-primary" />
+                    </div>
+                    <span className="text-sm font-medium text-foreground">Premium {i + 1}</span>
+                  </div>
+                ))}
+                <div className="text-center col-span-3">
+                  <div className="p-4 bg-muted rounded-lg">
+                    <span className="text-lg font-semibold text-foreground">+ 4000 FE d'entreprises</span>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </section>
+
+      {/* 6. SECTION EXPERT */}
+      <section className="py-24 bg-muted">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Colonne gauche - Photo Guillaume */}
+            <div className="relative">
+              <img 
+                src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=600&h=800&fit=crop" 
+                alt="Guillaume - Expert carbone" 
+                className="rounded-lg shadow-elegant w-full max-w-md mx-auto"
+              />
+            </div>
+            
+            {/* Colonne droite */}
+            <div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">
+                Base de données structurée et enrichie par nos experts
+              </h2>
+              
+              <div className="space-y-8">
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <CheckCircle className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground">Validation experte</h3>
+                    <p className="text-muted-foreground">
+                      Chaque facteur d'émission est vérifié et validé par notre équipe d'experts carbone 
+                      pour garantir la fiabilité des données.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <BarChart3 className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground">Enrichissement continu</h3>
+                    <p className="text-muted-foreground">
+                      Nos données sont constamment enrichies avec de nouveaux facteurs, métadonnées 
+                      et mises à jour des sources officielles.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Users className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground">Accompagnement personnalisé</h3>
+                    <p className="text-muted-foreground">
+                      Notre équipe vous accompagne dans l'utilisation de la plateforme et dans 
+                      vos projets carbone.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. SECTION PRICING */}
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+              Un prix qui s'adapte à vos besoins
+            </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* Standard Plan */}
             <Card className="relative card-hover border-2">
               <CardHeader className="pb-8">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-2xl">Standard</CardTitle>
-                    <CardDescription className="text-lg mt-2">
-                      Pour les consultants et équipes
-                    </CardDescription>
+                <div>
+                  <CardTitle className="text-2xl text-foreground">Standard</CardTitle>
+                  <div className="mt-6">
+                    <span className="text-4xl font-bold text-foreground">850€</span>
+                    <span className="text-muted-foreground">/an</span>
                   </div>
-                  <Badge variant="secondary">Populaire</Badge>
-                </div>
-                <div className="mt-6">
-                  <span className="text-4xl font-bold">850€</span>
-                  <span className="text-muted-foreground">/an</span>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
                 <ul className="space-y-4">
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    Accès complet aux données ADEME
+                    <span className="text-muted-foreground">Accès moteur de recherche</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    1000 recherches/mois
+                    <span className="text-muted-foreground">Datasets standards (165k FE)</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    100 exports Excel/mois
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    Support par email
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    Historique 12 mois
+                    <span className="text-muted-foreground">Mises à jour hebdomadaires</span>
                   </li>
                 </ul>
-                <Link to="/signup" className="block">
-                  <Button className="w-full" size="lg">
-                    Essai gratuit 7 jours
-                  </Button>
-                </Link>
+                <Button className="w-full" size="lg" variant="outline">
+                  En savoir plus
+                </Button>
               </CardContent>
             </Card>
 
             {/* Premium Plan */}
             <Card className="relative card-hover border-2 border-primary shadow-premium">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-primary text-primary-foreground px-6 py-2">
-                  <Star className="w-4 h-4 mr-1" />
-                  Recommandé
+                <Badge className="bg-accent text-white px-6 py-2">
+                  Version Beta
                 </Badge>
               </div>
               <CardHeader className="pb-8 pt-8">
                 <div>
-                  <CardTitle className="text-2xl">Premium</CardTitle>
-                  <CardDescription className="text-lg mt-2">
-                    Pour les organisations
-                  </CardDescription>
-                </div>
-                <div className="mt-6">
-                  <span className="text-4xl font-bold">3000€</span>
-                  <span className="text-muted-foreground">/an</span>
+                  <CardTitle className="text-2xl text-foreground">Premium</CardTitle>
+                  <div className="mt-6">
+                    <span className="text-4xl font-bold text-foreground">3000€</span>
+                    <span className="text-muted-foreground">/an</span>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
                 <ul className="space-y-4">
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    Toutes les données (ADEME, INIES, Base Impacts)
+                    <span className="text-muted-foreground">Accès moteur de recherche</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    Recherches illimitées
+                    <span className="text-muted-foreground">Datasets standards (165k FE)</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    Exports illimités
+                    <span className="text-muted-foreground">Datasets premium (90K FE)</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    Support prioritaire & téléphone
+                    <span className="text-muted-foreground">Mises à jour hebdomadaires</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    Import de données personnalisées
+                    <span className="text-muted-foreground">Gestion des favoris</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    API REST accès complet
+                    <span className="text-muted-foreground">Export des données</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    Conformité entreprise (RGPD, audit logs)
+                    <span className="text-muted-foreground">Assistance de nos experts</span>
                   </li>
                 </ul>
-                <Link to="/signup" className="block">
-                  <Button className="w-full premium-gradient hover:opacity-90" size="lg">
-                    <Zap className="w-5 h-5 mr-2" />
-                    Essai gratuit 7 jours
-                  </Button>
-                </Link>
+                <Button className="w-full premium-gradient hover:opacity-90 text-white" size="lg">
+                  En savoir plus
+                </Button>
               </CardContent>
             </Card>
           </div>
+        </div>
+      </section>
 
-          <div className="text-center mt-12">
-            <p className="text-muted-foreground mb-4">
-              Toutes les options incluent un essai gratuit de 7 jours
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Facturation annuelle • Résiliation à tout moment • Support inclus
-            </p>
+      {/* 8. SECTION CTA FINALE */}
+      <section className="py-24 final-cta-gradient text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/5"></div>
+        <div className="container mx-auto px-4 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Colonne gauche */}
+            <div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
+                Prendre rendez-vous pour une démo
+              </h2>
+              <Button size="lg" className="px-8 py-6 text-lg bg-primary hover:bg-primary/90 text-white shadow-premium transition-bounce">
+                <Calendar className="w-5 h-5 mr-2" />
+                Prendre rendez-vous
+              </Button>
+            </div>
+            
+            {/* Colonne droite - Screenshot */}
+            <div className="relative">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 border border-white/20">
+                <img 
+                  src="https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=800&h=600&fit=crop" 
+                  alt="Interface de démonstration" 
+                  className="rounded-lg shadow-2xl w-full h-auto"
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* CTA Section */}
-      <div className="py-20 bg-muted/50">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Prêt à commencer ?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Rejoignez des milliers d'utilisateurs qui font confiance à EcoSearch 
-            pour leurs calculs d'empreinte carbone.
-          </p>
-          <Link to="/signup">
-            <Button size="lg" className="bg-primary hover:bg-primary/90">
-              Créer un compte gratuit
-            </Button>
-          </Link>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };
