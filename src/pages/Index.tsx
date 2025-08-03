@@ -452,22 +452,26 @@ const Index = () => {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-[#2D3436] to-[#6C5CE7]">
-        <div className="container mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6 text-white">
-              <h2 className="text-3xl font-bold">
-                Prendre rendez-vous<br />
-                pour une démo
-              </h2>
-              <Button className="bg-[#FF6B35] hover:bg-[#FF6B35]/90 text-white px-8 py-3">
-                Prendre rendez-vous
-              </Button>
-            </div>
-            <div className="bg-white rounded-lg p-4">
-              <div className="aspect-video bg-gray-100 rounded flex items-center justify-center">
-                <span className="text-gray-500">Interface de démo</span>
-              </div>
+      <section className="py-20 px-4" style={{backgroundColor: '#d7caf5'}}>
+        <div className="container mx-auto text-center">
+          <div className="space-y-6 max-w-2xl mx-auto">
+            <h2 className="text-4xl font-bold text-indigo-950">
+              Prêt à explorer nos facteurs d'émission ?
+            </h2>
+            <p className="text-indigo-950 text-lg">
+              Accédez dès maintenant au moteur de recherche le plus puissant du marché
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/signup">
+                <Button className="text-white px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-slate-950 hover:bg-slate-800">
+                  Tester le moteur de recherche
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button variant="outline" className="border-[#2D3436] px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-indigo-200 hover:bg-indigo-100 text-indigo-950">
+                  Se connecter
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
