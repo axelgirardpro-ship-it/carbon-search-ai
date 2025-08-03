@@ -58,32 +58,48 @@ const Index = () => {
             Retrouvez les plus grandes bases françaises et internationales
           </h2>
           <div className="grid grid-cols-7 gap-8 items-center">
-            {[
-              { name: "Empreinte", logo: "/lovable-uploads/c59c6b00-a315-4d39-864a-9bb38a8834b0.png" },
-              { name: "Ecobalyse", logo: "/lovable-uploads/cad5ea4f-455b-421b-8495-4ff233ec68b5.png" },
-              { name: "exiobase", logo: "/lovable-uploads/c97153cb-e42d-4cf5-b924-d35125738902.png" },
-              { name: "inies", logo: null },
-              { name: "AGRI BALYSE", logo: null },
-              { name: "Electricity Maps", logo: "/lovable-uploads/37a71621-8258-4862-b595-0937730e8882.png" },
-              { name: "PCAF", logo: "/lovable-uploads/99314b47-0c4c-4201-a569-d8d2f80d3515.png" },
-              { name: "ecoinvent", logo: null },
-              { name: "AIB", logo: null },
-              { name: "EMBER", logo: "/lovable-uploads/e731de03-57d7-4769-89b6-e489c251e9cc.png" },
-              { name: "Climate Trace", logo: "/lovable-uploads/3878e6cb-b41f-49d6-b9d0-369ba96e8f15.png" },
-              { name: "European Environment Agency", logo: "/lovable-uploads/9f19512c-215b-4bee-b09e-f617835789c6.png" },
-              { name: "Department for Business, Energy & Industrial Strategy", logo: null },
-              { name: "eco", logo: null }
-            ].map((item, index) => (
-              <div key={index} className="flex flex-col items-center">
-                {item.logo ? (
-                  <img src={item.logo} alt={item.name} className="max-h-[50px]" />
-                ) : (
-                  <div className="max-h-[50px] h-[50px] w-[50px] bg-[#6C5CE7]/10 rounded-lg flex items-center justify-center">
-                    <div className="w-6 h-6 bg-[#6C5CE7] rounded"></div>
-                  </div>
-                )}
-              </div>
-            ))}
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/3fdbfe68-8e5e-4c44-8ac1-edd24a2d8fac.png" alt="Empreinte" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/ac4b2170-676b-424b-906d-7f65f939022c.png" alt="Ecobalyse" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/f51cec17-9b6f-417a-919b-c29f1a77ac1a.png" alt="exiobase" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/9d73d9ce-baf8-4a47-bdd7-bcbcc41e709d.png" alt="inies" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/8edc4de0-1e88-4d97-972f-ed5d481c1b30.png" alt="AGRI BALYSE" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/a39b6717-f7d1-4045-a4ab-921fe28e5c53.png" alt="Electricity Maps" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/c27135f4-de5c-49fd-9e9f-4dc89a29274f.png" alt="PCAF" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/5310da27-1ab7-4efe-a090-a25937048f60.png" alt="ecoinvent" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/08a66c66-7e5d-4050-918f-aa08fd2d8612.png" alt="AIB" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/aa03a266-0170-4b29-b12a-2f86dea065a2.png" alt="EMBER" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/c0650cbc-f7d4-40e6-a022-e6b2bac57c2a.png" alt="Climate Trace" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/ba02a326-86d5-4773-8777-e613296e2582.png" alt="European Environment Agency" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/2d97e89d-91a3-4143-8432-605a4422e9f0.png" alt="Department for Business, Energy & Industrial Strategy" className="max-h-[50px]" />
+            </div>
+            <div className="flex flex-col items-center">
+              <img src="/lovable-uploads/01ca909f-ef8b-4b32-aea1-50f98ae9e4a6.png" alt="eco" className="max-h-[50px]" />
+            </div>
           </div>
         </div>
       </section>
