@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 
 export const usePermissions = () => {
-  const { userRole, globalUserRole } = useAuth();
+  const { userRole } = useAuth();
 
   const canAddUsers = () => {
     return userRole?.role === 'admin';
@@ -19,7 +19,7 @@ export const usePermissions = () => {
     return userRole?.role === 'admin' || userRole?.role === 'gestionnaire';
   };
 
-  const canManageCompany = () => {
+  const canManageWorkspace = () => {
     return userRole?.role === 'admin';
   };
 
@@ -27,22 +27,14 @@ export const usePermissions = () => {
     return userRole?.role === 'admin';
   };
 
-  const isSuperAdmin = () => {
-    return userRole?.role === 'super_admin' as any;
-  };
-
   const isSupraAdmin = () => {
-    return globalUserRole?.role === 'supra_admin';
+    return userRole?.role === 'supra_admin';
   };
 
   const getRoleLabel = () => {
-    if (globalUserRole?.role === 'supra_admin') {
-      return 'Supra Administrateur';
-    }
-    
     switch (userRole?.role as any) {
-      case 'super_admin':
-        return 'Super Administrateur';
+      case 'supra_admin':
+        return 'Supra Administrateur';
       case 'admin':
         return 'Administrateur';
       case 'gestionnaire':
@@ -59,12 +51,10 @@ export const usePermissions = () => {
     canImportData,
     canExportData,
     canViewAllData,
-    canManageCompany,
+    canManageWorkspace,
     canDeleteData,
-    isSuperAdmin,
     isSupraAdmin,
     getRoleLabel,
     userRole,
-    globalUserRole,
   };
 };

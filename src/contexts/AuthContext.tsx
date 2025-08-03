@@ -4,9 +4,9 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface UserRole {
   id: string;
-  company_id: string;
-  role: 'admin' | 'gestionnaire' | 'lecteur';
-  companies: {
+  workspace_id: string | null;
+  role: 'admin' | 'gestionnaire' | 'lecteur' | 'supra_admin';
+  workspaces?: {
     id: string;
     name: string;
     owner_id: string;
@@ -14,16 +14,11 @@ interface UserRole {
   };
 }
 
-interface GlobalUserRole {
-  role: 'supra_admin';
-}
-
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
   userRole: UserRole | null;
-  globalUserRole: GlobalUserRole | null;
   subscriptionStatus: {
     subscribed: boolean;
     subscription_tier: string | null;
@@ -31,6 +26,7 @@ interface AuthContextType {
     trial_active: boolean;
   };
   refreshSubscription: () => Promise<void>;
+  refreshUserRole: (userId: string) => Promise<void>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<{ error: any }>;
   signInWithMicrosoft: () => Promise<{ error: any }>;
@@ -57,7 +53,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
-  const [globalUserRole, setGlobalUserRole] = useState<GlobalUserRole | null>(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState({
     subscribed: false,
     subscription_tier: null,
@@ -67,44 +62,39 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const refreshUserRole = async (userId: string) => {
     try {
-      // Get workspace-specific role
-      const { data: workspaceRole, error: workspaceError } = await supabase
+      // Get all user roles (including global roles with null workspace_id)
+      const { data: roles, error } = await supabase
         .from('user_roles')
         .select(`
           *,
-          companies (
+          workspaces (
             id,
             name,
             owner_id,
             plan_type
           )
         `)
-        .eq('user_id', userId)
-        .single();
+        .eq('user_id', userId);
 
-      if (workspaceError && workspaceError.code !== 'PGRST116') {
-        console.error('Error fetching user role:', workspaceError);
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching user roles:', error);
+        setUserRole(null);
+      } else if (roles && roles.length > 0) {
+        // Prioritize supra_admin role if it exists
+        const supraAdminRole = roles.find(role => role.role === 'supra_admin');
+        if (supraAdminRole) {
+          setUserRole(supraAdminRole as UserRole);
+        } else {
+          // Otherwise, take the first workspace-specific role
+          const workspaceRole = roles.find(role => role.workspace_id !== null);
+          setUserRole((workspaceRole || roles[0]) as UserRole);
+        }
       } else {
-        setUserRole(workspaceRole as UserRole);
-      }
-
-      // Get global role
-      const { data: globalRole, error: globalError } = await supabase
-        .from('global_user_roles')
-        .select('role')
-        .eq('user_id', userId)
-        .single();
-
-      if (globalError && globalError.code !== 'PGRST116') {
-        console.error('Error fetching global user role:', globalError);
-        setGlobalUserRole(null);
-      } else {
-        setGlobalUserRole(globalRole as GlobalUserRole);
+        setUserRole(null);
       }
     } catch (error) {
       console.error('Error refreshing user role:', error);
       setUserRole(null);
-      setGlobalUserRole(null);
     }
   };
 
@@ -222,7 +212,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         // Reset user role when user changes
         if (!session?.user) {
           setUserRole(null);
-          setGlobalUserRole(null);
           setSubscriptionStatus({
             subscribed: false,
             subscription_tier: null,
@@ -263,9 +252,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       session,
       loading,
       userRole,
-      globalUserRole,
       subscriptionStatus,
       refreshSubscription,
+      refreshUserRole,
       signOut,
       signInWithGoogle,
       signInWithMicrosoft,
