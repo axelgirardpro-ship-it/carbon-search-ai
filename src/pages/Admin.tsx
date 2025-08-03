@@ -241,10 +241,8 @@ const Admin = () => {
           <ExportsMonitoringTable />
           <SessionsTable />
           
-          <div className="grid gap-6 md:grid-cols-2">
-            <DatabaseAccessManager />
-            <CSVImporter />
-          </div>
+          <DatabaseAccessManager />
+          <CSVImporter />
         </div>
 
         {/* Debug Info */}
