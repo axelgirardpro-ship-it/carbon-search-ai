@@ -48,8 +48,8 @@ serve(async (req) => {
       .eq("user_id", user.id)
       .single();
     
-    // If user is manually set as premium, respect that
-    if (existingSubscriber?.plan_type === 'premium' && existingSubscriber?.subscribed) {
+    // If user is manually set as premium, respect that and don't override with Stripe data
+    if (existingSubscriber?.plan_type === 'premium' && existingSubscriber?.subscribed === true) {
       logStep("User has manual premium subscription", { 
         email: user.email, 
         planType: existingSubscriber.plan_type 
