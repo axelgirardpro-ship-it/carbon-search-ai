@@ -58,6 +58,8 @@ export const ContactsTable = () => {
     try {
       setLoading(true);
       
+      console.log('ContactsTable: Fetching contacts with workspaceId:', selectedCompany);
+      
       // Use edge function to get contacts with admin privileges
       const { data, error } = await supabase.functions.invoke('get-admin-contacts', {
         body: { workspaceId: selectedCompany }
@@ -65,8 +67,16 @@ export const ContactsTable = () => {
 
       if (error) throw error;
 
+      console.log('ContactsTable: Raw response:', data);
+      console.log('ContactsTable: Found contacts count:', data?.data?.length || 0);
+      
       if (data?.data) {
         setContacts(data.data);
+        console.log('ContactsTable: Setting contacts:', data.data.map((c: Contact) => ({ 
+          email: c.email, 
+          company: c.company_name, 
+          plan: c.company_plan 
+        })));
       }
     } catch (error) {
       console.error('Error fetching contacts:', error);
