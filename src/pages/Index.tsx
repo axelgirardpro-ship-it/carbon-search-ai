@@ -16,7 +16,7 @@ const Index = () => {
             <div className="space-y-6 order-2 lg:order-1">
               <h1 style={{
               fontSize: '48px'
-            }} className="font-montserrat font-bold leading-tight text-indigo-950 text-4xl">
+            }} className="font-montserrat font-bold leading-tight text-indigo-950 text-5xl">
                 Le moteur de recherche<br />
                 de FE le plus puissant<br />
                 du marché
