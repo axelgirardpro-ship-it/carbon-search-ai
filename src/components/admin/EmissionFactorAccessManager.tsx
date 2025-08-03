@@ -25,8 +25,9 @@ export const EmissionFactorAccessManager = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log('🔄 EmissionFactorAccessManager: useEffect triggered');
     fetchSourceData();
-  }, []);
+  }, []); // Empty dependency array to run only once
 
   const fetchSourceData = async () => {
     try {
