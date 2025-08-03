@@ -37,8 +37,7 @@ export const EmissionFactorAccessManager = () => {
       // Get all sources with their plan tier counts
       const { data, error } = await supabase
         .from('emission_factors')
-        .select('source, plan_tier')
-        .order('source');
+        .select('source, plan_tier');
 
       console.log('📊 EmissionFactorAccessManager: Raw data from database:', data);
       
