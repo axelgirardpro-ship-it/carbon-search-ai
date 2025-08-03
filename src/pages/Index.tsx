@@ -59,7 +59,7 @@ const Index = () => {
           </h2>
           <div className="grid grid-cols-7 gap-8 items-center">
             {[
-              { name: "Empreinte", logo: "/lovable-uploads/70da6d52-1932-407e-ae9d-805ba683b768.png" },
+              { name: "Empreinte", logo: "/lovable-uploads/c59c6b00-a315-4d39-864a-9bb38a8834b0.png" },
               { name: "Ecobalyse", logo: "/lovable-uploads/cad5ea4f-455b-421b-8495-4ff233ec68b5.png" },
               { name: "exiobase", logo: "/lovable-uploads/c97153cb-e42d-4cf5-b924-d35125738902.png" },
               { name: "inies", logo: null },
