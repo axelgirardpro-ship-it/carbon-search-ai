@@ -66,8 +66,13 @@ export const CSVImporter = () => {
         setProgress(prev => Math.min(prev + 10, 90));
       }, 500);
 
+      const { data: { session } } = await supabase.auth.getSession();
+      
       const { data, error } = await supabase.functions.invoke('import-csv', {
         body: formData,
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`
+        }
       });
 
       clearInterval(progressInterval);

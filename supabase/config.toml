@@ -97,3 +97,6 @@ verify_jwt = true
 
 [functions.customer-portal]
 verify_jwt = true
+
+[functions.import-csv]
+verify_jwt = true
