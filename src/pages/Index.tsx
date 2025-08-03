@@ -94,6 +94,12 @@ const Index = () => {
             <div className="flex flex-col items-center">
               <div className="text-[#6C5CE7] text-lg font-medium">eco</div>
             </div>
+            <div className="flex flex-col items-center">
+              <div className="text-[#6C5CE7] text-lg font-medium">Nouveau Logo 1</div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="text-[#6C5CE7] text-lg font-medium">Nouveau Logo 2</div>
+            </div>
           </div>
         </div>
       </section>
