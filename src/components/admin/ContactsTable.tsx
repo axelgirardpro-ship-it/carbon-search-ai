@@ -16,6 +16,7 @@ interface Contact {
   first_name?: string;
   last_name?: string;
   company_name?: string;
+  company_plan?: string;
   created_at: string;
 }
 
@@ -57,46 +58,29 @@ export const ContactsTable = () => {
     try {
       setLoading(true);
       
-      let query = supabase
-        .from('user_roles')
-        .select(`
-          *
-        `)
-        .order('created_at', { ascending: false });
+      // Use edge function to get contacts with admin privileges
+      const { data, error } = await supabase.functions.invoke('get-admin-contacts', {
+        body: { workspaceId: selectedCompany }
+      });
 
-      if (selectedCompany !== "all") {
-        query = query.eq('workspace_id', selectedCompany);
-      }
-
-      const { data: userRoles, error } = await query;
       if (error) throw error;
 
-      // Get user details from auth.users and profiles
-      const contactsWithDetails = await Promise.all(
-        (userRoles || []).map(async (userRole) => {
-          const { data: userData } = await supabase.auth.admin.getUserById(userRole.user_id);
-          
-          const { data: profileData } = await supabase
-            .from('profiles')
-            .select('first_name, last_name')
-            .eq('user_id', userRole.user_id)
-            .single();
-
-          return {
-            ...userRole,
-            email: userData.user?.email || 'Unknown',
-            first_name: profileData?.first_name || '',
-            last_name: profileData?.last_name || '',
-            company_name: 'Loading...'
-          };
-        })
-      );
-
-      setContacts(contactsWithDetails);
+      if (data?.data) {
+        setContacts(data.data);
+      }
     } catch (error) {
       console.error('Error fetching contacts:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getPlanBadgeVariant = (plan: string) => {
+    switch (plan) {
+      case 'premium': return 'default';
+      case 'standard': return 'secondary';
+      case 'freemium': return 'outline';
+      default: return 'outline';
     }
   };
 
@@ -170,6 +154,7 @@ export const ContactsTable = () => {
               <TableHead>Contact</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Entreprise</TableHead>
+              <TableHead>Plan</TableHead>
               <TableHead>Rôle</TableHead>
               <TableHead>Ajouté le</TableHead>
             </TableRow>
@@ -199,6 +184,11 @@ export const ContactsTable = () => {
                   </div>
                 </TableCell>
                 <TableCell>
+                  <Badge variant={getPlanBadgeVariant(contact.company_plan || 'freemium')}>
+                    {contact.company_plan}
+                  </Badge>
+                </TableCell>
+                <TableCell>
                   <div className="flex items-center gap-2">
                     <Shield className="h-4 w-4" />
                     <Badge variant={getRoleBadgeVariant(contact.role)}>
@@ -213,7 +203,7 @@ export const ContactsTable = () => {
             ))}
             {contacts.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                <TableCell colSpan={6} className="text-center text-muted-foreground">
                   Aucun contact trouvé
                 </TableCell>
               </TableRow>

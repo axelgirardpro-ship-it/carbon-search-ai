@@ -235,9 +235,7 @@ const Admin = () => {
             </div>
           </div>
           
-          <div className="grid gap-6 md:grid-cols-2">
-            <ContactsTable />
-          </div>
+          <ContactsTable />
           
           <SearchHistoryTable />
           <ExportsMonitoringTable />
