@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { Zap, Crown, TrendingUp, AlertTriangle } from "lucide-react";
 
 export const QuotaWidget = () => {
-  const { subscriptionStatus } = useAuth();
+  const { subscriptionStatus, refreshSubscription } = useAuth();
   const { searchesUsed, searchesLimit, exportsUsed, exportsLimit, canSearch, canExport } = useQuotas();
 
   const searchProgress = searchesLimit === -1 ? 0 : (searchesUsed / searchesLimit) * 100;
@@ -17,7 +17,8 @@ export const QuotaWidget = () => {
   const isNearLimit = searchProgress > 80 || exportProgress > 80;
   const isAtLimit = !canSearch || !canExport;
 
-  if (subscriptionStatus.plan_type === 'premium') {
+  // Gestion des différents plans (premium, standard, freemium, trial)
+  if (subscriptionStatus.subscribed && subscriptionStatus.plan_type === 'premium') {
     return (
       <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
         <CardHeader className="pb-3">
@@ -50,8 +51,10 @@ export const QuotaWidget = () => {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Badge variant={subscriptionStatus.plan_type === 'premium' ? "default" : subscriptionStatus.trial_active ? "default" : "secondary"}>
-              {subscriptionStatus.plan_type === 'premium' ? 'Premium' : subscriptionStatus.trial_active ? "Essai" : "Freemium"}
+            <Badge variant={subscriptionStatus.subscribed && subscriptionStatus.plan_type === 'premium' ? "default" : subscriptionStatus.trial_active ? "default" : "secondary"}>
+              {subscriptionStatus.subscribed && subscriptionStatus.plan_type === 'premium' ? 'Premium' : 
+               subscriptionStatus.subscribed && subscriptionStatus.plan_type === 'standard' ? 'Standard' :
+               subscriptionStatus.trial_active ? "Essai" : "Freemium"}
             </Badge>
             {isAtLimit && (
               <Badge variant="destructive">
@@ -60,7 +63,7 @@ export const QuotaWidget = () => {
               </Badge>
             )}
           </div>
-          {(isNearLimit || isAtLimit) && (
+          {(isNearLimit || isAtLimit) && !subscriptionStatus.subscribed && (
             <Link to="/profile">
               <Button size="sm" className="h-7 text-xs">
                 <Zap className="w-3 h-3 mr-1" />
@@ -68,6 +71,15 @@ export const QuotaWidget = () => {
               </Button>
             </Link>
           )}
+          {/* Bouton de debug pour forcer le refresh */}
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="h-7 text-xs"
+            onClick={refreshSubscription}
+          >
+            🔄
+          </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
