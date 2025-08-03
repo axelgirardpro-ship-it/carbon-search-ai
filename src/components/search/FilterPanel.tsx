@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -7,6 +8,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 
 export interface Filters {
   source: string;
@@ -24,14 +27,58 @@ interface FilterPanelProps {
 }
 
 export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterPanelProps) => {
-  const filterOptions = {
-    source: ["Base Impacts 3.0", "ADEME", "GHG Protocol", "EPA"],
-    secteur: ["Énergie", "Transport", "Industrie", "Bâtiment", "Agriculture"],
-    categorie: ["Matériaux", "Combustibles", "Électricité", "Transport"],
-    uniteActivite: ["kgCO2e/kg", "kgCO2e/m3", "kgCO2e/kWh", "kgCO2e/km"],
-    localisation: ["Europe", "France", "Allemagne", "Monde"],
-    anneeRapport: ["2023", "2022", "2021", "2020", "2019"]
-  };
+  const { currentWorkspace } = useWorkspace();
+  const [filterOptions, setFilterOptions] = useState({
+    source: [] as string[],
+    secteur: [] as string[],
+    categorie: [] as string[],
+    uniteActivite: [] as string[],
+    localisation: [] as string[],
+    anneeRapport: [] as string[]
+  });
+
+  useEffect(() => {
+    const fetchFilterOptions = async () => {
+      try {
+        let query = supabase.from('emission_factors').select('source, secteur, categorie, unite, localisation, date');
+        
+        // Apply workspace filtering like in search
+        if (currentWorkspace) {
+          query = query.or(`is_public.eq.true,workspace_id.eq.${currentWorkspace.id}`);
+        } else {
+          query = query.eq('is_public', true);
+        }
+
+        const { data, error } = await query;
+
+        if (error) {
+          console.error('Error fetching filter options:', error);
+          return;
+        }
+
+        // Extract unique values for each filter
+        const sources = [...new Set(data?.map(item => item.source).filter(Boolean))];
+        const secteurs = [...new Set(data?.map(item => item.secteur).filter(Boolean))];
+        const categories = [...new Set(data?.map(item => item.categorie).filter(Boolean))];
+        const unites = [...new Set(data?.map(item => item.unite).filter(Boolean))];
+        const localisations = [...new Set(data?.map(item => item.localisation).filter(Boolean))];
+        const dates = [...new Set(data?.map(item => item.date).filter(Boolean))];
+
+        setFilterOptions({
+          source: sources.sort(),
+          secteur: secteurs.sort(),
+          categorie: categories.sort(),
+          uniteActivite: unites.sort(),
+          localisation: localisations.sort(),
+          anneeRapport: dates.sort().reverse() // Most recent first
+        });
+      } catch (error) {
+        console.error('Error in fetchFilterOptions:', error);
+      }
+    };
+
+    fetchFilterOptions();
+  }, [currentWorkspace]);
 
   const hasActiveFilters = Object.values(filters).some(value => value !== "");
 
@@ -88,7 +135,7 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
 
         <Select value={filters.uniteActivite} onValueChange={(value) => onFilterChange("uniteActivite", value)}>
           <SelectTrigger>
-            <SelectValue placeholder="Unité donnée activité" />
+            <SelectValue placeholder="Unité" />
           </SelectTrigger>
           <SelectContent>
             {filterOptions.uniteActivite.map((option) => (
@@ -110,7 +157,7 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
 
         <Select value={filters.anneeRapport} onValueChange={(value) => onFilterChange("anneeRapport", value)}>
           <SelectTrigger>
-            <SelectValue placeholder="Année de rapport" />
+            <SelectValue placeholder="Année" />
           </SelectTrigger>
           <SelectContent>
             {filterOptions.anneeRapport.map((option) => (
