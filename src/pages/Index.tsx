@@ -399,7 +399,7 @@ const Index = () => {
                   <CheckCircle className="h-4 w-4 text-green-500" />
                   <span className="text-sm">Mises à jour hebdomadaires</span>
                 </div>
-                <Button className="w-full bg-[#2D3436] hover:bg-[#2D3436]/90 text-white mt-6">
+                <Button className="w-full bg-slate-950 hover:bg-slate-800 text-white mt-6">
                   En savoir plus
                 </Button>
               </CardContent>
