@@ -6,6 +6,7 @@ import { EmissionFactor } from "@/types/emission-factor";
 import { Heart, Plus } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useQuotas } from "@/contexts/QuotaContext";
 import { useToast } from "@/hooks/use-toast";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 
@@ -15,6 +16,7 @@ console.log('🚀 Favorites page loaded');
 const Favorites = () => {
   const { favorites, loading, removeFromFavorites, addToFavorites } = useFavorites();
   const { canExportData } = usePermissions();
+  const { incrementExport, canExport } = useQuotas();
   const { toast } = useToast();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
@@ -81,20 +83,45 @@ const Favorites = () => {
     }
   };
 
-  const handleExport = () => {
-    const selectedFavorites = favorites.filter(f => selectedItems.includes(f.id));
-    const csvContent = [
-      "Nom,FE,Unité,Source,Localisation,Date",
-      ...selectedFavorites.map(f => `"${f.nom}",${f.fe},"${f.unite}","${f.source}","${f.localisation}","${f.date}"`)
-    ].join("\n");
-    
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "mes_favoris_emissions.csv";
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleExport = async () => {
+    if (!canExport) {
+      toast({
+        variant: "destructive",
+        title: "Limite d'exports atteinte",
+        description: "Veuillez upgrader votre abonnement pour continuer à exporter.",
+      });
+      return;
+    }
+
+    try {
+      await incrementExport();
+      
+      const selectedFavorites = favorites.filter(f => selectedItems.includes(f.id));
+      const csvContent = [
+        "Nom,FE,Unité,Source,Localisation,Date",
+        ...selectedFavorites.map(f => `"${f.nom}",${f.fe},"${f.unite}","${f.source}","${f.localisation}","${f.date}"`)
+      ].join("\n");
+      
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "mes_favoris_emissions.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Export réalisé",
+        description: "Vos favoris ont été exportés avec succès !",
+      });
+    } catch (error) {
+      console.error('Error during export:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de l'export",
+      });
+    }
   };
 
   return (

@@ -6,7 +6,9 @@ import { ResultsTable } from "@/components/search/ResultsTable";
 import { EmissionFactor } from "@/types/emission-factor";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useQuotas } from "@/contexts/QuotaContext";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 // Removed mock data - now using Supabase data
 
@@ -18,6 +20,7 @@ const suggestions = [
 const Dashboard = () => {
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { currentWorkspace } = useWorkspace();
+  const { incrementExport, canExport } = useQuotas();
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<Filters>({
     source: "",
@@ -176,20 +179,34 @@ const Dashboard = () => {
     }
   };
 
-  const handleExport = () => {
-    const selectedResults = results.filter(r => selectedItems.includes(r.id));
-    const csvContent = [
-      "Nom,FE,Unité,Source,Localisation,Date",
-      ...selectedResults.map(r => `"${r.nom}",${r.fe},"${r.unite}","${r.source}","${r.localisation}","${r.date}"`)
-    ].join("\n");
-    
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "facteurs_emissions.csv";
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleExport = async () => {
+    if (!canExport) {
+      toast.error("Limite d'exports atteinte. Veuillez upgrader votre abonnement.");
+      return;
+    }
+
+    try {
+      await incrementExport();
+      
+      const selectedResults = results.filter(r => selectedItems.includes(r.id));
+      const csvContent = [
+        "Nom,FE,Unité,Source,Localisation,Date",
+        ...selectedResults.map(r => `"${r.nom}",${r.fe},"${r.unite}","${r.source}","${r.localisation}","${r.date}"`)
+      ].join("\n");
+      
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "facteurs_emissions.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      toast.success("Export réalisé avec succès !");
+    } catch (error) {
+      console.error('Error during export:', error);
+      toast.error("Erreur lors de l'export");
+    }
   };
 
   return (
