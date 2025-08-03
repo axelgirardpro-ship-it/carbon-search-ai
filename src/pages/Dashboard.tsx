@@ -7,6 +7,7 @@ import { EmissionFactor } from "@/types/emission-factor";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useQuotas } from "@/contexts/QuotaContext";
+import { useSearchHistory } from "@/hooks/useSearchHistory";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -21,6 +22,7 @@ const Dashboard = () => {
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { currentWorkspace } = useWorkspace();
   const { incrementExport, canExport } = useQuotas();
+  const { recordSearch } = useSearchHistory();
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<Filters>({
     source: "",
@@ -99,13 +101,16 @@ const Dashboard = () => {
       }));
       
       setResults(searchResults);
+      
+      // Record search in history
+      await recordSearch(query, filters, searchResults.length);
     } catch (error) {
       console.error('Error performing search:', error);
       setResults([]);
     } finally {
       setIsLoading(false);
     }
-  }, [filters, isFavorite, currentWorkspace]);
+  }, [filters, isFavorite, currentWorkspace, recordSearch]);
 
   const handleSearch = () => {
     performSearch(searchQuery);

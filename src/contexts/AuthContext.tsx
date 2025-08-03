@@ -142,6 +142,50 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const createUserSession = async (session: Session) => {
+    try {
+      // Get user agent and IP (IP will be handled by the server)
+      const userAgent = navigator.userAgent;
+      
+      // Create session record
+      const { error } = await supabase
+        .from('user_sessions')
+        .insert({
+          user_id: session.user.id,
+          session_token: session.access_token,
+          user_agent: userAgent,
+          last_activity: new Date().toISOString(),
+          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
+        });
+
+      if (error) {
+        console.error('Error creating user session:', error);
+      }
+    } catch (error) {
+      console.error('Error creating user session:', error);
+    }
+  };
+
+  const updateSessionActivity = async () => {
+    if (!session?.user) return;
+    
+    try {
+      const { error } = await supabase
+        .from('user_sessions')
+        .update({ 
+          last_activity: new Date().toISOString() 
+        })
+        .eq('user_id', session.user.id)
+        .eq('session_token', session.access_token);
+
+      if (error) {
+        console.error('Error updating session activity:', error);
+      }
+    } catch (error) {
+      console.error('Error updating session activity:', error);
+    }
+  };
+
   const signOut = async () => {
     try {
       setLoading(true);
@@ -249,6 +293,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setTimeout(() => {
             refreshSubscription();
             refreshUserRole(session.user.id);
+            // Create user session when user logs in
+            createUserSession(session);
           }, 100);
         }
       }
@@ -265,12 +311,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setTimeout(() => {
           refreshSubscription();
           refreshUserRole(session.user.id);
+          // Create user session for existing session
+          createUserSession(session);
         }, 100);
       }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Update session activity every 5 minutes
+  useEffect(() => {
+    if (!session?.user) return;
+
+    const interval = setInterval(() => {
+      updateSessionActivity();
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => clearInterval(interval);
+  }, [session]);
 
   return (
     <AuthContext.Provider value={{
