@@ -151,7 +151,9 @@ export const DatabaseAccessManager = () => {
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
                       <Database className="h-4 w-4 text-muted-foreground" />
-                      {index === 0 ? databaseName : ''}
+                      <span className="truncate max-w-[150px]" title={databaseName}>
+                        {databaseName}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell>
