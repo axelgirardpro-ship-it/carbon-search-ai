@@ -3,10 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Users, Calendar, Crown } from "lucide-react";
+import { Building2, Users, Calendar, UserCheck } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface Company {
+interface FreemiumCompany {
   id: string;
   name: string;
   owner_id: string;
@@ -21,21 +21,21 @@ interface Company {
   };
 }
 
-export const CompaniesTable = () => {
-  const [companies, setCompanies] = useState<Company[]>([]);
+export const FreemiumCompaniesTable = () => {
+  const [companies, setCompanies] = useState<FreemiumCompany[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchCompanies();
+    fetchFreemiumCompanies();
   }, []);
 
-  const fetchCompanies = async () => {
+  const fetchFreemiumCompanies = async () => {
     try {
       setLoading(true);
       
-      // Use edge function to get paid workspaces
+      // Use edge function to get freemium workspaces
       const { data, error } = await supabase.functions.invoke('get-admin-workspaces', {
-        body: { planFilter: 'paid' }
+        body: { planFilter: 'freemium' }
       });
 
       if (error) throw error;
@@ -44,18 +44,9 @@ export const CompaniesTable = () => {
         setCompanies(data.data);
       }
     } catch (error) {
-      console.error('Error fetching companies:', error);
+      console.error('Error fetching freemium companies:', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const getPlanBadgeVariant = (planType: string) => {
-    switch (planType) {
-      case 'premium': return 'default';
-      case 'standard': return 'secondary';
-      case 'freemium': return 'outline';
-      default: return 'outline';
     }
   };
 
@@ -64,13 +55,13 @@ export const CompaniesTable = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Building2 className="h-5 w-5" />
-            Entreprises Clientes
+            <UserCheck className="h-5 w-5" />
+            Entreprises Freemium
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {[...Array(5)].map((_, i) => (
+            {[...Array(3)].map((_, i) => (
               <Skeleton key={i} className="h-12 w-full" />
             ))}
           </div>
@@ -83,8 +74,8 @@ export const CompaniesTable = () => {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Building2 className="h-5 w-5" />
-          Entreprises Clientes ({companies.length})
+          <UserCheck className="h-5 w-5" />
+          Entreprises Freemium ({companies.length})
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -99,7 +90,7 @@ export const CompaniesTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-             {companies.map((company) => (
+            {companies.map((company) => (
               <TableRow key={company.id}>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">
@@ -112,12 +103,12 @@ export const CompaniesTable = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Crown className="h-4 w-4 text-amber-500" />
+                    <UserCheck className="h-4 w-4 text-green-500" />
                     {company.owner_email}
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={getPlanBadgeVariant(company.subscription_status?.plan_type || company.plan_type)}>
+                  <Badge variant="outline">
                     {company.subscription_status?.plan_type || company.plan_type}
                   </Badge>
                 </TableCell>
@@ -138,7 +129,7 @@ export const CompaniesTable = () => {
             {companies.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-muted-foreground">
-                  Aucune entreprise avec plan payant trouvée
+                  Aucune entreprise freemium trouvée
                 </TableCell>
               </TableRow>
             )}

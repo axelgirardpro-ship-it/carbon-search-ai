@@ -20,6 +20,7 @@ import { usePermissions } from "@/hooks/usePermissions";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { CompaniesTable } from "@/components/admin/CompaniesTable";
+import { FreemiumCompaniesTable } from "@/components/admin/FreemiumCompaniesTable";
 import { ContactsTable } from "@/components/admin/ContactsTable";
 import { SearchHistoryTable } from "@/components/admin/SearchHistoryTable";
 import { DatabaseAccessManager } from "@/components/admin/DatabaseAccessManager";
@@ -225,8 +226,16 @@ const Admin = () => {
 
         {/* Admin Components */}
         <div className="space-y-6">
+          {/* Entreprises Dashboard */}
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Gestion des Entreprises</h2>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <CompaniesTable />
+              <FreemiumCompaniesTable />
+            </div>
+          </div>
+          
           <div className="grid gap-6 md:grid-cols-2">
-            <CompaniesTable />
             <ContactsTable />
           </div>
           

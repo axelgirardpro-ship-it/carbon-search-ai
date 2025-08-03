@@ -44,11 +44,30 @@ serve(async (req) => {
       return new Response('Forbidden', { status: 403, headers: corsHeaders })
     }
 
-    // Get only workspaces with paid plans (standard or premium)
+    // Get filter parameter from request body or query params
+    let planFilter = 'paid'; // default to paid plans
+    
+    if (req.method === 'POST') {
+      const body = await req.json();
+      planFilter = body.planFilter || 'paid';
+    } else {
+      const url = new URL(req.url);
+      planFilter = url.searchParams.get('planFilter') || 'paid';
+    }
+
+    // Define plan types based on filter
+    let planTypes: string[];
+    if (planFilter === 'freemium') {
+      planTypes = ['freemium'];
+    } else {
+      planTypes = ['standard', 'premium']; // paid plans
+    }
+
+    // Get workspaces based on plan filter
     const { data: workspaces, error: workspacesError } = await supabase
       .from('workspaces')
       .select('*')
-      .in('plan_type', ['standard', 'premium'])
+      .in('plan_type', planTypes)
       .order('created_at', { ascending: false })
 
     if (workspacesError) throw workspacesError
