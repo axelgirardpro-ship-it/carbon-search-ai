@@ -67,6 +67,13 @@ serve(async (req) => {
     const { data: userRoles, error: rolesError } = await query;
     if (rolesError) throw rolesError;
 
+    console.log('Found user roles:', userRoles?.length);
+    console.log('User roles data:', userRoles?.map(ur => ({
+      user_id: ur.user_id,
+      workspace_id: ur.workspace_id,
+      role: ur.role
+    })));
+
     // Get all workspaces data
     const { data: workspaces } = await supabase
       .from('workspaces')
@@ -77,6 +84,8 @@ serve(async (req) => {
     workspaces?.forEach(workspace => {
       workspaceMap.set(workspace.id, workspace);
     });
+
+    console.log('Available workspaces:', workspaces?.map(w => ({ id: w.id, name: w.name, plan: w.plan_type })));
 
     // Get detailed info for each contact
     const contactsWithDetails = await Promise.all(
@@ -103,6 +112,13 @@ serve(async (req) => {
         };
       })
     );
+
+    console.log('Final contacts with details:', contactsWithDetails.map(c => ({
+      email: c.email,
+      company_name: c.company_name,
+      company_plan: c.company_plan,
+      role: c.role
+    })));
 
     return new Response(
       JSON.stringify({ data: contactsWithDetails }),
