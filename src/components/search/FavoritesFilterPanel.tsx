@@ -81,12 +81,12 @@ export const FavoritesFilterPanel = ({
           {/* Source Filter */}
           <div className="space-y-2">
             <Label>Source</Label>
-            <Select value={filters.source} onValueChange={(value) => updateFilter('source', value)}>
+            <Select value={filters.source || 'all'} onValueChange={(value) => updateFilter('source', value === 'all' ? '' : value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Toutes les sources" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Toutes les sources</SelectItem>
+                <SelectItem value="all">Toutes les sources</SelectItem>
                 {availableSources.map((source) => (
                   <SelectItem key={source} value={source}>
                     {source}
@@ -99,12 +99,12 @@ export const FavoritesFilterPanel = ({
           {/* Location Filter */}
           <div className="space-y-2">
             <Label>Localisation</Label>
-            <Select value={filters.localisation} onValueChange={(value) => updateFilter('localisation', value)}>
+            <Select value={filters.localisation || 'all'} onValueChange={(value) => updateFilter('localisation', value === 'all' ? '' : value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Toutes les localisations" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Toutes les localisations</SelectItem>
+                <SelectItem value="all">Toutes les localisations</SelectItem>
                 {availableLocations.map((location) => (
                   <SelectItem key={location} value={location}>
                     {location}
@@ -117,12 +117,12 @@ export const FavoritesFilterPanel = ({
           {/* Date Filter */}
           <div className="space-y-2">
             <Label>Date</Label>
-            <Select value={filters.date} onValueChange={(value) => updateFilter('date', value)}>
+            <Select value={filters.date || 'all'} onValueChange={(value) => updateFilter('date', value === 'all' ? '' : value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Toutes les dates" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Toutes les dates</SelectItem>
+                <SelectItem value="all">Toutes les dates</SelectItem>
                 {availableDates.map((date) => (
                   <SelectItem key={date} value={date}>
                     {date}
