@@ -7,7 +7,7 @@ import { QuotaWidget } from "@/components/ui/QuotaWidget";
 import { EmissionFactor } from "@/types/emission-factor";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
-import { useQuotas } from "@/contexts/QuotaSubscriptionContext";
+import { useQuotas, useSubscription } from "@/contexts/QuotaSubscriptionContext";
 import { useSearchHistory } from "@/hooks/useSearchHistory";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ const Dashboard = () => {
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { currentWorkspace } = useWorkspace();
   const { incrementExport, canExport, canSearch, incrementSearch } = useQuotas();
+  const { subscription } = useSubscription();
   const { recordSearch } = useSearchHistory();
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<Filters>({
@@ -81,6 +82,16 @@ const Dashboard = () => {
         supabaseQuery = supabaseQuery.eq('is_public', true);
       }
 
+      // Apply plan tier filtering based on user subscription
+      const userPlan = subscription?.plan_type || 'freemium';
+      if (userPlan === 'premium') {
+        // Premium users can see both standard and premium content
+        supabaseQuery = supabaseQuery.in('plan_tier', ['standard', 'premium']);
+      } else {
+        // Freemium and standard users can only see standard content
+        supabaseQuery = supabaseQuery.eq('plan_tier', 'standard');
+      }
+
       // Apply search filter if query is provided
       if (query.trim()) {
         supabaseQuery = supabaseQuery.or(`nom.ilike.%${query}%,description.ilike.%${query}%`);
@@ -137,7 +148,7 @@ const Dashboard = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [filters, isFavorite, currentWorkspace]); // Enlever canSearch et incrementSearch des dépendances
+  }, [filters, isFavorite, currentWorkspace, subscription]); // Ajouter subscription aux dépendances
 
   const handleSearch = () => {
     performSearch(searchQuery);

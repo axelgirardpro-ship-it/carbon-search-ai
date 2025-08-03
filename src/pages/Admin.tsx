@@ -23,7 +23,7 @@ import { CompaniesTable } from "@/components/admin/CompaniesTable";
 import { FreemiumCompaniesTable } from "@/components/admin/FreemiumCompaniesTable";
 import { ContactsTable } from "@/components/admin/ContactsTable";
 import { SearchHistoryTable } from "@/components/admin/SearchHistoryTable";
-import { DatabaseAccessManager } from "@/components/admin/DatabaseAccessManager";
+import { EmissionFactorAccessManager } from "@/components/admin/EmissionFactorAccessManager";
 import { CSVImporter } from "@/components/admin/CSVImporter";
 import { SessionsTable } from "@/components/admin/SessionsTable";
 import { ExportsMonitoringTable } from "@/components/admin/ExportsMonitoringTable";
@@ -241,7 +241,7 @@ const Admin = () => {
           <ExportsMonitoringTable />
           <SessionsTable />
           
-          <DatabaseAccessManager />
+          <EmissionFactorAccessManager />
           <CSVImporter />
         </div>
 
