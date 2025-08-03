@@ -71,15 +71,6 @@ export const QuotaWidget = () => {
               </Button>
             </Link>
           )}
-          {/* Bouton de debug pour forcer le refresh */}
-          <Button 
-            size="sm" 
-            variant="outline" 
-            className="h-7 text-xs"
-            onClick={refreshSubscription}
-          >
-            🔄
-          </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
