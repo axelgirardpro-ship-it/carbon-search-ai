@@ -68,12 +68,20 @@ export const CSVImporter = () => {
 
       const { data: { session } } = await supabase.auth.getSession();
       
+      if (!session?.access_token) {
+        throw new Error('Session d\'authentification expirée. Veuillez vous reconnecter.');
+      }
+
+      console.log('Calling import-csv function with token:', session.access_token.substring(0, 20) + '...');
+      
       const { data, error } = await supabase.functions.invoke('import-csv', {
         body: formData,
         headers: {
-          'Authorization': `Bearer ${session?.access_token}`
+          'Authorization': `Bearer ${session.access_token}`
         }
       });
+
+      console.log('Function response:', { data, error });
 
       clearInterval(progressInterval);
       setProgress(100);
