@@ -34,13 +34,17 @@ export const FreemiumCompaniesTable = () => {
       setLoading(true);
       
       // Use edge function to get freemium workspaces
+      console.log('FreemiumCompaniesTable: Calling edge function with planFilter: freemium');
       const { data, error } = await supabase.functions.invoke('get-admin-workspaces', {
         body: { planFilter: 'freemium' }
       });
 
+      console.log('FreemiumCompaniesTable: Edge function response:', { data, error });
+
       if (error) throw error;
 
       if (data?.data) {
+        console.log('FreemiumCompaniesTable: Setting companies:', data.data.map((c: any) => `${c.name}: ${c.plan_type}`));
         setCompanies(data.data);
       }
     } catch (error) {

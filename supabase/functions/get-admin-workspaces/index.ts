@@ -50,18 +50,24 @@ serve(async (req) => {
     if (req.method === 'POST') {
       const body = await req.json();
       planFilter = body.planFilter || 'paid';
+      console.log('POST request - planFilter:', planFilter);
     } else {
       const url = new URL(req.url);
       planFilter = url.searchParams.get('planFilter') || 'paid';
+      console.log('GET request - planFilter:', planFilter);
     }
 
     // Define plan types based on filter
     let planTypes: string[];
     if (planFilter === 'freemium') {
       planTypes = ['freemium'];
+      console.log('Filtering for freemium plans');
     } else {
       planTypes = ['standard', 'premium']; // paid plans
+      console.log('Filtering for paid plans:', planTypes);
     }
+
+    console.log('Final planTypes filter:', planTypes);
 
     // Get workspaces based on plan filter
     const { data: workspaces, error: workspacesError } = await supabase
@@ -69,6 +75,9 @@ serve(async (req) => {
       .select('*')
       .in('plan_type', planTypes)
       .order('created_at', { ascending: false })
+
+    console.log('Found workspaces:', workspaces?.length, 'workspaces');
+    console.log('Workspace plans:', workspaces?.map(w => `${w.name}: ${w.plan_type}`));
 
     if (workspacesError) throw workspacesError
 

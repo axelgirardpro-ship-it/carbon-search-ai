@@ -34,13 +34,17 @@ export const CompaniesTable = () => {
       setLoading(true);
       
       // Use edge function to get paid workspaces
+      console.log('CompaniesTable: Calling edge function with planFilter: paid');
       const { data, error } = await supabase.functions.invoke('get-admin-workspaces', {
         body: { planFilter: 'paid' }
       });
 
+      console.log('CompaniesTable: Edge function response:', { data, error });
+
       if (error) throw error;
 
       if (data?.data) {
+        console.log('CompaniesTable: Setting companies:', data.data.map((c: any) => `${c.name}: ${c.plan_type}`));
         setCompanies(data.data);
       }
     } catch (error) {
