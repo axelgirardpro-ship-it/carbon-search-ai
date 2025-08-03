@@ -113,30 +113,20 @@ const Index = () => {
           </h2>
           <div className="max-w-4xl mx-auto">
             <div className="bg-gradient-to-br from-[#6C5CE7] to-[#2D3436] rounded-2xl p-8">
-              <div className="bg-white rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  </div>
-                  
-                </div>
-                <div style={{
-                position: "relative",
-                paddingBottom: "calc(52.44791666666667% + 41px)",
-                height: 0,
-                width: "100%"
-              }}>
-                  <iframe src="https://demo.arcade.software/rg5Pizw2AGo4sO73KGPN?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true" title="Moteur de recherche de FE Sami - Démo" frameBorder="0" loading="lazy" style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                  colorScheme: "light"
-                }} allow="clipboard-write" className="rounded-lg" />
-                </div>
+              <div style={{
+              position: "relative",
+              paddingBottom: "calc(52.44791666666667% + 41px)",
+              height: 0,
+              width: "100%"
+            }}>
+                <iframe src="https://demo.arcade.software/rg5Pizw2AGo4sO73KGPN?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true" title="Moteur de recherche de FE Sami - Démo" frameBorder="0" loading="lazy" style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                colorScheme: "light"
+              }} allow="clipboard-write" className="rounded-lg" />
               </div>
             </div>
           </div>
