@@ -2,10 +2,35 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Facebook, Twitter, Linkedin, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 const Index = () => {
   return <div className="min-h-screen bg-white">
+      {/* Navigation Bar */}
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <h1 className="text-2xl font-bold text-indigo-950">SAMI</h1>
+            </div>
+            
+            {/* Boutons de navigation */}
+            <div className="flex items-center space-x-4">
+              <Link to="/signup">
+                <Button variant="outline" className="border-indigo-950 text-indigo-950 hover:bg-indigo-50">
+                  S'inscrire
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button className="bg-slate-950 hover:bg-slate-800 text-white">
+                  Se connecter
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
       {/* Hero Section */}
       <section className="py-20 px-4" style={{
       backgroundColor: '#d7caf5'
@@ -476,6 +501,85 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-indigo-950 text-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Colonne 1 - Logo et description */}
+            <div className="space-y-4">
+              <h3 className="text-2xl font-bold">SAMI</h3>
+              <p className="text-indigo-200">
+                Le moteur de recherche de facteurs d'émission le plus puissant du marché.
+              </p>
+              <div className="flex space-x-4">
+                <Button variant="ghost" size="sm" className="text-indigo-200 hover:text-white hover:bg-indigo-800 p-2">
+                  <Twitter className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm" className="text-indigo-200 hover:text-white hover:bg-indigo-800 p-2">
+                  <Linkedin className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm" className="text-indigo-200 hover:text-white hover:bg-indigo-800 p-2">
+                  <Mail className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Colonne 2 - Produit */}
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold">Produit</h4>
+              <ul className="space-y-2 text-indigo-200">
+                <li><Link to="/features" className="hover:text-white transition-colors">Fonctionnalités</Link></li>
+                <li><Link to="/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
+                <li><Link to="/demo" className="hover:text-white transition-colors">Démo</Link></li>
+                <li><Link to="/integrations" className="hover:text-white transition-colors">Intégrations</Link></li>
+              </ul>
+            </div>
+
+            {/* Colonne 3 - Support */}
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold">Support</h4>
+              <ul className="space-y-2 text-indigo-200">
+                <li><Link to="/help" className="hover:text-white transition-colors">Centre d'aide</Link></li>
+                <li><Link to="/documentation" className="hover:text-white transition-colors">Documentation</Link></li>
+                <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+                <li><Link to="/status" className="hover:text-white transition-colors">Statut</Link></li>
+              </ul>
+            </div>
+
+            {/* Colonne 4 - Entreprise */}
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold">Entreprise</h4>
+              <ul className="space-y-2 text-indigo-200">
+                <li><Link to="/about" className="hover:text-white transition-colors">À propos</Link></li>
+                <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+                <li><Link to="/careers" className="hover:text-white transition-colors">Carrières</Link></li>
+                <li><Link to="/press" className="hover:text-white transition-colors">Presse</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Séparateur et copyright */}
+          <div className="border-t border-indigo-800 mt-12 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+              <div className="text-indigo-200 text-sm">
+                © 2024 SAMI. Tous droits réservés.
+              </div>
+              <div className="flex space-x-6 text-sm text-indigo-200">
+                <Link to="/privacy" className="hover:text-white transition-colors">
+                  Politique de confidentialité
+                </Link>
+                <Link to="/terms" className="hover:text-white transition-colors">
+                  Conditions d'utilisation
+                </Link>
+                <Link to="/cookies" className="hover:text-white transition-colors">
+                  Cookies
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>;
 };
 export default Index;
