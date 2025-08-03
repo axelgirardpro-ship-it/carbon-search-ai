@@ -51,14 +51,14 @@ const Team = () => {
   const [inviteLoading, setInviteLoading] = useState(false);
 
   const loadTeamData = async () => {
-    if (!userRole?.company_id) return;
+    if (!userRole?.workspace_id) return;
 
     try {
       // Load team members
       const { data: members, error: membersError } = await supabase
         .from('user_roles')
         .select('*')
-        .eq('company_id', userRole.company_id);
+        .eq('workspace_id', userRole.workspace_id);
 
       if (membersError) throw membersError;
 
@@ -82,9 +82,9 @@ const Team = () => {
 
       // Load pending invitations
       const { data: invitations, error: invitationsError } = await supabase
-        .from('company_invitations')
+        .from('workspace_invitations')
         .select('*')
-        .eq('company_id', userRole.company_id)
+        .eq('workspace_id', userRole.workspace_id)
         .eq('status', 'pending');
 
       if (invitationsError) throw invitationsError;
@@ -121,7 +121,7 @@ const Team = () => {
         body: {
           email: inviteForm.email,
           role: inviteForm.role,
-          companyName: userRole?.companies.name
+          companyName: 'Workspace'
         }
       });
 
@@ -224,7 +224,7 @@ const Team = () => {
                 Gestion de l'équipe
               </h1>
               <p className="text-muted-foreground">
-                Gérez les membres de votre équipe {userRole.companies.name}
+                Gérez les membres de votre équipe
               </p>
             </div>
             

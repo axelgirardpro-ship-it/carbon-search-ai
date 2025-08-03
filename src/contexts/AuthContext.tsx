@@ -87,17 +87,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         console.error('Error fetching workspace roles:', workspaceError);
       }
 
-      // Try to get global roles if global_user_roles table still exists
+      // Get global roles from user_roles with NULL workspace_id
       let globalRoles: any[] = [];
       try {
         const { data: globalRoleData } = await supabase
-          .from('global_user_roles')
+          .from('user_roles')
           .select('*')
-          .eq('user_id', userId);
+          .eq('user_id', userId)
+          .is('workspace_id', null);
         
         globalRoles = globalRoleData || [];
       } catch (error) {
-        // global_user_roles table might not exist anymore
+        // Error fetching global roles
         console.log('global_user_roles table does not exist, which is expected after migration');
       }
 

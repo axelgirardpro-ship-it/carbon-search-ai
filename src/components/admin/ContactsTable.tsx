@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface Contact {
   id: string;
   user_id: string;
-  company_id: string;
+  workspace_id: string;
   role: string;
   email?: string;
   first_name?: string;
@@ -42,14 +42,14 @@ export const ContactsTable = () => {
   const fetchCompanies = async () => {
     try {
       const { data, error } = await supabase
-        .from('companies')
+        .from('workspaces')
         .select('id, name')
         .order('name');
-
+      
       if (error) throw error;
       setCompanies(data || []);
     } catch (error) {
-      console.error('Error fetching companies:', error);
+      console.error('Error fetching workspaces:', error);
     }
   };
 
@@ -60,13 +60,12 @@ export const ContactsTable = () => {
       let query = supabase
         .from('user_roles')
         .select(`
-          *,
-          companies(id, name)
+          *
         `)
         .order('created_at', { ascending: false });
 
       if (selectedCompany !== "all") {
-        query = query.eq('company_id', selectedCompany);
+        query = query.eq('workspace_id', selectedCompany);
       }
 
       const { data: userRoles, error } = await query;
@@ -88,7 +87,7 @@ export const ContactsTable = () => {
             email: userData.user?.email || 'Unknown',
             first_name: profileData?.first_name || '',
             last_name: profileData?.last_name || '',
-            company_name: userRole.companies?.name || 'Unknown'
+            company_name: 'Loading...'
           };
         })
       );

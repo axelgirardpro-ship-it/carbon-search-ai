@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface SearchRecord {
   id: string;
   user_id: string;
-  company_id: string;
+  workspace_id: string;
   search_query: string;
   search_filters: any;
   results_count: number;
@@ -41,14 +41,14 @@ export const SearchHistoryTable = () => {
   const fetchCompanies = async () => {
     try {
       const { data, error } = await supabase
-        .from('companies')
+        .from('workspaces')
         .select('id, name')
         .order('name');
-
+      
       if (error) throw error;
       setCompanies(data || []);
     } catch (error) {
-      console.error('Error fetching companies:', error);
+      console.error('Error fetching workspaces:', error);
     }
   };
 
@@ -63,7 +63,7 @@ export const SearchHistoryTable = () => {
         .limit(100);
 
       if (selectedCompany !== "all") {
-        query = query.eq('company_id', selectedCompany);
+        query = query.eq('workspace_id', selectedCompany);
       }
 
       const { data: searchData, error } = await query;
@@ -91,16 +91,16 @@ export const SearchHistoryTable = () => {
         (searchData || []).map(async (search) => {
           const userEmail = userEmailMap[search.user_id] || 'Unknown';
           
-          const { data: companyData } = await supabase
-            .from('companies')
+          const { data: workspaceData } = await supabase
+            .from('workspaces')
             .select('name')
-            .eq('id', search.company_id)
+            .eq('id', search.workspace_id)
             .single();
 
           return {
             ...search,
             user_email: userEmail,
-            company_name: companyData?.name || 'Unknown'
+            company_name: workspaceData?.name || 'Unknown'
           };
         })
       );

@@ -79,12 +79,12 @@ export const WorkspaceProvider = ({ children }: WorkspaceProviderProps) => {
     try {
       const { data, error } = await supabase
         .from('user_roles')
-        .select('company_id')
+        .select('workspace_id')
         .eq('user_id', userId);
 
       if (error || !data) return '';
       
-      return data.map(role => role.company_id).join(',');
+      return data.map(role => role.workspace_id).join(',');
     } catch {
       return '';
     }
@@ -122,7 +122,7 @@ export const WorkspaceProvider = ({ children }: WorkspaceProviderProps) => {
         .from('user_roles')
         .insert({
           user_id: user.id,
-          company_id: data.id,
+          workspace_id: data.id,
           role: 'admin',
           assigned_by: user.id
         });
