@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navbar } from "@/components/ui/navbar";
+import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -44,13 +44,13 @@ const Settings = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <UnifiedNavbar />
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2 flex items-center">
-              <SettingsIcon className="w-8 h-8 mr-3 text-primary" />
+            <h1 className="text-3xl font-bold mb-2 flex items-center homepage-text">
+              <SettingsIcon className="w-8 h-8 mr-3 text-indigo-950" />
               Paramètres
             </h1>
             <p className="text-muted-foreground">

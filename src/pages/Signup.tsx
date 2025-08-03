@@ -152,12 +152,12 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-hero-bg to-primary/90 flex items-center justify-center p-4">
+    <div className="min-h-screen homepage-violet-bg flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-6">
           <Link 
             to="/" 
-            className="inline-flex items-center text-white hover:text-white/80 transition-colors"
+            className="inline-flex items-center homepage-text hover:opacity-80 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Retour à l'accueil

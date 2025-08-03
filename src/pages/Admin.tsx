@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navbar } from "@/components/ui/navbar";
+import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -108,7 +108,7 @@ const Admin = () => {
   if (!user || !isSupraAdmin()) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
+        <UnifiedNavbar />
         <div className="container mx-auto px-4 py-8">
           <Alert className="max-w-2xl mx-auto">
             <AlertTriangle className="h-4 w-4" />
@@ -123,12 +123,12 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <UnifiedNavbar />
       
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2 flex items-center">
-            <Shield className="w-8 h-8 mr-3 text-primary" />
+          <h1 className="text-3xl font-bold mb-2 flex items-center homepage-text">
+            <Shield className="w-8 h-8 mr-3 text-indigo-950" />
             Console d'administration
           </h1>
           <p className="text-muted-foreground">

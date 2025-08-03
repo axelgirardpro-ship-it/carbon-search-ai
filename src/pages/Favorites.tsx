@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Navbar } from "@/components/ui/navbar";
+import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
 import { ResultsTable } from "@/components/search/ResultsTable";
 import { Button } from "@/components/ui/button";
 import { EmissionFactor } from "@/types/emission-factor";
@@ -188,11 +188,11 @@ const Favorites = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <UnifiedNavbar />
       
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2 flex items-center">
+          <h1 className="text-3xl font-bold mb-2 flex items-center homepage-text">
             <Heart className="w-8 h-8 mr-3 text-red-500" />
             Mes favoris
           </h1>
