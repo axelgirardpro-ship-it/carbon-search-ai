@@ -64,18 +64,19 @@ serve(async (req) => {
           .select('*', { count: 'exact', head: true })
           .eq('workspace_id', workspace.id)
 
-        // Get subscription info
-        const { data: subscription } = await supabase
-          .from('subscribers')
-          .select('plan_type, subscribed')
-          .eq('user_id', workspace.owner_id)
-          .single()
+        // Use workspace plan_type instead of user subscription
+        // The billing is at workspace level, not user level
+        const workspacePlan = workspace.plan_type || 'freemium'
+        const isSubscribed = workspacePlan === 'premium' || workspacePlan === 'standard'
 
         return {
           ...workspace,
           owner_email: authUser?.user?.email || 'Unknown',
           user_count: userCount || 0,
-          subscription_status: subscription || { plan_type: 'freemium', subscribed: false }
+          subscription_status: { 
+            plan_type: workspacePlan, 
+            subscribed: isSubscribed 
+          }
         }
       })
     )

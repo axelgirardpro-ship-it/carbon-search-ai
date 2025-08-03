@@ -15,6 +15,10 @@ interface Company {
   updated_at: string;
   user_count?: number;
   owner_email?: string;
+  subscription_status?: {
+    plan_type: string;
+    subscribed: boolean;
+  };
 }
 
 export const CompaniesTable = () => {
@@ -93,12 +97,15 @@ export const CompaniesTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {companies.map((company) => (
+             {companies.map((company) => (
               <TableRow key={company.id}>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">
                     <Building2 className="h-4 w-4 text-muted-foreground" />
-                    {company.name}
+                    <div>
+                      <div>{company.name}</div>
+                      <div className="text-xs text-muted-foreground">ID: {company.id.slice(0, 8)}...</div>
+                    </div>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -108,8 +115,8 @@ export const CompaniesTable = () => {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={getPlanBadgeVariant(company.plan_type)}>
-                    {company.plan_type}
+                  <Badge variant={getPlanBadgeVariant(company.subscription_status?.plan_type || company.plan_type)}>
+                    {company.subscription_status?.plan_type || company.plan_type}
                   </Badge>
                 </TableCell>
                 <TableCell>
