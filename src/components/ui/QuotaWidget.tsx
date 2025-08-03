@@ -50,8 +50,8 @@ export const QuotaWidget = () => {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Badge variant={subscriptionStatus.trial_active ? "default" : "secondary"}>
-              {subscriptionStatus.trial_active ? "Essai" : "Freemium"}
+            <Badge variant={subscriptionStatus.plan_type === 'premium' ? "default" : subscriptionStatus.trial_active ? "default" : "secondary"}>
+              {subscriptionStatus.plan_type === 'premium' ? 'Premium' : subscriptionStatus.trial_active ? "Essai" : "Freemium"}
             </Badge>
             {isAtLimit && (
               <Badge variant="destructive">
