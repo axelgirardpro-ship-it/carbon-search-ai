@@ -194,7 +194,7 @@ const Index = () => {
                 </div>
               </div>
               <div className="bg-white rounded-lg p-6">
-                <img src="/lovable-uploads/71d74bc4-61b0-4e95-befc-12b9508a15e4.png" alt="Interface de recherche" className="w-full h-auto" />
+                <img src="/lovable-uploads/501e99e2-29fe-4086-8d1f-9bd8028d151d.png" alt="Interface de recherche" className="w-full h-auto" />
               </div>
             </TabsContent>
             <TabsContent value="personnalisation" className="grid lg:grid-cols-2 gap-12 items-start">
