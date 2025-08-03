@@ -169,20 +169,7 @@ const Index = () => {
                 </div>
               </div>
               <div className="bg-white rounded-lg p-6">
-                <div className="text-center mb-4 text-[#636E72]">Base de données</div>
-                <div className="flex gap-4 mb-6">
-                  <button className="px-4 py-2 bg-white border border-gray-300 rounded text-sm">Datasets communs</button>
-                  <button className="px-4 py-2 text-[#6C5CE7] text-sm">Datasets importés</button>
-                </div>
-                <div className="space-y-2">
-                  {["FE_Généralistes_2025", "FE_Agroalimentaire", "FE_Finance", "FE_Clients_2024", "FE_Combustibles", "FE_Divertissement_Inflation", "FE_Automobile", "FE_Santé", "FE_Industrie_2022"].map((item, index) => <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100">
-                      <div className="text-sm">{item}</div>
-                      <div className="flex items-center gap-4">
-                        <span className="text-xs text-[#6C5CE7]">Général</span>
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Publié</span>
-                      </div>
-                    </div>)}
-                </div>
+                <img src="/lovable-uploads/71d74bc4-61b0-4e95-befc-12b9508a15e4.png" alt="Interface base de données" className="w-full h-auto" />
               </div>
             </TabsContent>
             <TabsContent value="recherche">
