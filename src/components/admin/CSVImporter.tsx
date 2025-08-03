@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Upload, File, CheckCircle, XCircle, AlertTriangle, Download } from "lucide-react";
+import { Upload, File, CheckCircle, XCircle, AlertTriangle, Download, FileDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ImportResult {
@@ -23,6 +23,7 @@ export const CSVImporter = () => {
   const [file, setFile] = useState<File | null>(null);
   const [replaceExisting, setReplaceExisting] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<ImportResult | null>(null);
   const { toast } = useToast();
@@ -129,12 +130,99 @@ export const CSVImporter = () => {
     setReplaceExisting(false);
   };
 
+  const exportEmissionFactors = async () => {
+    try {
+      setExporting(true);
+      
+      toast({
+        title: "Export en cours",
+        description: "Récupération des données depuis la base...",
+      });
+
+      // Récupérer toutes les données de la table emission_factors
+      const { data, error } = await supabase
+        .from('emission_factors')
+        .select('*')
+        .order('source', { ascending: true });
+
+      if (error) {
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        toast({
+          title: "Aucune donnée",
+          description: "Aucun facteur d'émission trouvé dans la base de données",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Créer le contenu CSV
+      const headers = [
+        'nom', 'description', 'fe', 'unite', 'secteur', 'categorie', 
+        'source', 'localisation', 'date', 'incertitude', 'plan_tier', 'is_public'
+      ];
+
+      const csvRows = [
+        headers.join(','), // En-têtes
+        ...data.map(row => [
+          `"${row.nom || ''}"`,
+          `"${row.description || ''}"`,
+          row.fe || 0,
+          `"${row.unite || ''}"`,
+          `"${row.secteur || ''}"`,
+          `"${row.categorie || ''}"`,
+          `"${row.source || ''}"`,
+          `"${row.localisation || ''}"`,
+          `"${row.date || ''}"`,
+          `"${row.incertitude || ''}"`,
+          `"${row.plan_tier || 'standard'}"`,
+          row.is_public ? 'true' : 'false'
+        ].join(','))
+      ];
+
+      const csvContent = csvRows.join('\n');
+
+      // Créer et télécharger le fichier
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      const timestamp = new Date().toISOString().split('T')[0];
+      const filename = `emission_factors_export_${timestamp}.csv`;
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: "Export terminé",
+        description: `${data.length} facteurs d'émission exportés dans ${filename}`,
+      });
+
+    } catch (error: any) {
+      console.error('Export error:', error);
+      toast({
+        title: "Erreur d'export",
+        description: error.message || "Une erreur est survenue lors de l'export",
+        variant: "destructive",
+      });
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Upload className="h-5 w-5" />
-          Import de Données CSV
+          Import / Export de Données CSV
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -176,10 +264,10 @@ export const CSVImporter = () => {
           </Alert>
         )}
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Button 
             onClick={handleImport} 
-            disabled={!file || importing}
+            disabled={!file || importing || exporting}
             className="flex items-center gap-2"
           >
             <Upload className="h-4 w-4" />
@@ -189,17 +277,28 @@ export const CSVImporter = () => {
           <Button 
             variant="secondary" 
             onClick={downloadTemplate}
+            disabled={importing || exporting}
             className="flex items-center gap-2"
           >
             <Download className="h-4 w-4" />
             Télécharger Template
+          </Button>
+
+          <Button 
+            variant="outline" 
+            onClick={exportEmissionFactors}
+            disabled={importing || exporting}
+            className="flex items-center gap-2"
+          >
+            <FileDown className="h-4 w-4" />
+            {exporting ? "Export en cours..." : "Exporter BDD"}
           </Button>
           
           {(file || result) && (
             <Button 
               variant="outline" 
               onClick={resetImport}
-              disabled={importing}
+              disabled={importing || exporting}
             >
               Réinitialiser
             </Button>
