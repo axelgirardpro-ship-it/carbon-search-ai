@@ -28,7 +28,7 @@ import { SessionsTable } from "@/components/admin/SessionsTable";
 import { ExportsMonitoringTable } from "@/components/admin/ExportsMonitoringTable";
 
 const Admin = () => {
-  const { user, userRole, globalUserRole } = useAuth();
+  const { user, userRole } = useAuth();
   const { isSupraAdmin } = usePermissions();
   const { toast } = useToast();
   const [stats, setStats] = useState({
@@ -252,9 +252,8 @@ const Admin = () => {
               <p><strong>User ID:</strong> {user.id}</p>
               <p><strong>Email:</strong> {user.email}</p>
               <p><strong>Workspace Role:</strong> {userRole?.role || 'Pas de rôle workspace'}</p>
-              <p><strong>Global Role:</strong> {globalUserRole?.role || 'Pas de rôle global'}</p>
               <p><strong>Supra Admin:</strong> {isSupraAdmin() ? 'Oui' : 'Non'}</p>
-              <p><strong>Company:</strong> {userRole?.companies?.name || 'Aucune'}</p>
+              <p><strong>Workspace:</strong> {userRole?.companies?.name || userRole?.workspaces?.name || 'Aucun'}</p>
             </div>
           </CardContent>
         </Card>

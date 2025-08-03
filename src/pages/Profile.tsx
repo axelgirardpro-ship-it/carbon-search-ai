@@ -60,7 +60,7 @@ const Profile = () => {
             firstName: data.first_name || "",
             lastName: data.last_name || "",
             email: user.email || "",
-            company: data.company || userRole?.companies.name || "",
+            company: data.company || userRole?.companies?.name || userRole?.workspaces?.name || "",
             position: data.position || "",
             billingFirstName: data.billing_first_name || "",
             billingLastName: data.billing_last_name || "",
@@ -92,6 +92,7 @@ const Profile = () => {
         .from('profiles')
         .upsert({
           user_id: user.id,
+          workspace_id: userRole?.company_id || userRole?.workspace_id || '00000000-0000-0000-0000-000000000000',
           first_name: formData.firstName,
           last_name: formData.lastName,
           company: formData.company,

@@ -4,8 +4,15 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface UserRole {
   id: string;
-  workspace_id: string | null;
+  company_id?: string;
+  workspace_id?: string;
   role: 'admin' | 'gestionnaire' | 'lecteur' | 'supra_admin';
+  companies?: {
+    id: string;
+    name: string;
+    owner_id: string;
+    plan_type: string;
+  };
   workspaces?: {
     id: string;
     name: string;
@@ -62,12 +69,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const refreshUserRole = async (userId: string) => {
     try {
-      // Get all user roles (including global roles with null workspace_id)
-      const { data: roles, error } = await supabase
+      // Try to get workspace roles first
+      const { data: workspaceRoles, error: workspaceError } = await supabase
         .from('user_roles')
         .select(`
           *,
-          workspaces (
+          companies (
             id,
             name,
             owner_id,
@@ -76,18 +83,36 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         `)
         .eq('user_id', userId);
 
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching user roles:', error);
-        setUserRole(null);
-      } else if (roles && roles.length > 0) {
+      if (workspaceError && workspaceError.code !== 'PGRST116') {
+        console.error('Error fetching workspace roles:', workspaceError);
+      }
+
+      // Try to get global roles if global_user_roles table still exists
+      let globalRoles: any[] = [];
+      try {
+        const { data: globalRoleData } = await supabase
+          .from('global_user_roles')
+          .select('*')
+          .eq('user_id', userId);
+        
+        globalRoles = globalRoleData || [];
+      } catch (error) {
+        // global_user_roles table might not exist anymore
+        console.log('global_user_roles table does not exist, which is expected after migration');
+      }
+
+      // Combine all roles
+      const allRoles = [...(workspaceRoles || []), ...globalRoles];
+
+      if (allRoles.length > 0) {
         // Prioritize supra_admin role if it exists
-        const supraAdminRole = roles.find(role => role.role === 'supra_admin');
+        const supraAdminRole = allRoles.find(role => role.role === 'supra_admin');
         if (supraAdminRole) {
           setUserRole(supraAdminRole as UserRole);
         } else {
           // Otherwise, take the first workspace-specific role
-          const workspaceRole = roles.find(role => role.workspace_id !== null);
-          setUserRole((workspaceRole || roles[0]) as UserRole);
+          const workspaceRole = allRoles.find(role => role.company_id || role.workspace_id);
+          setUserRole((workspaceRole || allRoles[0]) as UserRole);
         }
       } else {
         setUserRole(null);

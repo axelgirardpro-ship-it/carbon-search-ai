@@ -3,7 +3,7 @@ import { usePermissions } from "@/hooks/usePermissions";
 
 interface RoleGuardProps {
   children: ReactNode;
-  allowedRoles?: ('admin' | 'gestionnaire' | 'lecteur')[];
+  allowedRoles?: ('admin' | 'gestionnaire' | 'lecteur' | 'supra_admin')[];
   requirePermission?: 'canAddUsers' | 'canImportData' | 'canExportData' | 'canViewAllData' | 'canManageCompany' | 'canDeleteData';
   fallback?: ReactNode;
 }

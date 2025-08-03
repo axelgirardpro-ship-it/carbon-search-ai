@@ -18,7 +18,7 @@ export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
-  const { isSuperAdmin } = usePermissions();
+  const { isSupraAdmin } = usePermissions();
   const { toast } = useToast();
 
   const handleSignOut = async () => {
@@ -101,7 +101,7 @@ export const Navbar = () => {
                     <span>Paramètres</span>
                   </Link>
                 </DropdownMenuItem>
-                {isSuperAdmin() && (
+                {isSupraAdmin() && (
                   <DropdownMenuItem asChild>
                     <Link to="/admin" className="cursor-pointer">
                       <Shield className="mr-2 h-4 w-4" />
