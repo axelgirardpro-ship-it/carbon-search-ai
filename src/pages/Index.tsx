@@ -317,9 +317,11 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="premium">
               <div className="grid grid-cols-7 gap-8">
-                {["Base Carbone", "Base Impacts", "CCF", "EcoInvent"].map((name, index) => <div key={index} className="flex flex-col items-center space-y-2">
+                {["Base Carbone", "Base Impacts", "Eco-platform", "EcoInvent"].map((name, index) => <div key={index} className="flex flex-col items-center space-y-2">
                     <div className="w-16 h-16 rounded-lg flex items-center justify-center">
-                      {name === "EcoInvent" ? (
+                      {name === "Eco-platform" ? (
+                        <img src="/lovable-uploads/7d492fef-d5aa-4fa5-9732-938c9b53680d.png" alt="Eco-platform Logo" className="w-full h-full object-contain" />
+                      ) : name === "EcoInvent" ? (
                         <img src="/lovable-uploads/95586b3d-873f-4be8-a627-63fce61a19fd.png" alt="EcoInvent Logo" className="w-full h-full object-contain" />
                       ) : (
                         <div className="w-16 h-16 bg-[#6C5CE7]/10 rounded-lg flex items-center justify-center">
