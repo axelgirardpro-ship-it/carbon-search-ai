@@ -263,6 +263,7 @@ export type Database = {
           plan_tier: string | null
           secteur: string
           source: string
+          source_type: string | null
           unite: string
           updated_at: string
           workspace_id: string | null
@@ -282,6 +283,7 @@ export type Database = {
           plan_tier?: string | null
           secteur: string
           source: string
+          source_type?: string | null
           unite: string
           updated_at?: string
           workspace_id?: string | null
@@ -301,6 +303,7 @@ export type Database = {
           plan_tier?: string | null
           secteur?: string
           source?: string
+          source_type?: string | null
           unite?: string
           updated_at?: string
           workspace_id?: string | null

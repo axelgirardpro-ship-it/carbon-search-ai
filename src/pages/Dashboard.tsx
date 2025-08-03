@@ -5,6 +5,7 @@ import { FilterPanel, Filters } from "@/components/search/FilterPanel";
 import { ResultsTable } from "@/components/search/ResultsTable";
 import { EmissionFactor } from "@/types/emission-factor";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 
 // Removed mock data - now using Supabase data
@@ -16,6 +17,7 @@ const suggestions = [
 
 const Dashboard = () => {
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
+  const { currentWorkspace } = useWorkspace();
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<Filters>({
     source: "",
@@ -38,6 +40,14 @@ const Dashboard = () => {
       let supabaseQuery = supabase
         .from('emission_factors')
         .select('*');
+
+      // Search logic: public data + current workspace data
+      if (currentWorkspace) {
+        supabaseQuery = supabaseQuery.or(`is_public.eq.true,workspace_id.eq.${currentWorkspace.id}`);
+      } else {
+        // If no workspace, only show public data
+        supabaseQuery = supabaseQuery.eq('is_public', true);
+      }
 
       // Apply search filter if query is provided
       if (query.trim()) {
@@ -92,7 +102,7 @@ const Dashboard = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [filters, isFavorite]);
+  }, [filters, isFavorite, currentWorkspace]);
 
   const handleSearch = () => {
     performSearch(searchQuery);
