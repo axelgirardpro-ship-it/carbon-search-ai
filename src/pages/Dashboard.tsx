@@ -3,6 +3,7 @@ import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
 import { SearchBar } from "@/components/search/SearchBar";
 import { FilterPanel, Filters } from "@/components/search/FilterPanel";
 import { ResultsTable } from "@/components/search/ResultsTable";
+import { QuotaWidget } from "@/components/ui/QuotaWidget";
 import { EmissionFactor } from "@/types/emission-factor";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
@@ -21,7 +22,7 @@ const suggestions = [
 const Dashboard = () => {
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { currentWorkspace } = useWorkspace();
-  const { incrementExport, canExport } = useQuotas();
+  const { incrementExport, canExport, canSearch, incrementSearch } = useQuotas();
   const { recordSearch } = useSearchHistory();
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<Filters>({
@@ -38,10 +39,18 @@ const Dashboard = () => {
   const [hasSearched, setHasSearched] = useState(false);
 
   const performSearch = useCallback(async (query: string) => {
+    // Vérifier si l'utilisateur peut effectuer une recherche
+    if (!canSearch) {
+      toast.error("Limite de recherche atteinte. Passez à un plan payant pour continuer.");
+      return;
+    }
+    
     setIsLoading(true);
     setHasSearched(true);
     
     try {
+      // Incrémenter le compteur de recherches
+      await incrementSearch();
       let supabaseQuery = supabase
         .from('emission_factors')
         .select('*');
@@ -110,7 +119,7 @@ const Dashboard = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [filters, isFavorite, currentWorkspace]);
+  }, [filters, isFavorite, currentWorkspace, canSearch, incrementSearch]);
 
   const handleSearch = () => {
     performSearch(searchQuery);
@@ -239,6 +248,11 @@ const Dashboard = () => {
 
       {/* Content Section */}
       <div className="container mx-auto px-4 py-8">
+        {/* Quota Widget */}
+        <div className="mb-6">
+          <QuotaWidget />
+        </div>
+        
         <FilterPanel
           filters={filters}
           onFilterChange={handleFilterChange}
