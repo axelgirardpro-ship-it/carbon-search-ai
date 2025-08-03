@@ -87,16 +87,38 @@ export const EmissionFactorAccessManager = () => {
 
   const updateSourceTier = async (source: string, newTier: 'standard' | 'premium') => {
     try {
+      console.log(`Starting update for source: ${source} to tier: ${newTier}`);
       setUpdating(source);
       
-      const { error } = await supabase
+      // First, check how many records we're about to update
+      const { data: countData, error: countError } = await supabase
+        .from('emission_factors')
+        .select('id, plan_tier')
+        .eq('source', source);
+      
+      if (countError) {
+        console.error('Error counting records:', countError);
+        throw countError;
+      }
+      
+      console.log(`Found ${countData?.length} records for source ${source}:`, countData);
+      
+      // Now update all records for this source
+      const { data: updateData, error: updateError } = await supabase
         .from('emission_factors')
         .update({ plan_tier: newTier })
-        .eq('source', source);
+        .eq('source', source)
+        .select('id, source, plan_tier'); // Return updated records to verify
 
-      if (error) throw error;
+      if (updateError) {
+        console.error('Error updating records:', updateError);
+        throw updateError;
+      }
 
-      await fetchSourceData(); // Refresh data
+      console.log(`Successfully updated ${updateData?.length} records:`, updateData);
+
+      // Refresh data to see changes
+      await fetchSourceData();
 
       toast({
         title: "Succès",
