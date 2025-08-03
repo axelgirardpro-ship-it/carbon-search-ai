@@ -59,7 +59,7 @@ const Index = () => {
           </h2>
           <div className="grid grid-cols-6 gap-8 items-center">
             <div className="flex flex-col items-center">
-              <div className="text-[#6C5CE7] text-lg font-medium">Empreinte</div>
+              <img src="/lovable-uploads/3fdbfe68-8e5e-4c44-8ac1-edd24a2d8fac.png" alt="Empreinte" className="max-h-[50px]" />
             </div>
             <div className="flex flex-col items-center">
               <div className="text-[#6C5CE7] text-lg font-medium">Ecobalyse</div>
