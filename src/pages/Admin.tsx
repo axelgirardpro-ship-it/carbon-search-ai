@@ -11,7 +11,9 @@ import {
   Database, 
   Search,
   Activity,
-  AlertTriangle
+  AlertTriangle,
+  Download,
+  Heart
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -22,6 +24,8 @@ import { ContactsTable } from "@/components/admin/ContactsTable";
 import { SearchHistoryTable } from "@/components/admin/SearchHistoryTable";
 import { DatabaseAccessManager } from "@/components/admin/DatabaseAccessManager";
 import { CSVImporter } from "@/components/admin/CSVImporter";
+import { SessionsTable } from "@/components/admin/SessionsTable";
+import { ExportsMonitoringTable } from "@/components/admin/ExportsMonitoringTable";
 
 const Admin = () => {
   const { user, userRole, globalUserRole } = useAuth();
@@ -31,7 +35,9 @@ const Admin = () => {
     totalUsers: 0,
     totalCompanies: 0,
     totalSearches: 0,
-    activeFavorites: 0
+    activeFavorites: 0,
+    totalExports: 0,
+    activeSessions: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -65,18 +71,23 @@ const Admin = () => {
           .from('favorites')
           .select('*', { count: 'exact', head: true });
 
-        console.log('🚀 Admin: Stats loaded', {
-          userCount, 
-          companyCount, 
-          searchCount, 
-          favoritesCount
-        });
+        // Count total exports
+        const { data: quotas } = await supabase.from('search_quotas').select('exports_used');
+        const totalExports = quotas?.reduce((sum, quota) => sum + (quota.exports_used || 0), 0) || 0;
+        
+        // Count active sessions
+        const { count: sessionsCount } = await supabase
+          .from('user_sessions')
+          .select('*', { count: 'exact', head: true })
+          .gt('expires_at', new Date().toISOString());
 
         setStats({
           totalUsers: userCount || 0,
           totalCompanies: companyCount || 0,
           totalSearches: searchCount || 0,
-          activeFavorites: favoritesCount || 0
+          activeFavorites: favoritesCount || 0,
+          totalExports: totalExports,
+          activeSessions: sessionsCount || 0,
         });
       } catch (error) {
         console.error('Error loading admin stats:', error);
@@ -134,7 +145,7 @@ const Admin = () => {
         </div>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Utilisateurs</CardTitle>
@@ -177,7 +188,7 @@ const Admin = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Favoris</CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
+              <Heart className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.activeFavorites}</div>
@@ -186,15 +197,49 @@ const Admin = () => {
               </p>
             </CardContent>
           </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Exports totaux</CardTitle>
+              <Download className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalExports}</div>
+              <p className="text-xs text-muted-foreground">
+                Limite: 100/mois/utilisateur
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Sessions actives</CardTitle>
+              <Shield className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.activeSessions}</div>
+              <p className="text-xs text-muted-foreground">
+                Max 2/utilisateur
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Dynamic Admin Components */}
-        <div className="space-y-8">
-          <CompaniesTable />
-          <ContactsTable />
+        {/* Admin Components */}
+        <div className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <CompaniesTable />
+            <ContactsTable />
+          </div>
+          
           <SearchHistoryTable />
-          <DatabaseAccessManager />
-          <CSVImporter />
+          <ExportsMonitoringTable />
+          <SessionsTable />
+          
+          <div className="grid gap-6 md:grid-cols-2">
+            <DatabaseAccessManager />
+            <CSVImporter />
+          </div>
         </div>
 
         {/* Debug Info */}
