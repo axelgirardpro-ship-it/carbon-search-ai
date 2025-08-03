@@ -82,7 +82,7 @@ export const CompaniesTable = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Building2 className="h-5 w-5" />
-          Entreprises Clientes ({companies.length})
+          Entreprises Clientes Premium ({companies.length})
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -136,7 +136,7 @@ export const CompaniesTable = () => {
             {companies.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-muted-foreground">
-                  Aucune entreprise trouvée
+                  Aucune entreprise avec plan payant trouvée
                 </TableCell>
               </TableRow>
             )}

@@ -44,10 +44,11 @@ serve(async (req) => {
       return new Response('Forbidden', { status: 403, headers: corsHeaders })
     }
 
-    // Get all workspaces with details
+    // Get only workspaces with paid plans (standard or premium)
     const { data: workspaces, error: workspacesError } = await supabase
       .from('workspaces')
       .select('*')
+      .in('plan_type', ['standard', 'premium'])
       .order('created_at', { ascending: false })
 
     if (workspacesError) throw workspacesError
