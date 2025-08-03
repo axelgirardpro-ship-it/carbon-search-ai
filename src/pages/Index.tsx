@@ -132,7 +132,7 @@ const Index = () => {
       </section>
 
       {/* Features Tabs Section */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-[#d7caf5]">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-indigo-950 text-center mb-12">
             Un moteur de recherche<br />
