@@ -5,75 +5,9 @@ import { FilterPanel, Filters } from "@/components/search/FilterPanel";
 import { ResultsTable } from "@/components/search/ResultsTable";
 import { EmissionFactor } from "@/types/emission-factor";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { supabase } from "@/integrations/supabase/client";
 
-// Mock data - à remplacer par l'API Algolia
-const mockResults: EmissionFactor[] = [
-  {
-    id: "1",
-    nom: "Flat glass average",
-    description: "Verre plat moyen",
-    fe: 1.62,
-    unite: "kgCO2e/kg",
-    source: "Base Impacts 3.0",
-    secteur: "Matériaux",
-    categorie: "Verre",
-    localisation: "Europe",
-    date: "2023",
-    incertitude: "±15%"
-  },
-  {
-    id: "2",
-    nom: "Curved glass, RER",
-    description: "Verre courbé, RER",
-    fe: 2.41,
-    unite: "kgCO2e/kg",
-    source: "Base Impacts 3.0",
-    secteur: "Matériaux",
-    categorie: "Verre",
-    localisation: "Europe",
-    date: "2011",
-    incertitude: "±20%"
-  },
-  {
-    id: "3",
-    nom: "Toughened glass (ESG)",
-    description: "Verre renforcé (verre monocouche de sécurité-ESG) (épaisseur 1 mm; densité 2.5 kg/m2), RER",
-    fe: 1.84,
-    unite: "kgCO2e/kg",
-    source: "Base Impacts 3.0",
-    secteur: "Matériaux",
-    categorie: "Verre",
-    localisation: "Europe",
-    date: "2011",
-    incertitude: "±18%"
-  },
-  {
-    id: "4",
-    nom: "Patterned glass, RER",
-    description: "Verre à motifs, RER",
-    fe: 1.17,
-    unite: "kgCO2e/kg",
-    source: "Base Impacts 3.0",
-    secteur: "Matériaux",
-    categorie: "Verre",
-    localisation: "Europe",
-    date: "2011",
-    incertitude: "±12%"
-  },
-  {
-    id: "5",
-    nom: "Container glass, RER",
-    description: "Verre d'emballage, RER",
-    fe: 0.81396,
-    unite: "kgCO2e/kg",
-    source: "Base Impacts 3.0",
-    secteur: "Matériaux",
-    categorie: "Verre",
-    localisation: "Europe",
-    date: "2011",
-    incertitude: "±10%"
-  }
-];
+// Removed mock data - now using Supabase data
 
 const suggestions = [
   "glass", "recycled glass", "sodium", "verre", "verre recyclé", 
@@ -96,31 +30,69 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const performSearch = useCallback((query: string) => {
+  const performSearch = useCallback(async (query: string) => {
     setIsLoading(true);
     setHasSearched(true);
     
-    // Simulate API call to Algolia
-    setTimeout(() => {
-      let searchResults: EmissionFactor[] = [];
-      if (query.toLowerCase().includes("glass") || query.toLowerCase().includes("verre")) {
-        searchResults = mockResults;
-      } else if (query === "") {
-        searchResults = mockResults;
-      } else {
-        searchResults = [];
+    try {
+      let supabaseQuery = supabase
+        .from('emission_factors')
+        .select('*');
+
+      // Apply search filter if query is provided
+      if (query.trim()) {
+        supabaseQuery = supabaseQuery.or(`nom.ilike.%${query}%,description.ilike.%${query}%`);
       }
-      
-      // Mark items as favorite based on context
-      const resultsWithFavorites = searchResults.map(item => ({
-        ...item,
+
+      // Apply other filters
+      if (filters.source) {
+        supabaseQuery = supabaseQuery.ilike('source', `%${filters.source}%`);
+      }
+      if (filters.secteur) {
+        supabaseQuery = supabaseQuery.ilike('secteur', `%${filters.secteur}%`);
+      }
+      if (filters.categorie) {
+        supabaseQuery = supabaseQuery.ilike('categorie', `%${filters.categorie}%`);
+      }
+      if (filters.localisation) {
+        supabaseQuery = supabaseQuery.ilike('localisation', `%${filters.localisation}%`);
+      }
+      if (filters.anneeRapport) {
+        supabaseQuery = supabaseQuery.ilike('date', `%${filters.anneeRapport}%`);
+      }
+
+      const { data, error } = await supabaseQuery.limit(100);
+
+      if (error) {
+        console.error('Error fetching emission factors:', error);
+        setResults([]);
+        return;
+      }
+
+      // Transform Supabase data to match EmissionFactor interface
+      const searchResults: EmissionFactor[] = (data || []).map(item => ({
+        id: item.id,
+        nom: item.nom,
+        description: item.description || '',
+        fe: Number(item.fe),
+        unite: item.unite,
+        source: item.source,
+        secteur: item.secteur,
+        categorie: item.categorie,
+        localisation: item.localisation,
+        date: item.date,
+        incertitude: item.incertitude || '',
         isFavorite: isFavorite(item.id)
       }));
       
-      setResults(resultsWithFavorites);
+      setResults(searchResults);
+    } catch (error) {
+      console.error('Error performing search:', error);
+      setResults([]);
+    } finally {
       setIsLoading(false);
-    }, 800);
-  }, []);
+    }
+  }, [filters, isFavorite]);
 
   const handleSearch = () => {
     performSearch(searchQuery);
