@@ -269,6 +269,8 @@ const Index = () => {
                         <img src="/lovable-uploads/04c097ec-c73b-4fb8-8788-7db8dce6aae6.png" alt="AIB Logo" className="w-full h-full object-contain" />
                       ) : name === "Agribalyse" ? (
                         <img src="/lovable-uploads/fda086b7-f932-4837-beff-453157e04098.png" alt="Agribalyse Logo" className="w-full h-full object-contain" />
+                      ) : name === "BEIS" ? (
+                        <img src="/lovable-uploads/6a36c45c-748d-4f7b-83c3-06ab2651649f.png" alt="BEIS Logo" className="w-full h-full object-contain" />
                       ) : (
                         <div className="w-16 h-16 bg-[#6C5CE7]/10 rounded-lg flex items-center justify-center">
                           <div className="w-8 h-8 bg-[#6C5CE7] rounded"></div>
