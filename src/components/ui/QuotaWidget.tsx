@@ -18,27 +18,35 @@ export const QuotaWidget = () => {
   const isAtLimit = !canSearch || !canExport;
 
   // Gestion des différents plans (premium, standard, freemium, trial)
-  if (subscriptionStatus.subscribed && subscriptionStatus.plan_type === 'premium') {
+  if (subscriptionStatus.subscribed && (subscriptionStatus.plan_type === 'premium' || subscriptionStatus.plan_type === 'standard')) {
+    const isPremium = subscriptionStatus.plan_type === 'premium';
+    
     return (
-      <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
+      <Card className={`border-primary/20 ${isPremium ? 'bg-gradient-to-r from-primary/5 to-primary/10' : 'bg-gradient-to-r from-blue-500/5 to-blue-600/10'}`}>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <Badge className="bg-primary text-primary-foreground">
-              <Crown className="w-4 h-4 mr-1" />
-              Premium
+            <Badge className={isPremium ? "bg-primary text-primary-foreground" : "bg-blue-600 text-white"}>
+              {isPremium ? <Crown className="w-4 h-4 mr-1" /> : <Zap className="w-4 h-4 mr-1" />}
+              {isPremium ? 'Premium' : 'Standard'}
             </Badge>
-            <div className="text-sm text-muted-foreground">Illimité</div>
+            <div className="text-sm text-muted-foreground">
+              {isPremium ? 'Illimité' : 'Plan payant'}
+            </div>
           </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>Recherches</span>
-              <span className="text-primary font-medium">Illimitées ∞</span>
+              <span className="text-primary font-medium">
+                {isPremium ? 'Illimitées ∞' : '1000 / mois'}
+              </span>
             </div>
             <div className="flex justify-between text-sm">
               <span>Exports</span>
-              <span className="text-primary font-medium">Illimitées ∞</span>
+              <span className="text-primary font-medium">
+                {isPremium ? 'Illimitées ∞' : '100 / mois'}
+              </span>
             </div>
           </div>
         </CardContent>

@@ -46,20 +46,22 @@ serve(async (req) => {
       .from("subscribers")
       .select("*")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
     
-    // If user is manually set as premium, respect that and don't override with Stripe data
-    if (existingSubscriber?.plan_type === 'premium' && existingSubscriber?.subscribed === true) {
-      logStep("User has manual premium subscription", { 
+    // If user is manually set as premium or standard, respect that and don't override with Stripe data
+    if (existingSubscriber?.subscribed === true && 
+        (existingSubscriber?.plan_type === 'premium' || existingSubscriber?.plan_type === 'standard')) {
+      logStep("User has manual paid subscription", { 
         email: user.email, 
-        planType: existingSubscriber.plan_type 
+        planType: existingSubscriber.plan_type,
+        subscribed: existingSubscriber.subscribed
       });
       
       return new Response(JSON.stringify({
         subscribed: true,
-        subscription_tier: 'Premium',
+        subscription_tier: existingSubscriber.subscription_tier || (existingSubscriber.plan_type === 'premium' ? 'Premium' : 'Standard'),
         subscription_end: existingSubscriber.subscription_end,
-        plan_type: 'premium',
+        plan_type: existingSubscriber.plan_type,
         trial_active: false
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
