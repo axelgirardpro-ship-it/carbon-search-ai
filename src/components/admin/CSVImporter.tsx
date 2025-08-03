@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Upload, File, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { Upload, File, CheckCircle, XCircle, AlertTriangle, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ImportResult {
@@ -94,6 +94,34 @@ export const CSVImporter = () => {
     }
   };
 
+  const downloadTemplate = () => {
+    const templateData = [
+      ['nom', 'description', 'fe', 'unite', 'secteur', 'categorie', 'source', 'localisation', 'date', 'incertitude', 'plan_tier', 'is_public'],
+      ['Transport routier - Voiture particulière essence', 'Facteur d\'émission pour voiture particulière essence', '0.193', 'kg CO2e/km', 'Transport', 'Transport routier', 'ADEME 2024', 'France', '2024', '±15%', 'standard', 'true'],
+      ['Électricité - Mix énergétique français', 'Facteur d\'émission du mix électrique français', '0.079', 'kg CO2e/kWh', 'Énergie', 'Électricité', 'RTE 2024', 'France', '2024', '±10%', 'premium', 'true'],
+      ['Gaz naturel - Combustion', 'Facteur d\'émission pour la combustion de gaz naturel', '0.234', 'kg CO2e/kWh', 'Énergie', 'Gaz', 'ADEME 2024', 'France', '2024', '±5%', 'standard', 'true']
+    ];
+    
+    const csvContent = templateData.map(row => 
+      row.map(field => `"${field}"`).join(',')
+    ).join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'template_emission_factors.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast({
+      title: "Template téléchargé",
+      description: "Le fichier template CSV a été téléchargé avec succès",
+    });
+  };
+
   const resetImport = () => {
     setFile(null);
     setProgress(0);
@@ -156,6 +184,15 @@ export const CSVImporter = () => {
           >
             <Upload className="h-4 w-4" />
             {importing ? "Import en cours..." : "Importer"}
+          </Button>
+          
+          <Button 
+            variant="secondary" 
+            onClick={downloadTemplate}
+            className="flex items-center gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Télécharger Template
           </Button>
           
           {(file || result) && (
@@ -242,10 +279,28 @@ export const CSVImporter = () => {
           </div>
         )}
 
-        <div className="text-sm text-muted-foreground">
-          <div className="font-medium mb-2">Format CSV attendu :</div>
-          <div className="font-mono text-xs bg-muted p-2 rounded">
-            nom,description,fe,unite,secteur,categorie,source,localisation,date,incertitude,plan_tier,is_public
+        <div className="text-sm text-muted-foreground space-y-3">
+          <div>
+            <div className="font-medium mb-2">Format CSV attendu :</div>
+            <div className="font-mono text-xs bg-muted p-2 rounded">
+              nom,description,fe,unite,secteur,categorie,source,localisation,date,incertitude,plan_tier,is_public
+            </div>
+          </div>
+          
+          <div>
+            <div className="font-medium mb-2">Valeurs autorisées pour plan_tier :</div>
+            <div className="text-xs space-y-1">
+              <div><span className="font-mono bg-muted px-1 rounded">standard</span> - Accessible à tous les utilisateurs</div>
+              <div><span className="font-mono bg-muted px-1 rounded">premium</span> - Accessible uniquement aux utilisateurs premium</div>
+            </div>
+          </div>
+          
+          <div>
+            <div className="font-medium mb-2">Valeurs autorisées pour is_public :</div>
+            <div className="text-xs space-y-1">
+              <div><span className="font-mono bg-muted px-1 rounded">true</span> ou <span className="font-mono bg-muted px-1 rounded">1</span> - Données publiques</div>
+              <div><span className="font-mono bg-muted px-1 rounded">false</span> ou <span className="font-mono bg-muted px-1 rounded">0</span> - Données privées</div>
+            </div>
           </div>
         </div>
       </CardContent>

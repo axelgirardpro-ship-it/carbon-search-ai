@@ -34,16 +34,12 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Check if user is supra admin
-    const { data: globalRole } = await supabase
-      .from('global_user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .eq('role', 'supra_admin')
-      .single()
+    // Check if user is supra admin using the correct table and function
+    const { data: supaAdminCheck, error: roleError } = await supabase
+      .rpc('is_supra_admin', { user_uuid: user.id })
 
-    if (!globalRole) {
-      return new Response(JSON.stringify({ error: 'Access denied' }), {
+    if (roleError || !supaAdminCheck) {
+      return new Response(JSON.stringify({ error: 'Access denied - supra admin required' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
@@ -155,7 +151,7 @@ Deno.serve(async (req) => {
               break
             case 'plan_tier':
             case 'tier':
-              record.plan_tier = value || 'freemium'
+              record.plan_tier = value || 'standard'
               break
             case 'is_public':
             case 'public':
@@ -173,7 +169,7 @@ Deno.serve(async (req) => {
 
         // Set default values
         record.is_public = record.is_public ?? true
-        record.plan_tier = record.plan_tier || 'freemium'
+        record.plan_tier = record.plan_tier || 'standard'
 
         // Insert record
         const { error: insertError } = await supabase
