@@ -7,7 +7,7 @@ import { QuotaWidget } from "@/components/ui/QuotaWidget";
 import { EmissionFactor } from "@/types/emission-factor";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
-import { useQuotas } from "@/contexts/QuotaContext";
+import { useQuotas } from "@/contexts/QuotaSubscriptionContext";
 import { useSearchHistory } from "@/hooks/useSearchHistory";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";

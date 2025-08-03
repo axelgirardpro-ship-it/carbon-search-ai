@@ -6,7 +6,7 @@ import { EmissionFactor } from "@/types/emission-factor";
 import { Heart, Plus } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { usePermissions } from "@/hooks/usePermissions";
-import { useQuotas } from "@/contexts/QuotaContext";
+import { useQuotas } from "@/contexts/QuotaSubscriptionContext";
 import { useToast } from "@/hooks/use-toast";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 import { FavoritesFilterPanel, FavoritesFilters } from "@/components/search/FavoritesFilterPanel";

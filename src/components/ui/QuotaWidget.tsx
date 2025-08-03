@@ -2,8 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { useSubscription } from "@/contexts/SubscriptionContext";
-import { useQuotas } from "@/contexts/QuotaContext";
+import { useSubscription, useQuotas } from "@/contexts/QuotaSubscriptionContext";
 import { Link } from "react-router-dom";
 import { Zap, Crown, TrendingUp, AlertTriangle } from "lucide-react";
 

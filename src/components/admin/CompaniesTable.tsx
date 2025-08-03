@@ -29,12 +29,12 @@ export const CompaniesTable = () => {
     try {
       setLoading(true);
       
-      // Fetch companies with owner profile info
+      // Fetch workspaces with owner profile info
       const { data: companiesData, error: companiesError } = await supabase
-        .from('companies')
+        .from('workspaces')
         .select(`
           *,
-          profiles!companies_owner_id_fkey(user_id)
+          profiles!workspaces_owner_id_fkey(user_id)
         `)
         .order('created_at', { ascending: false });
 

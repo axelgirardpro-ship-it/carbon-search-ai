@@ -54,9 +54,9 @@ const Admin = () => {
           .from('profiles')
           .select('*', { count: 'exact', head: true });
 
-        // Count companies
+        // Count workspaces
         const { count: companyCount } = await supabase
-          .from('companies')
+          .from('workspaces')
           .select('*', { count: 'exact', head: true });
 
         // Count search quotas (proxy for active users)

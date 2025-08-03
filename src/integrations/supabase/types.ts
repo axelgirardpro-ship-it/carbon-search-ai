@@ -47,33 +47,6 @@ export type Database = {
         }
         Relationships: []
       }
-      companies: {
-        Row: {
-          created_at: string
-          id: string
-          name: string
-          owner_id: string
-          plan_type: string | null
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          name: string
-          owner_id: string
-          plan_type?: string | null
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          name?: string
-          owner_id?: string
-          plan_type?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
       data_imports: {
         Row: {
           completed_at: string | null
@@ -190,13 +163,6 @@ export type Database = {
           workspace_id?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "datasets_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "datasets_workspace_id_fkey"
             columns: ["workspace_id"]
@@ -521,15 +487,7 @@ export type Database = {
           user_id?: string
           workspace_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_roles_company_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       user_sessions: {
         Row: {
@@ -598,15 +556,7 @@ export type Database = {
           token?: string
           workspace_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "company_invitations_company_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       workspaces: {
         Row: {
