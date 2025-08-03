@@ -69,10 +69,27 @@ export const SearchHistoryTable = () => {
       const { data: searchData, error } = await query;
       if (error) throw error;
 
-      // Get user and company details
+      // Get unique user IDs for batch email fetching
+      const userIds = [...new Set((searchData || []).map(search => search.user_id))];
+      
+      // Fetch emails using admin edge function
+      let userEmailMap: Record<string, string> = {};
+      if (userIds.length > 0) {
+        const { data: emailData, error: emailError } = await supabase.functions.invoke('get-admin-users', {
+          body: { userIds }
+        });
+
+        if (emailError) {
+          console.error('Error fetching user emails:', emailError);
+        } else {
+          userEmailMap = emailData.users;
+        }
+      }
+
+      // Get company details and combine with user emails
       const searchesWithDetails = await Promise.all(
         (searchData || []).map(async (search) => {
-          const { data: userData } = await supabase.auth.admin.getUserById(search.user_id);
+          const userEmail = userEmailMap[search.user_id] || 'Unknown';
           
           const { data: companyData } = await supabase
             .from('companies')
@@ -82,7 +99,7 @@ export const SearchHistoryTable = () => {
 
           return {
             ...search,
-            user_email: userData.user?.email || 'Unknown',
+            user_email: userEmail,
             company_name: companyData?.name || 'Unknown'
           };
         })

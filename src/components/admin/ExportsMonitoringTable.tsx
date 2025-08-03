@@ -34,16 +34,31 @@ export const ExportsMonitoringTable = () => {
 
       if (error) throw error;
 
-      // Get user emails from auth metadata
-      const quotasWithEmails = await Promise.all(
-        (data || []).map(async (quota) => {
-          const { data: userData } = await supabase.auth.admin.getUserById(quota.user_id);
-          return {
-            ...quota,
-            user_email: userData.user?.email || 'Email non disponible'
-          };
-        })
-      );
+      // Get user IDs for batch email fetching
+      const userIds = (data || []).map(quota => quota.user_id);
+      
+      if (userIds.length === 0) {
+        setQuotas([]);
+        return;
+      }
+
+      // Fetch emails using admin edge function
+      const { data: emailData, error: emailError } = await supabase.functions.invoke('get-admin-users', {
+        body: { userIds }
+      });
+
+      if (emailError) {
+        console.error('Error fetching user emails:', emailError);
+        // Fallback to quotas without emails
+        setQuotas((data || []).map(quota => ({ ...quota, user_email: 'Email non disponible' })));
+        return;
+      }
+
+      // Map emails to quotas
+      const quotasWithEmails = (data || []).map(quota => ({
+        ...quota,
+        user_email: emailData.users[quota.user_id] || 'Email non disponible'
+      }));
 
       setQuotas(quotasWithEmails);
     } catch (error) {
