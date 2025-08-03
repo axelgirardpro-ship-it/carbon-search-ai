@@ -275,6 +275,8 @@ const Index = () => {
                         <img src="/lovable-uploads/e9be0482-b48d-476b-8536-b92ea3b88ea5.png" alt="Base Carbone Logo" className="w-full h-full object-contain" />
                       ) : name === "Base Impacts" ? (
                         <img src="/lovable-uploads/8351c94f-afcc-498e-b8fa-73f47451686a.png" alt="Base Impacts Logo" className="w-full h-full object-contain" />
+                      ) : name === "CCF" ? (
+                        <img src="/lovable-uploads/c9bb06bc-2cc4-4420-9704-4c9f16118e97.png" alt="CCF Logo" className="w-full h-full object-contain" />
                       ) : name === "Climate Trace" ? (
                         <img src="/lovable-uploads/47300cd4-f205-4264-a5b0-6f1406b312f8.png" alt="Climate Trace Logo" className="w-full h-full object-contain" />
                       ) : name === "EEA" ? (
