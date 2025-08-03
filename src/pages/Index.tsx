@@ -98,7 +98,7 @@ const Index = () => {
               <img src="/lovable-uploads/2d97e89d-91a3-4143-8432-605a4422e9f0.png" alt="Department for Business, Energy & Industrial Strategy" className="max-h-[50px]" />
             </div>
             <div className="flex flex-col items-center">
-              <div className="text-[#6C5CE7] text-lg font-medium">Nouveau Logo 2</div>
+              <img src="/lovable-uploads/01ca909f-ef8b-4b32-aea1-50f98ae9e4a6.png" alt="eco" className="max-h-[50px]" />
             </div>
           </div>
         </div>
