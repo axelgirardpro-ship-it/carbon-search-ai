@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Upload, File, CheckCircle, XCircle, AlertTriangle, Download, FileDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { usePermissions } from "@/hooks/usePermissions";
 
 interface ImportResult {
   importId: string;
@@ -27,6 +28,9 @@ export const CSVImporter = () => {
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<ImportResult | null>(null);
   const { toast } = useToast();
+  const { canImportData, userRole, getRoleLabel } = usePermissions();
+
+  console.log('CSVImporter - User role:', userRole?.role, 'Can import:', canImportData());
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -230,6 +234,37 @@ export const CSVImporter = () => {
     }
   };
 
+  // Vérification des permissions
+  if (!canImportData()) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Upload className="h-5 w-5" />
+            Import / Export de Données CSV
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Alert>
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              <div className="space-y-2">
+                <div className="font-medium">Accès restreint</div>
+                <div>Vous n'avez pas les permissions nécessaires pour importer des données.</div>
+                <div className="text-sm text-muted-foreground">
+                  Votre rôle actuel : <span className="font-medium">{getRoleLabel()}</span>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Rôles autorisés : Administrateur, Gestionnaire, Supra Administrateur
+                </div>
+              </div>
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -239,6 +274,20 @@ export const CSVImporter = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Étapes claires pour l'utilisateur */}
+        <div className="bg-muted/50 p-4 rounded-lg space-y-2">
+          <div className="font-medium text-sm">Guide d'utilisation :</div>
+          <div className="text-sm text-muted-foreground space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-medium">1</span>
+              Sélectionnez un fichier CSV ci-dessous
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 bg-muted border-2 border-muted-foreground rounded-full flex items-center justify-center text-xs font-medium">2</span>
+              Cliquez sur "Importer" (le bouton devient actif après sélection)
+            </div>
+          </div>
+        </div>
         <div className="space-y-2">
           <Label htmlFor="csv-file">Fichier CSV</Label>
           <Input
@@ -252,6 +301,11 @@ export const CSVImporter = () => {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <File className="h-4 w-4" />
               {file.name} ({(file.size / 1024).toFixed(1)} KB)
+            </div>
+          )}
+          {!file && (
+            <div className="text-sm text-muted-foreground">
+              ⚠️ Veuillez d'abord sélectionner un fichier CSV pour activer le bouton d'import
             </div>
           )}
         </div>
@@ -282,6 +336,7 @@ export const CSVImporter = () => {
             onClick={handleImport} 
             disabled={!file || importing || exporting}
             className="flex items-center gap-2"
+            title={!file ? "Sélectionnez d'abord un fichier CSV" : ""}
           >
             <Upload className="h-4 w-4" />
             {importing ? "Import en cours..." : "Importer"}
