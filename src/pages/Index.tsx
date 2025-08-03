@@ -263,7 +263,7 @@ const Index = () => {
             </TabsList>
             <TabsContent value="standards">
               <div className="grid grid-cols-7 gap-8">
-                {["AIB", "Agribalyse", "BEIS", "Base Carbone", "Base Impacts", "CCF", "Climate Trace", "EEA", "EPA", "Exiobase", "EcoInfo", "Ecobalyse", "Electricity Maps", "Ember", "GESPoint5", "GLEC", "Kering", "OMEGA TP", "Open CEDA", "PCAF"].map((name, index) => <div key={index} className="flex flex-col items-center space-y-2">
+                {["AIB", "Agribalyse", "BEIS", "Base Carbone", "Base Impacts", "CCF", "Climate Trace", "EEA", "EPA", "Exiobase", "EcoInvent", "Ecobalyse", "Electricity Maps", "Ember", "GESPoint5", "GLEC", "Kering", "OMEGA TP", "Open CEDA", "PCAF"].map((name, index) => <div key={index} className="flex flex-col items-center space-y-2">
                     <div className="w-16 h-16 rounded-lg flex items-center justify-center">
                       {name === "AIB" ? (
                         <img src="/lovable-uploads/04c097ec-c73b-4fb8-8788-7db8dce6aae6.png" alt="AIB Logo" className="w-full h-full object-contain" />
@@ -285,8 +285,8 @@ const Index = () => {
                         <img src="/lovable-uploads/75c9eac2-554f-4bb0-9719-08a698c80e1d.png" alt="US EPA Logo" className="w-full h-full object-contain" />
                       ) : name === "Exiobase" ? (
                         <img src="/lovable-uploads/373cff1a-5089-4167-b40a-38ff4d50cc36.png" alt="Exiobase Logo" className="w-full h-full object-contain" />
-                      ) : name === "EcoInfo" ? (
-                        <img src="/lovable-uploads/5cc1caa1-f312-4760-849c-0b4ec3ab5f76.png" alt="EcoInfo Logo" className="w-full h-full object-contain" />
+                      ) : name === "EcoInvent" ? (
+                        <img src="/lovable-uploads/5cc1caa1-f312-4760-849c-0b4ec3ab5f76.png" alt="EcoInvent Logo" className="w-full h-full object-contain" />
                       ) : name === "Ecobalyse" ? (
                         <img src="/lovable-uploads/f775ed4f-912f-41cf-9ade-08338aadf665.png" alt="Ecobalyse Logo" className="w-full h-full object-contain" />
                       ) : name === "Electricity Maps" ? (
