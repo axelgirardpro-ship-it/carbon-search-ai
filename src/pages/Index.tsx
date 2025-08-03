@@ -172,25 +172,79 @@ const Index = () => {
                 <img src="/lovable-uploads/71d74bc4-61b0-4e95-befc-12b9508a15e4.png" alt="Interface base de données" className="w-full h-auto" />
               </div>
             </TabsContent>
-            <TabsContent value="recherche">
-              <div className="text-center py-20">
-                <h3 className="text-2xl font-semibold text-[#2D3436] mb-4">
-                  Moteur fluide et simple d'utilisation
+            <TabsContent value="recherche" className="grid lg:grid-cols-2 gap-12 items-start">
+              <div className="space-y-6">
+                <h3 className="font-bold text-indigo-950 text-3xl">
+                  Moteur fluide et simple<br />
+                  d'utilisation
                 </h3>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Recherche intelligente</h4>
+                    <p className="text-indigo-950">Recherchez par mots-clés, codes, catégories ou filtres<br />avancés pour trouver rapidement vos FE.</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Interface intuitive</h4>
+                    <p className="text-indigo-950">Navigation simple et rapide avec des suggestions<br />automatiques et tri personnalisable.</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Résultats précis</h4>
+                    <p className="text-indigo-950">Algorithme optimisé pour vous proposer les facteurs<br />d'émission les plus pertinents selon vos critères.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg p-6">
+                <img src="/lovable-uploads/71d74bc4-61b0-4e95-befc-12b9508a15e4.png" alt="Interface de recherche" className="w-full h-auto" />
               </div>
             </TabsContent>
-            <TabsContent value="personnalisation">
-              <div className="text-center py-20">
-                <h3 className="text-2xl font-semibold text-[#2D3436] mb-4">
-                  Personnalisez le moteur
+            <TabsContent value="personnalisation" className="grid lg:grid-cols-2 gap-12 items-start">
+              <div className="space-y-6">
+                <h3 className="font-bold text-indigo-950 text-3xl">
+                  Personnalisez le moteur<br />
+                  selon vos besoins
                 </h3>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Favoris et collections</h4>
+                    <p className="text-indigo-950">Sauvegardez vos FE préférés et créez des collections<br />thématiques pour un accès rapide.</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Filtres personnalisés</h4>
+                    <p className="text-indigo-950">Configurez des filtres selon vos secteurs d'activité<br />et vos besoins métier spécifiques.</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Données sur-mesure</h4>
+                    <p className="text-indigo-950">Intégrez vos propres FE spécifiques et créez votre<br />base de données personnalisée.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg p-6">
+                <img src="/lovable-uploads/71d74bc4-61b0-4e95-befc-12b9508a15e4.png" alt="Interface de personnalisation" className="w-full h-auto" />
               </div>
             </TabsContent>
-            <TabsContent value="plus-loin">
-              <div className="text-center py-20">
-                <h3 className="text-2xl font-semibold text-[#2D3436] mb-4">
-                  Allez plus loin que la recherche
+            <TabsContent value="plus-loin" className="grid lg:grid-cols-2 gap-12 items-start">
+              <div className="space-y-6">
+                <h3 className="font-bold text-indigo-950 text-3xl">
+                  Allez plus loin que<br />
+                  la recherche
                 </h3>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold mb-2 text-indigo-950">API et intégrations</h4>
+                    <p className="text-indigo-950">Connectez directement nos données à vos outils<br />via notre API REST performante.</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Export et analyse</h4>
+                    <p className="text-indigo-950">Exportez vos données aux formats CSV, Excel<br />pour vos analyses et rapports.</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Support expert</h4>
+                    <p className="text-indigo-950">Bénéficiez de l'accompagnement de nos experts<br />carbone pour optimiser vos calculs.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-lg p-6">
+                <img src="/lovable-uploads/71d74bc4-61b0-4e95-befc-12b9508a15e4.png" alt="Interface avancée" className="w-full h-auto" />
               </div>
             </TabsContent>
           </Tabs>
