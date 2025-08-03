@@ -40,10 +40,42 @@ serve(async (req) => {
     logStep("User authenticated", { userId: user.id, email: user.email });
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
+    
+    // Check existing subscriber data first
+    const { data: existingSubscriber } = await supabaseClient
+      .from("subscribers")
+      .select("*")
+      .eq("user_id", user.id)
+      .single();
+    
+    // If user is manually set as premium, respect that
+    if (existingSubscriber?.plan_type === 'premium' && existingSubscriber?.subscribed) {
+      logStep("User has manual premium subscription", { 
+        email: user.email, 
+        planType: existingSubscriber.plan_type 
+      });
+      
+      return new Response(JSON.stringify({
+        subscribed: true,
+        subscription_tier: 'Premium',
+        subscription_end: existingSubscriber.subscription_end,
+        plan_type: 'premium',
+        trial_active: false
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
+    
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     
     if (customers.data.length === 0) {
       logStep("No customer found, updating unsubscribed state");
+      
+      // Check trial status before setting to freemium
+      const trialActive = existingSubscriber?.trial_end ? 
+        new Date(existingSubscriber.trial_end) > new Date() : false;
+      
       await supabaseClient.from("subscribers").upsert({
         email: user.email,
         user_id: user.id,
@@ -58,7 +90,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ 
         subscribed: false, 
         plan_type: 'freemium',
-        trial_active: false 
+        trial_active: trialActive 
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
