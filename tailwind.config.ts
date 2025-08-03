@@ -71,7 +71,8 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				'indigo-950': 'hsl(231 57% 15%)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -101,7 +102,8 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out'
 			},
 			fontFamily: {
-				'montserrat': ['Montserrat', 'sans-serif']
+				'montserrat': ['Montserrat', 'sans-serif'],
+				'sans': ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif']
 			}
 		}
 	},
