@@ -105,9 +105,7 @@ const Index = () => {
       </section>
 
       {/* Interactive Demo Section */}
-      <section className="py-20 px-4" style={{
-        backgroundColor: '#d7caf5'
-      }}>
+      <section className="py-20 px-4">
         <div className="container mx-auto text-center">
           <h2 className="text-4xl font-bold mb-12 text-indigo-950">
             Découvrez la puissance<br />
@@ -134,9 +132,11 @@ const Index = () => {
       </section>
 
       {/* Features Tabs Section */}
-      <section className="py-20 px-4 bg-[#F8F9FA]">
+      <section className="py-20 px-4" style={{
+        backgroundColor: '#d7caf5'
+      }}>
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-[#2D3436] text-center mb-12">
+          <h2 className="text-4xl font-bold text-indigo-950 text-center mb-12">
             Un moteur de recherche<br />
             puissant et personnalisable
           </h2>
@@ -149,22 +149,22 @@ const Index = () => {
             </TabsList>
             <TabsContent value="donnees" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-[#2D3436]">
+                <h3 className="text-2xl font-bold text-indigo-950">
                   Le guichet unique de vos<br />
                   données carbone
                 </h3>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-semibold mb-2">Une donnée structurée</h4>
-                    <p className="text-[#636E72]">Une structuration unique et homogène de plus de 20 bases de<br />données de références internationales.</p>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Une donnée structurée</h4>
+                    <p className="text-indigo-950">Une structuration unique et homogène de plus de 20 bases de<br />données de références internationales.</p>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-2">Une donnée à jour</h4>
-                    <p className="text-[#636E72]">Une mise à jour en continu des bases pour une garantie de<br />qualité des FE.</p>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Une donnée à jour</h4>
+                    <p className="text-indigo-950">Une mise à jour en continu des bases pour une garantie de<br />qualité des FE.</p>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-2">+ 250K FE à disposition</h4>
-                    <p className="text-[#636E72]">Plus de 250k FE génériques et spécifiques en cumulé,<br />disponibles au sein d'une structure commune.</p>
+                    <h4 className="font-semibold mb-2 text-indigo-950">+ 250K FE à disposition</h4>
+                    <p className="text-indigo-950">Plus de 250k FE génériques et spécifiques en cumulé,<br />disponibles au sein d'une structure commune.</p>
                   </div>
                 </div>
               </div>
