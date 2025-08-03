@@ -132,14 +132,14 @@ const Index = () => {
       </section>
 
       {/* Features Tabs Section */}
-      <section className="py-20 px-4 bg-[#d7caf5]">
+      <section className="py-20 px-4 bg-white">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-indigo-950 text-center mb-12">
             Un moteur de recherche<br />
             puissant et personnalisable
           </h2>
           <Tabs defaultValue="donnees" className="max-w-6xl mx-auto">
-            <TabsList className="grid w-full grid-cols-4 mb-12 bg-white rounded-full">
+            <TabsList className="grid w-full grid-cols-4 mb-12 bg-[#d7caf5] rounded-full items-center">
               <TabsTrigger value="donnees" className="rounded-full">Données</TabsTrigger>
               <TabsTrigger value="recherche" className="rounded-full">Recherche</TabsTrigger>
               <TabsTrigger value="personnalisation" className="rounded-full">Personnalisation</TabsTrigger>
