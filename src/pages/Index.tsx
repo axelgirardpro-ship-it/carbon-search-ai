@@ -62,7 +62,7 @@ const Index = () => {
               <img src="/lovable-uploads/3fdbfe68-8e5e-4c44-8ac1-edd24a2d8fac.png" alt="Empreinte" className="max-h-[50px]" />
             </div>
             <div className="flex flex-col items-center">
-              <div className="text-[#6C5CE7] text-lg font-medium">Ecobalyse</div>
+              <img src="/lovable-uploads/ac4b2170-676b-424b-906d-7f65f939022c.png" alt="Ecobalyse" className="max-h-[50px]" />
             </div>
             <div className="flex flex-col items-center">
               <div className="text-[#6C5CE7] text-lg font-medium">exiobase</div>
