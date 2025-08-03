@@ -40,9 +40,11 @@ export const EmissionFactorAccessManager = () => {
         .order('source');
 
       console.log('📊 EmissionFactorAccessManager: Raw data from database:', data);
-      console.log('❌ EmissionFactorAccessManager: Error:', error);
-
-      if (error) throw error;
+      
+      if (error) {
+        console.error('❌ EmissionFactorAccessManager: Database error:', error);
+        throw error;
+      }
 
       // Group by source and calculate counts
       const sourceMap = new Map<string, SourceAccessData>();
@@ -85,7 +87,7 @@ export const EmissionFactorAccessManager = () => {
       
       setSourceData(finalData);
     } catch (error) {
-      console.error('Error fetching source data:', error);
+      console.error('💥 EmissionFactorAccessManager: Error fetching source data:', error);
       toast({
         title: "Erreur",
         description: "Impossible de charger les données des sources",
