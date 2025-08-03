@@ -68,7 +68,7 @@ const Index = () => {
               <img src="/lovable-uploads/f51cec17-9b6f-417a-919b-c29f1a77ac1a.png" alt="exiobase" className="max-h-[50px]" />
             </div>
             <div className="flex flex-col items-center">
-              <div className="text-[#6C5CE7] text-lg font-medium">inies</div>
+              <img src="/lovable-uploads/9d73d9ce-baf8-4a47-bdd7-bcbcc41e709d.png" alt="inies" className="max-h-[50px]" />
             </div>
             <div className="flex flex-col items-center">
               <div className="text-[#6C5CE7] text-lg font-medium">AGRI BALYSE</div>
