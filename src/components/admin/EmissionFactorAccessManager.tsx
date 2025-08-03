@@ -17,6 +17,8 @@ interface SourceAccessData {
 }
 
 export const EmissionFactorAccessManager = () => {
+  console.log('🚀 EmissionFactorAccessManager: Component mounting...');
+  
   const [sourceData, setSourceData] = useState<SourceAccessData[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
@@ -28,6 +30,7 @@ export const EmissionFactorAccessManager = () => {
 
   const fetchSourceData = async () => {
     try {
+      console.log('🔄 EmissionFactorAccessManager: Starting to fetch source data...');
       setLoading(true);
       
       // Get all sources with their plan tier counts
@@ -35,6 +38,9 @@ export const EmissionFactorAccessManager = () => {
         .from('emission_factors')
         .select('source, plan_tier')
         .order('source');
+
+      console.log('📊 EmissionFactorAccessManager: Raw data from database:', data);
+      console.log('❌ EmissionFactorAccessManager: Error:', error);
 
       if (error) throw error;
 
@@ -72,7 +78,12 @@ export const EmissionFactorAccessManager = () => {
         }
       });
 
-      setSourceData(Array.from(sourceMap.values()).sort((a, b) => a.source.localeCompare(b.source)));
+      console.log('🔧 EmissionFactorAccessManager: Processed sourceMap:', Array.from(sourceMap.entries()));
+      
+      const finalData = Array.from(sourceMap.values()).sort((a, b) => a.source.localeCompare(b.source));
+      console.log('✅ EmissionFactorAccessManager: Final data to display:', finalData);
+      
+      setSourceData(finalData);
     } catch (error) {
       console.error('Error fetching source data:', error);
       toast({
