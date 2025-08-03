@@ -60,7 +60,7 @@ export const SearchBar = ({
               <X className="h-4 w-4" />
             </button>}
         </div>
-        <Button onClick={onSearch} className="ml-2 h-12 px-6 bg-gray-50">
+        <Button onClick={onSearch} className="ml-2 h-12 px-6 bg-gray-50 text-violet-950">
           RECHERCHER
         </Button>
       </div>
