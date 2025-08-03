@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
 import { SearchBar } from "@/components/search/SearchBar";
 import { FilterPanel, Filters } from "@/components/search/FilterPanel";
@@ -37,10 +37,20 @@ const Dashboard = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  
+  // Refs pour éviter les boucles infinies
+  const canSearchRef = useRef(canSearch);
+  const incrementSearchRef = useRef(incrementSearch);
+  
+  // Mettre à jour les refs quand les valeurs changent
+  useEffect(() => {
+    canSearchRef.current = canSearch;
+    incrementSearchRef.current = incrementSearch;
+  }, [canSearch, incrementSearch]);
 
   const performSearch = useCallback(async (query: string) => {
-    // Vérifier si l'utilisateur peut effectuer une recherche
-    if (!canSearch) {
+    // Vérifier si l'utilisateur peut effectuer une recherche (utiliser la ref)
+    if (!canSearchRef.current) {
       toast.error("Limite de recherche atteinte. Passez à un plan payant pour continuer.");
       return;
     }
@@ -49,8 +59,8 @@ const Dashboard = () => {
     setHasSearched(true);
     
     try {
-      // Incrémenter le compteur de recherches
-      await incrementSearch();
+      // Incrémenter le compteur de recherches SEULEMENT si on va faire la recherche (utiliser la ref)
+      await incrementSearchRef.current();
       let supabaseQuery = supabase
         .from('emission_factors')
         .select('*');
@@ -119,7 +129,7 @@ const Dashboard = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [filters, isFavorite, currentWorkspace, canSearch, incrementSearch]);
+  }, [filters, isFavorite, currentWorkspace]); // Enlever canSearch et incrementSearch des dépendances
 
   const handleSearch = () => {
     performSearch(searchQuery);
@@ -138,7 +148,7 @@ const Dashboard = () => {
       setResults([]);
       setHasSearched(false);
     }
-  }, [searchQuery, performSearch, hasSearched]);
+  }, [searchQuery, performSearch, hasSearched]); // Remettre performSearch dans les dépendances maintenant qu'il est stable
 
   const handleFilterChange = (key: keyof Filters, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
