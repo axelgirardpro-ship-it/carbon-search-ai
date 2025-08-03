@@ -11,9 +11,6 @@ import { useToast } from "@/hooks/use-toast";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 import { FavoritesFilterPanel, FavoritesFilters } from "@/components/search/FavoritesFilterPanel";
 
-// Debug logging for favorites
-console.log('🚀 Favorites page loaded');
-
 const Favorites = () => {
   const { favorites, loading, removeFromFavorites, addToFavorites } = useFavorites();
   const { canExportData } = usePermissions();
@@ -80,13 +77,6 @@ const Favorites = () => {
     [...new Set(favorites.map(f => f.date))].filter(Boolean).sort().reverse(), 
     [favorites]
   );
-
-  console.log('🚀 Favorites component render:', { 
-    favoritesCount: favorites.length, 
-    filteredCount: filteredFavorites.length,
-    loading, 
-    filters
-  });
 
   const handleItemSelect = (id: string) => {
     setSelectedItems(prev => 

@@ -184,14 +184,10 @@ const Dashboard = () => {
     if (!item) return;
 
     try {
-      console.log('🚀 Dashboard: Toggling favorite for item:', item);
-      
       if (item.isFavorite) {
         await removeFromFavorites(id);
-        console.log('🚀 Dashboard: Removed from favorites');
       } else {
         await addToFavorites(item);
-        console.log('🚀 Dashboard: Added to favorites');
       }
       
       // Update local state after successful DB operation

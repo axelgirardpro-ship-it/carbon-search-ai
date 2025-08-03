@@ -5,9 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
-import { QuotaProvider } from "@/contexts/QuotaContext";
+import { QuotaSubscriptionProvider } from "@/contexts/QuotaSubscriptionContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
-import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -71,10 +70,9 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <WorkspaceProvider>
-        <QuotaProvider>
-          <SubscriptionProvider>
-            <FavoritesProvider>
-              <TooltipProvider>
+        <QuotaSubscriptionProvider>
+          <FavoritesProvider>
+            <TooltipProvider>
                 <Toaster />
                 <Sonner />
                 <BrowserRouter>
@@ -95,10 +93,9 @@ const App = () => (
               </BrowserRouter>
             </TooltipProvider>
           </FavoritesProvider>
-        </SubscriptionProvider>
-      </QuotaProvider>
-    </WorkspaceProvider>
-  </AuthProvider>
+        </QuotaSubscriptionProvider>
+      </WorkspaceProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

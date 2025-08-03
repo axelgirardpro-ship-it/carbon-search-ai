@@ -39,18 +39,13 @@ export const SubscriptionProvider = ({ children }: SubscriptionProviderProps) =>
 
   const refreshSubscription = async () => {
     if (!user) {
-      console.log('🚀 SubscriptionContext: No user, clearing subscription');
       setSubscription(null);
       return;
     }
 
     try {
       setLoading(true);
-      console.log('🚀 SubscriptionContext: Checking subscription for user:', user.id);
-      
       const { data, error } = await supabase.functions.invoke('check-subscription');
-
-      console.log('🚀 SubscriptionContext: Subscription check result:', { data, error });
 
       if (error) throw error;
 
@@ -73,8 +68,6 @@ export const SubscriptionProvider = ({ children }: SubscriptionProviderProps) =>
     if (!user) throw new Error('User not authenticated');
 
     try {
-      console.log('🚀 SubscriptionContext: Creating checkout session for plan:', plan);
-      
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: { plan }
       });
@@ -95,8 +88,6 @@ export const SubscriptionProvider = ({ children }: SubscriptionProviderProps) =>
     if (!user) throw new Error('User not authenticated');
 
     try {
-      console.log('🚀 SubscriptionContext: Opening customer portal');
-      
       const { data, error } = await supabase.functions.invoke('customer-portal');
 
       if (error) throw error;

@@ -98,8 +98,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         
         globalRoles = globalRoleData || [];
       } catch (error) {
-        // Error fetching global roles
-        console.log('global_user_roles table does not exist, which is expected after migration');
+        // Error fetching global roles - expected after migration
       }
 
       // Combine all roles
@@ -274,7 +273,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log('Auth state change:', event, session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -302,7 +300,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('Initial session check:', session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);

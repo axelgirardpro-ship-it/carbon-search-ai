@@ -49,8 +49,6 @@ const Admin = () => {
       }
 
       try {
-        console.log('🚀 Admin: Loading admin stats...');
-        
         // Count users
         const { count: userCount } = await supabase
           .from('profiles')
