@@ -340,30 +340,30 @@ const Index = () => {
       </section>
 
       {/* Expert Section */}
-      <section className="py-20 px-4 bg-[#F8F9FA]">
+      <section className="py-20 px-4 bg-white">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
-              <img src="/lovable-uploads/45983903-6b93-459c-ac61-aa9cbb61ccae.png" alt="Guillaume - Expert" className="w-80 h-80 object-cover rounded-lg" />
+              <img src="/lovable-uploads/aa4e0a75-7d42-444e-8f29-bd985c64a491.png" alt="Expert" className="w-80 h-80 object-cover rounded-lg" />
             </div>
             <div className="space-y-6">
-              <h2 className="text-3xl font-bold text-[#2D3436]">
+              <h2 className="text-3xl font-bold text-indigo-950">
                 Une base de données<br />
                 structurée et enrichie par nos<br />
                 experts
               </h2>
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Des bases de données nettoyées et structurées</h3>
-                  <p className="text-[#636E72]">Nos experts nettoient et restructurent l'ensemble des bases de données intégrées afin de disposer d'un format unique de données.</p>
+                  <h3 className="font-semibold text-lg mb-2 text-indigo-950">Des bases de données nettoyées et structurées</h3>
+                  <p className="text-indigo-950">Nos experts nettoient et restructurent l'ensemble des bases de données intégrées afin de disposer d'un format unique de données.</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Enrichissement des bases de données</h3>
-                  <p className="text-[#636E72]">Vérification des facteurs par poste d'émissions, correction des effets de l'inflation, traduction des métadonnées...</p>
+                  <h3 className="font-semibold text-lg mb-2 text-indigo-950">Enrichissement des bases de données</h3>
+                  <p className="text-indigo-950">Vérification des facteurs par poste d'émissions, correction des effets de l'inflation, traduction des métadonnées...</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Versionnage</h3>
-                  <p className="text-[#636E72]">Profitez d'un versionnage d'un maintien en temps réel de la base au gré des mises à jour des différentes sources de données.</p>
+                  <h3 className="font-semibold text-lg mb-2 text-indigo-950">Versionnage</h3>
+                  <p className="text-indigo-950">Profitez d'un versionnage d'un maintien en temps réel de la base au gré des mises à jour des différentes sources de données.</p>
                 </div>
               </div>
             </div>
