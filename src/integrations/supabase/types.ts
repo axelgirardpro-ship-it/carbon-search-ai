@@ -401,6 +401,7 @@ export type Database = {
           position: string | null
           updated_at: string
           user_id: string
+          workspace_id: string
         }
         Insert: {
           billing_address?: string | null
@@ -420,6 +421,7 @@ export type Database = {
           position?: string | null
           updated_at?: string
           user_id: string
+          workspace_id: string
         }
         Update: {
           billing_address?: string | null
@@ -439,8 +441,17 @@ export type Database = {
           position?: string | null
           updated_at?: string
           user_id?: string
+          workspace_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_profiles_workspace"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       search_history: {
         Row: {
