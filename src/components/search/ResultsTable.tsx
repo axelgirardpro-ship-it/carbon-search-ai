@@ -122,7 +122,12 @@ export const ResultsTable = ({
                     />
                   </TableCell>
                   <TableCell className="font-medium max-w-xs">
-                    <div className="truncate">{item.nom}</div>
+                    <div className="flex items-center gap-2">
+                      <div className="truncate">{item.nom}</div>
+                      {(item as any).source_type === 'private' && (
+                        <Badge variant="secondary" className="text-xs">Import</Badge>
+                      )}
+                    </div>
                     {item.description && (
                       <div className="text-xs text-muted-foreground truncate">
                         {item.description}

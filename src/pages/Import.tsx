@@ -161,6 +161,7 @@ const Import = () => {
         incertitude: row.incertitude || row.uncertainty || '',
         plan_tier: 'freemium', // Par défaut
         is_public: false,
+        source_type: 'private',
       }));
 
       const { data: insertedFactors, error: insertError } = await supabase

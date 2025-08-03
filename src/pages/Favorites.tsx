@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Navbar } from "@/components/ui/navbar";
 import { ResultsTable } from "@/components/search/ResultsTable";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { usePermissions } from "@/hooks/usePermissions";
 import { useQuotas } from "@/contexts/QuotaContext";
 import { useToast } from "@/hooks/use-toast";
 import { RoleGuard } from "@/components/ui/RoleGuard";
+import { FavoritesFilterPanel, FavoritesFilters } from "@/components/search/FavoritesFilterPanel";
 
 // Debug logging for favorites
 console.log('🚀 Favorites page loaded');
@@ -19,11 +20,72 @@ const Favorites = () => {
   const { incrementExport, canExport } = useQuotas();
   const { toast } = useToast();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [filters, setFilters] = useState<FavoritesFilters>({
+    search: '',
+    source: '',
+    localisation: '',
+    date: '',
+    importType: 'all'
+  });
+
+  // Filter favorites based on filters
+  const filteredFavorites = useMemo(() => {
+    return favorites.filter(favorite => {
+      // Search filter
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        const matchesSearch = favorite.nom.toLowerCase().includes(searchLower) ||
+          (favorite.description && favorite.description.toLowerCase().includes(searchLower));
+        if (!matchesSearch) return false;
+      }
+
+      // Source filter
+      if (filters.source && favorite.source !== filters.source) {
+        return false;
+      }
+
+      // Location filter
+      if (filters.localisation && favorite.localisation !== filters.localisation) {
+        return false;
+      }
+
+      // Date filter
+      if (filters.date && favorite.date !== filters.date) {
+        return false;
+      }
+
+      // Import type filter
+      if (filters.importType !== 'all') {
+        const isImported = (favorite as any).source_type === 'private';
+        if (filters.importType === 'imported' && !isImported) return false;
+        if (filters.importType === 'not_imported' && isImported) return false;
+      }
+
+      return true;
+    });
+  }, [favorites, filters]);
+
+  // Get unique values for filter options
+  const availableSources = useMemo(() => 
+    [...new Set(favorites.map(f => f.source))].filter(Boolean).sort(), 
+    [favorites]
+  );
+  
+  const availableLocations = useMemo(() => 
+    [...new Set(favorites.map(f => f.localisation))].filter(Boolean).sort(), 
+    [favorites]
+  );
+  
+  const availableDates = useMemo(() => 
+    [...new Set(favorites.map(f => f.date))].filter(Boolean).sort().reverse(), 
+    [favorites]
+  );
 
   console.log('🚀 Favorites component render:', { 
     favoritesCount: favorites.length, 
+    filteredCount: filteredFavorites.length,
     loading, 
-    favorites: favorites.map(f => ({ id: f.id, nom: f.nom }))
+    filters
   });
 
   const handleItemSelect = (id: string) => {
@@ -36,7 +98,7 @@ const Favorites = () => {
 
   const handleSelectAll = () => {
     setSelectedItems(
-      selectedItems.length === favorites.length ? [] : favorites.map(f => f.id)
+      selectedItems.length === filteredFavorites.length ? [] : filteredFavorites.map(f => f.id)
     );
   };
 
@@ -96,7 +158,7 @@ const Favorites = () => {
     try {
       await incrementExport();
       
-      const selectedFavorites = favorites.filter(f => selectedItems.includes(f.id));
+      const selectedFavorites = filteredFavorites.filter(f => selectedItems.includes(f.id));
       const csvContent = [
         "Nom,FE,Unité,Source,Localisation,Date",
         ...selectedFavorites.map(f => `"${f.nom}",${f.fe},"${f.unite}","${f.source}","${f.localisation}","${f.date}"`)
@@ -145,6 +207,13 @@ const Favorites = () => {
           </div>
         ) : favorites.length > 0 ? (
           <div>
+            <FavoritesFilterPanel
+              filters={filters}
+              onFiltersChange={setFilters}
+              availableSources={availableSources}
+              availableLocations={availableLocations}
+              availableDates={availableDates}
+            />
             <div className="mb-4 flex gap-2">
               <Button 
                 onClick={handleAddToFavorites}
@@ -164,7 +233,7 @@ const Favorites = () => {
               </RoleGuard>
             </div>
             <ResultsTable
-              results={favorites}
+              results={filteredFavorites}
               selectedItems={selectedItems}
               onItemSelect={handleItemSelect}
               onSelectAll={handleSelectAll}

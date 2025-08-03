@@ -50,7 +50,7 @@ export const CompaniesTable = () => {
           const { count } = await supabase
             .from('user_roles')
             .select('*', { count: 'exact', head: true })
-            .eq('company_id', company.id);
+            .eq('workspace_id', company.id);
 
           return {
             ...company,

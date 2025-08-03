@@ -8,7 +8,7 @@ export const usePermissions = () => {
   };
 
   const canImportData = () => {
-    return userRole?.role === 'admin' || userRole?.role === 'gestionnaire';
+    return userRole?.role === 'admin' || userRole?.role === 'gestionnaire' || userRole?.role === 'supra_admin';
   };
 
   const canExportData = () => {
