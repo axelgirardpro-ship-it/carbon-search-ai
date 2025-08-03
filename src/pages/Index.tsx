@@ -273,6 +273,8 @@ const Index = () => {
                         <img src="/lovable-uploads/6a36c45c-748d-4f7b-83c3-06ab2651649f.png" alt="BEIS Logo" className="w-full h-full object-contain" />
                       ) : name === "Base Carbone" ? (
                         <img src="/lovable-uploads/e9be0482-b48d-476b-8536-b92ea3b88ea5.png" alt="Base Carbone Logo" className="w-full h-full object-contain" />
+                      ) : name === "Base Impacts" ? (
+                        <img src="/lovable-uploads/c59c6b00-a315-4d39-864a-9bb38a8834b0.png" alt="Base Impacts Logo" className="w-full h-full object-contain" />
                       ) : (
                         <div className="w-16 h-16 bg-[#6C5CE7]/10 rounded-lg flex items-center justify-center">
                           <div className="w-8 h-8 bg-[#6C5CE7] rounded"></div>
