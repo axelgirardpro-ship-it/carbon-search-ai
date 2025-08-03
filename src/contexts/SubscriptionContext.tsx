@@ -7,6 +7,7 @@ interface SubscriptionData {
   subscription_tier: string | null;
   subscription_end: string | null;
   plan_type: string;
+  trial_active?: boolean;
 }
 
 interface SubscriptionContextType {
