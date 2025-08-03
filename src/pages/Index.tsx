@@ -149,7 +149,7 @@ const Index = () => {
             </TabsList>
             <TabsContent value="donnees" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-indigo-950">
+                <h3 className="font-bold text-indigo-950 text-3xl">
                   Le guichet unique de vos<br />
                   données carbone
                 </h3>
