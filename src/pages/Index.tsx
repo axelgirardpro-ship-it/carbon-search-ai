@@ -293,6 +293,16 @@ const Index = () => {
                         <img src="/lovable-uploads/88e14343-4589-4e34-b420-395130de1641.png" alt="Ember Logo" className="w-full h-full object-contain" />
                       ) : name === "GESPoint5" ? (
                         <img src="/lovable-uploads/8de84824-fb1b-441b-a7c2-50b92b4072e2.png" alt="1point5 Logo" className="w-full h-full object-contain" />
+                      ) : name === "GLEC" ? (
+                        <img src="/lovable-uploads/a5f3dea0-840a-4eed-b0ce-58ef94a75d67.png" alt="GLEC Logo" className="w-full h-full object-contain" />
+                      ) : name === "Kering" ? (
+                        <img src="/lovable-uploads/faa38581-8c17-443c-b8de-77a4ffc6c72e.png" alt="Kering Logo" className="w-full h-full object-contain" />
+                      ) : name === "OMEGA TP" ? (
+                        <img src="/lovable-uploads/4cce460f-a743-4cdf-9fdf-215ba86522d8.png" alt="OMEGA TP Logo" className="w-full h-full object-contain" />
+                      ) : name === "Open CEDA" ? (
+                        <img src="/lovable-uploads/6bd2c0d0-f9d1-4f7d-853f-cc2a7932bff5.png" alt="Open CEDA Logo" className="w-full h-full object-contain" />
+                      ) : name === "PCAF" ? (
+                        <img src="/lovable-uploads/b5978785-2cff-49c0-996a-225457820050.png" alt="PCAF Logo" className="w-full h-full object-contain" />
                       ) : (
                         <div className="w-16 h-16 bg-[#6C5CE7]/10 rounded-lg flex items-center justify-center">
                           <div className="w-8 h-8 bg-[#6C5CE7] rounded"></div>
