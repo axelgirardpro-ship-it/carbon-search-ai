@@ -30,28 +30,40 @@ export const SessionsTable = () => {
     try {
       setLoading(true);
       
-        // Get sessions
-        const { data, error } = await supabase
-          .from('user_sessions')
-          .select('*')
-          .order('last_activity', { ascending: false });
+      // Get sessions
+      const { data, error } = await supabase
+        .from('user_sessions')
+        .select('*')
+        .order('last_activity', { ascending: false });
 
       if (error) throw error;
 
-      // Get user emails from auth metadata
-      const sessionsWithEmails = await Promise.all(
-        (data || []).map(async (session) => {
-          const { data: userData } = await supabase.auth.admin.getUserById(session.user_id);
-          return {
-            ...session,
-            ip_address: session.ip_address as string | null,
-            user_agent: session.user_agent as string | null,
-            user_email: userData.user?.email || 'Email non disponible'
-          };
-        })
-      );
+      if (data && data.length > 0) {
+        // Get unique user IDs
+        const userIds = [...new Set(data.map(session => session.user_id))];
+        
+        // Fetch user emails using the edge function
+        const { data: emailData, error: emailError } = await supabase.functions.invoke(
+          'get-admin-users',
+          { body: { userIds } }
+        );
 
-      setSessions(sessionsWithEmails);
+        if (emailError) {
+          console.error('Error fetching user emails:', emailError);
+        }
+
+        // Map sessions with emails
+        const sessionsWithEmails = data.map(session => ({
+          ...session,
+          ip_address: session.ip_address as string | null,
+          user_agent: session.user_agent as string | null,
+          user_email: emailData?.users?.[session.user_id] || 'Email non disponible'
+        }));
+
+        setSessions(sessionsWithEmails);
+      } else {
+        setSessions([]);
+      }
     } catch (error) {
       console.error('Error loading sessions:', error);
       toast({
@@ -141,6 +153,7 @@ export const SessionsTable = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>Utilisateur</TableHead>
+                <TableHead>User ID</TableHead>
                 <TableHead>IP</TableHead>
                 <TableHead>Navigateur</TableHead>
                 <TableHead>Dernière activité</TableHead>
@@ -157,6 +170,9 @@ export const SessionsTable = () => {
                   <TableRow key={session.id}>
                     <TableCell className="font-medium">
                       {session.user_email}
+                    </TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {session.user_id.substring(0, 8)}...
                     </TableCell>
                     <TableCell>
                       <code className="text-xs bg-muted px-2 py-1 rounded">
@@ -208,7 +224,7 @@ export const SessionsTable = () => {
               })}
               {sessions.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                     Aucune session active
                   </TableCell>
                 </TableRow>

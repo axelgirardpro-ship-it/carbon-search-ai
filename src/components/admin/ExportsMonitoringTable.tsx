@@ -162,6 +162,7 @@ export const ExportsMonitoringTable = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>Utilisateur</TableHead>
+                <TableHead>User ID</TableHead>
                 <TableHead>Plan</TableHead>
                 <TableHead>Exports utilisés</TableHead>
                 <TableHead>Progression</TableHead>
@@ -183,6 +184,9 @@ export const ExportsMonitoringTable = () => {
                         {quota.user_email}
                         {isNearLimit && <AlertTriangle className="h-4 w-4 text-orange-500" />}
                       </div>
+                    </TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {quota.user_id.substring(0, 8)}...
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline">{quota.plan_type}</Badge>
@@ -226,7 +230,7 @@ export const ExportsMonitoringTable = () => {
               })}
               {quotas.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                     Aucun quota d'export trouvé
                   </TableCell>
                 </TableRow>
