@@ -226,16 +226,16 @@ const Index = () => {
               <div className="space-y-6">
                 <h3 className="font-bold text-indigo-950 text-3xl">
                   Allez plus loin que<br />
-                  la recherche
+                  la recherche de FE
                 </h3>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">API et intégrations</h4>
-                    <p className="text-indigo-950">Connectez directement nos données à vos outils<br />via notre API REST performante.</p>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Réalisez des benchmarks approfondis</h4>
+                    <p className="text-indigo-950">Positionnez facilement un produit ou une entreprise par<br />rapport à des concurrents et des moyennes sectorielles de marché.</p>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Export et analyse</h4>
-                    <p className="text-indigo-950">Exportez vos données aux formats CSV, Excel<br />pour vos analyses et rapports.</p>
+                    <h4 className="font-semibold mb-2 text-indigo-950">Plan d'action et décarbonation</h4>
+                    <p className="text-indigo-950">Identifiez rapidement les bénéfices de changements de produits,<br />relocalisation, de fournisseurs (achats responsables), etc.</p>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-2 text-indigo-950">Support expert</h4>
