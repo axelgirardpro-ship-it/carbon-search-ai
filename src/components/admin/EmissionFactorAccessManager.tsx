@@ -57,9 +57,18 @@ export const EmissionFactorAccessManager = () => {
         
         if (item.plan_tier === 'premium') {
           sourceInfo.premium_count++;
-          sourceInfo.current_tier = 'premium';
         } else {
           sourceInfo.standard_count++;
+        }
+      });
+
+      // Determine current_tier based on the majority/consistency rule:
+      // If ALL factors are premium, then source is premium, otherwise standard
+      sourceMap.forEach(sourceInfo => {
+        if (sourceInfo.premium_count > 0 && sourceInfo.standard_count === 0) {
+          sourceInfo.current_tier = 'premium';
+        } else {
+          sourceInfo.current_tier = 'standard';
         }
       });
 
