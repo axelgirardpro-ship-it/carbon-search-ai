@@ -4,33 +4,37 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-white">
+  return <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="py-20 px-4" style={{backgroundColor: '#d7caf5'}}>
+      <section className="py-20 px-4" style={{
+      backgroundColor: '#d7caf5'
+    }}>
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Colonne gauche : H1, Paragraphe, CTAs */}
             <div className="space-y-6 order-2 lg:order-1">
-              <h1 className="font-montserrat font-bold text-[#2D3436] leading-tight" style={{fontSize: '48px'}}>
+              <h1 style={{
+              fontSize: '48px'
+            }} className="font-montserrat font-bold leading-tight text-indigo-950 text-4xl">
                 Le moteur de recherche<br />
                 de FE le plus puissant<br />
                 du marché
               </h1>
-              <p className="font-montserrat text-[#636E72]" style={{fontSize: '16px'}}>
+              <p style={{
+              fontSize: '16px'
+            }} className="font-montserrat text-indigo-950">
                 Accédez à plus de 255 000 facteurs d'émissions français et internationaux<br />
                 agrégés et enrichis par nos experts.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/signup">
-                  <Button className="bg-[#2D3436] hover:bg-[#2D3436]/90 text-white px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto">
+                  <Button className="text-white px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-slate-950 hover:bg-slate-800">
                     Tester le moteur de recherche
                   </Button>
                 </Link>
                 <Link to="/login">
-                  <Button variant="outline" className="border-[#2D3436] text-[#2D3436] hover:bg-[#2D3436] hover:text-white px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto">
+                  <Button variant="outline" className="border-[#2D3436] px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-indigo-200 hover:bg-indigo-100 text-indigo-950">
                     Se connecter
                   </Button>
                 </Link>
@@ -40,11 +44,7 @@ const Index = () => {
             {/* Colonne droite : Image */}
             <div className="order-1 lg:order-2">
               <div className="bg-white rounded-lg p-8 shadow-lg">
-                <img 
-                  src="/lovable-uploads/5891d941-bc3a-4cef-a0f8-23e6e733d4b1.png" 
-                  alt="Interface de recherche de facteurs d'émission"
-                  className="w-full h-auto rounded-lg"
-                />
+                <img src="/lovable-uploads/5891d941-bc3a-4cef-a0f8-23e6e733d4b1.png" alt="Interface de recherche de facteurs d'émission" className="w-full h-auto rounded-lg" />
               </div>
             </div>
           </div>
@@ -54,7 +54,7 @@ const Index = () => {
       {/* Partner Logos Section */}
       <section className="py-16 bg-[#F8F9FA]">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-lg text-[#6C5CE7] mb-12">
+          <h2 className="text-lg mb-12 text-indigo-950">
             Retrouvez les plus grandes bases françaises et internationales
           </h2>
           <div className="grid grid-cols-6 gap-8 items-center">
@@ -170,25 +170,13 @@ const Index = () => {
                   <button className="px-4 py-2 text-[#6C5CE7] text-sm">Datasets importés</button>
                 </div>
                 <div className="space-y-2">
-                  {[
-                    "FE_Généralistes_2025",
-                    "FE_Agroalimentaire", 
-                    "FE_Finance",
-                    "FE_Clients_2024",
-                    "FE_Combustibles",
-                    "FE_Divertissement_Inflation",
-                    "FE_Automobile",
-                    "FE_Santé",
-                    "FE_Industrie_2022"
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100">
+                  {["FE_Généralistes_2025", "FE_Agroalimentaire", "FE_Finance", "FE_Clients_2024", "FE_Combustibles", "FE_Divertissement_Inflation", "FE_Automobile", "FE_Santé", "FE_Industrie_2022"].map((item, index) => <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100">
                       <div className="text-sm">{item}</div>
                       <div className="flex items-center gap-4">
                         <span className="text-xs text-[#6C5CE7]">Général</span>
                         <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Publié</span>
                       </div>
-                    </div>
-                  ))}
+                    </div>)}
                 </div>
               </div>
             </TabsContent>
@@ -231,32 +219,22 @@ const Index = () => {
             </TabsList>
             <TabsContent value="standards">
               <div className="grid grid-cols-7 gap-8">
-                {[
-                  "AIB", "Agribalyse", "BEIS", "Base Carbone", "Base Impacts", "CCF", "Climate Trace",
-                  "EEA", "EPA", "Exiobase", "EcoInfo", "Ecobalyse", "Electricity Maps", "Ember",
-                  "GESPoint5", "GLEC", "Kering", "OMEGA TP", "Open CEDA", "PCAF"
-                ].map((name, index) => (
-                  <div key={index} className="flex flex-col items-center space-y-2">
+                {["AIB", "Agribalyse", "BEIS", "Base Carbone", "Base Impacts", "CCF", "Climate Trace", "EEA", "EPA", "Exiobase", "EcoInfo", "Ecobalyse", "Electricity Maps", "Ember", "GESPoint5", "GLEC", "Kering", "OMEGA TP", "Open CEDA", "PCAF"].map((name, index) => <div key={index} className="flex flex-col items-center space-y-2">
                     <div className="w-16 h-16 bg-[#6C5CE7]/10 rounded-lg flex items-center justify-center">
                       <div className="w-8 h-8 bg-[#6C5CE7] rounded"></div>
                     </div>
                     <span className="text-sm text-center">{name}</span>
-                  </div>
-                ))}
+                  </div>)}
               </div>
             </TabsContent>
             <TabsContent value="premium">
               <div className="grid grid-cols-7 gap-8">
-                {[
-                  "Base Carbone", "Base Impacts", "CCF", "Climate Trace"
-                ].map((name, index) => (
-                  <div key={index} className="flex flex-col items-center space-y-2">
+                {["Base Carbone", "Base Impacts", "CCF", "Climate Trace"].map((name, index) => <div key={index} className="flex flex-col items-center space-y-2">
                     <div className="w-16 h-16 bg-[#6C5CE7]/10 rounded-lg flex items-center justify-center">
                       <div className="w-8 h-8 bg-[#6C5CE7] rounded"></div>
                     </div>
                     <span className="text-sm text-center">{name}</span>
-                  </div>
-                ))}
+                  </div>)}
               </div>
             </TabsContent>
           </Tabs>
@@ -268,11 +246,7 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
-              <img 
-                src="/lovable-uploads/45983903-6b93-459c-ac61-aa9cbb61ccae.png" 
-                alt="Guillaume - Expert"
-                className="w-80 h-80 object-cover rounded-lg"
-              />
+              <img src="/lovable-uploads/45983903-6b93-459c-ac61-aa9cbb61ccae.png" alt="Guillaume - Expert" className="w-80 h-80 object-cover rounded-lg" />
             </div>
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-[#2D3436]">
@@ -400,8 +374,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
