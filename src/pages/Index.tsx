@@ -379,7 +379,7 @@ const Index = () => {
             à vos besoins
           </h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Card className="p-8 border-gray-200">
+            <Card className="p-8" style={{borderColor: '#d7caf5'}}>
               <CardHeader className="pb-4">
                 <CardTitle className="text-xl font-semibold">STANDARD</CardTitle>
                 <div className="text-sm text-[#636E72]">À partir de</div>
@@ -405,7 +405,7 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="p-8 border-gray-200 relative">
+            <Card className="p-8 relative" style={{borderColor: '#d7caf5'}}>
               <Badge className="absolute -top-3 right-4 bg-green-500 text-white">Version Beta</Badge>
               <CardHeader className="pb-4">
                 <CardTitle className="text-xl font-semibold">PREMIUM</CardTitle>
