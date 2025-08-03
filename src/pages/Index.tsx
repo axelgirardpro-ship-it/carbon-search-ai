@@ -264,8 +264,8 @@ const Index = () => {
             <TabsContent value="standards">
               <div className="grid grid-cols-7 gap-8">
                 {["AIB", "Agribalyse", "BEIS", "Base Carbone", "Base Impacts", "CCF", "Climate Trace", "EEA", "EPA", "Exiobase", "EcoInfo", "Ecobalyse", "Electricity Maps", "Ember", "GESPoint5", "GLEC", "Kering", "OMEGA TP", "Open CEDA", "PCAF"].map((name, index) => <div key={index} className="flex flex-col items-center space-y-2">
-                    <div className="w-16 h-16 bg-[#6C5CE7]/10 rounded-lg flex items-center justify-center">
-                      <div className="w-8 h-8 bg-[#6C5CE7] rounded"></div>
+                    <div className="w-16 h-16 rounded-lg flex items-center justify-center">
+                      <img src="/lovable-uploads/04c097ec-c73b-4fb8-8788-7db8dce6aae6.png" alt="AIB Logo" className="w-full h-full object-contain" />
                     </div>
                     <span className="text-sm text-center">{name}</span>
                   </div>)}
