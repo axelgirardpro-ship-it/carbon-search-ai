@@ -25,17 +25,17 @@ export const UnifiedNavbar = () => {
             {user ? (
               <>
                 <Link to="/dashboard">
-                  <Button variant="ghost" className="homepage-text hover:bg-violet-100">
+                  <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
                     Dashboard
                   </Button>
                 </Link>
                 <Link to="/favorites">
-                  <Button variant="ghost" className="homepage-text hover:bg-violet-100">
+                  <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
                     Favoris
                   </Button>
                 </Link>
                 <Link to="/profile">
-                  <Button variant="ghost" className="homepage-text hover:bg-violet-100">
+                  <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
                     Profil
                   </Button>
                 </Link>
@@ -50,7 +50,7 @@ export const UnifiedNavbar = () => {
             ) : (
               <>
                 <Link to="/signup">
-                  <Button variant="ghost" className="homepage-text hover:bg-violet-100">
+                  <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
                     S'inscrire
                   </Button>
                 </Link>

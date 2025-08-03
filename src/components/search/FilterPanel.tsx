@@ -91,7 +91,7 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
             variant="ghost"
             size="sm"
             onClick={onResetFilters}
-            className="text-primary hover:text-primary/80"
+            className="text-slate-950 hover:text-slate-800"
           >
             <X className="w-4 h-4 mr-1" />
             RÉINITIALISER LES FILTRES

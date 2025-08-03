@@ -55,12 +55,12 @@ export const SearchBar = ({
             onSearch();
             setShowSuggestions(false);
           }
-        }} placeholder={placeholder} className="pl-10 pr-10 h-12 text-lg bg-white text-foreground border-white/20 placeholder:text-muted-foreground focus:bg-white" />
+        }} placeholder={placeholder} className="pl-10 pr-10 h-12 text-lg bg-white text-foreground border-slate-950/20 placeholder:text-muted-foreground focus:bg-white focus:border-slate-950" />
           {value && <button onClick={handleClear} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground">
               <X className="h-4 w-4" />
             </button>}
         </div>
-        <Button onClick={onSearch} className="ml-2 h-12 px-6 bg-gray-50 text-violet-950">
+        <Button onClick={onSearch} className="ml-2 h-12 px-6 bg-slate-950 text-white hover:bg-slate-800">
           RECHERCHER
         </Button>
       </div>
