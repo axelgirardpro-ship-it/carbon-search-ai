@@ -92,36 +92,6 @@ export type Database = {
         }
         Relationships: []
       }
-      database_plan_access: {
-        Row: {
-          accessible: boolean
-          created_at: string
-          created_by: string | null
-          database_name: string
-          id: string
-          plan_tier: string
-          updated_at: string
-        }
-        Insert: {
-          accessible?: boolean
-          created_at?: string
-          created_by?: string | null
-          database_name: string
-          id?: string
-          plan_tier: string
-          updated_at?: string
-        }
-        Update: {
-          accessible?: boolean
-          created_at?: string
-          created_by?: string | null
-          database_name?: string
-          id?: string
-          plan_tier?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       datasets: {
         Row: {
           company_id: string | null
@@ -593,6 +563,10 @@ export type Database = {
       cleanup_expired_sessions: {
         Args: Record<PropertyKey, never>
         Returns: number
+      }
+      get_accessible_plan_tiers: {
+        Args: { user_plan: string }
+        Returns: string[]
       }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
