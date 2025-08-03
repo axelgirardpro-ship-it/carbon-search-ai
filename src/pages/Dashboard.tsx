@@ -102,15 +102,15 @@ const Dashboard = () => {
       
       setResults(searchResults);
       
-      // Record search in history
-      await recordSearch(query, filters, searchResults.length);
+      // Record search in history (called separately to avoid dependency issues)
+      recordSearch(query, filters, searchResults.length);
     } catch (error) {
       console.error('Error performing search:', error);
       setResults([]);
     } finally {
       setIsLoading(false);
     }
-  }, [filters, isFavorite, currentWorkspace, recordSearch]);
+  }, [filters, isFavorite, currentWorkspace]);
 
   const handleSearch = () => {
     performSearch(searchQuery);

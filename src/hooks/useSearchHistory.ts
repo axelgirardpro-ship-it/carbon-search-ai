@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
@@ -6,7 +7,7 @@ export const useSearchHistory = () => {
   const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
 
-  const recordSearch = async (
+  const recordSearch = useCallback(async (
     searchQuery: string, 
     filters: any, 
     resultsCount: number
@@ -30,7 +31,7 @@ export const useSearchHistory = () => {
     } catch (error) {
       console.error('Error recording search history:', error);
     }
-  };
+  }, [user, currentWorkspace]);
 
   return { recordSearch };
 };
