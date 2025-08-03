@@ -16,7 +16,7 @@ const Index = () => {
             <div className="space-y-6 order-2 lg:order-1">
               <h1 style={{
               fontSize: '48px'
-            }} className="font-montserrat font-bold leading-tight text-indigo-950 text-5xl">
+            }} className="font-montserrat font-bold leading-tight text-indigo-950 text-4xl">
                 Le moteur de recherche<br />
                 de FE le plus puissant<br />
                 du marché
@@ -113,19 +113,19 @@ const Index = () => {
           </h2>
           <div className="max-w-4xl mx-auto">
             <div style={{
-              position: "relative",
-              paddingBottom: "calc(52.44791666666667% + 41px)",
-              height: 0,
-              width: "100%"
-            }}>
+            position: "relative",
+            paddingBottom: "calc(52.44791666666667% + 41px)",
+            height: 0,
+            width: "100%"
+          }}>
               <iframe src="https://demo.arcade.software/rg5Pizw2AGo4sO73KGPN?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true" title="Moteur de recherche de FE Sami - Démo" frameBorder="0" loading="lazy" style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                colorScheme: "light"
-              }} allow="clipboard-write" className="rounded-lg" />
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              colorScheme: "light"
+            }} allow="clipboard-write" className="rounded-lg" />
             </div>
           </div>
         </div>
@@ -133,8 +133,8 @@ const Index = () => {
 
       {/* Features Tabs Section */}
       <section className="py-20 px-4" style={{
-        backgroundColor: '#d7caf5'
-      }}>
+      backgroundColor: '#d7caf5'
+    }}>
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-indigo-950 text-center mb-12">
             Un moteur de recherche<br />
