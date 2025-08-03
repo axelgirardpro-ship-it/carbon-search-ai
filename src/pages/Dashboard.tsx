@@ -55,12 +55,20 @@ const Dashboard = () => {
       return;
     }
     
+    // Éviter les recherches vides ou trop courtes qui pourraient causer des boucles
+    if (query.trim().length < 2) {
+      setResults([]);
+      setHasSearched(false);
+      return;
+    }
+    
     setIsLoading(true);
     setHasSearched(true);
     
     try {
-      // Incrémenter le compteur de recherches SEULEMENT si on va faire la recherche (utiliser la ref)
+      // Incrémenter le compteur de recherches seulement pour les vraies recherches
       await incrementSearchRef.current();
+      
       let supabaseQuery = supabase
         .from('emission_factors')
         .select('*');

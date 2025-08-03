@@ -29,38 +29,14 @@ export const CompaniesTable = () => {
     try {
       setLoading(true);
       
-      // Fetch workspaces with owner profile info
-      const { data: companiesData, error: companiesError } = await supabase
-        .from('workspaces')
-        .select(`
-          *,
-          profiles!workspaces_owner_id_fkey(user_id)
-        `)
-        .order('created_at', { ascending: false });
+      // Use edge function to get workspaces with admin privileges
+      const { data, error } = await supabase.functions.invoke('get-admin-workspaces');
 
-      if (companiesError) throw companiesError;
+      if (error) throw error;
 
-      // Get user emails from auth.users and user counts
-      const companiesWithDetails = await Promise.all(
-        (companiesData || []).map(async (company) => {
-          // Get owner email
-          const { data: userData } = await supabase.auth.admin.getUserById(company.owner_id);
-          
-          // Count users in this company
-          const { count } = await supabase
-            .from('user_roles')
-            .select('*', { count: 'exact', head: true })
-            .eq('workspace_id', company.id);
-
-          return {
-            ...company,
-            owner_email: userData.user?.email || 'Unknown',
-            user_count: count || 0
-          };
-        })
-      );
-
-      setCompanies(companiesWithDetails);
+      if (data?.data) {
+        setCompanies(data.data);
+      }
     } catch (error) {
       console.error('Error fetching companies:', error);
     } finally {
