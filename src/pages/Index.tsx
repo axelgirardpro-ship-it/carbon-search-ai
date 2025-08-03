@@ -303,7 +303,7 @@ const Index = () => {
               <div className="space-y-4">
                 <div>
                   <h3 className="font-semibold text-lg mb-2">Des bases de données nettoyées et structurées</h3>
-                  <p className="text-[#636E72]">Notre équipe expertise nettoie et restructure l'ensemble des bases de données intégrées afin de disposer d'un format unique de données.</p>
+                  <p className="text-[#636E72]">Nos experts nettoient et restructurent l'ensemble des bases de données intégrées afin de disposer d'un format unique de données.</p>
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg mb-2">Enrichissement des bases de données</h3>
