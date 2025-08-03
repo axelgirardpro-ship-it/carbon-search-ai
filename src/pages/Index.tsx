@@ -274,7 +274,25 @@ const Index = () => {
                       ) : name === "Base Carbone" ? (
                         <img src="/lovable-uploads/e9be0482-b48d-476b-8536-b92ea3b88ea5.png" alt="Base Carbone Logo" className="w-full h-full object-contain" />
                       ) : name === "Base Impacts" ? (
-                        <img src="/lovable-uploads/c59c6b00-a315-4d39-864a-9bb38a8834b0.png" alt="Base Impacts Logo" className="w-full h-full object-contain" />
+                        <img src="/lovable-uploads/8351c94f-afcc-498e-b8fa-73f47451686a.png" alt="Base Impacts Logo" className="w-full h-full object-contain" />
+                      ) : name === "Climate Trace" ? (
+                        <img src="/lovable-uploads/47300cd4-f205-4264-a5b0-6f1406b312f8.png" alt="Climate Trace Logo" className="w-full h-full object-contain" />
+                      ) : name === "EEA" ? (
+                        <img src="/lovable-uploads/d2dffb4b-f32d-43ed-82bf-b071db714f91.png" alt="European Environment Agency Logo" className="w-full h-full object-contain" />
+                      ) : name === "EPA" ? (
+                        <img src="/lovable-uploads/75c9eac2-554f-4bb0-9719-08a698c80e1d.png" alt="US EPA Logo" className="w-full h-full object-contain" />
+                      ) : name === "Exiobase" ? (
+                        <img src="/lovable-uploads/373cff1a-5089-4167-b40a-38ff4d50cc36.png" alt="Exiobase Logo" className="w-full h-full object-contain" />
+                      ) : name === "EcoInfo" ? (
+                        <img src="/lovable-uploads/5cc1caa1-f312-4760-849c-0b4ec3ab5f76.png" alt="EcoInfo Logo" className="w-full h-full object-contain" />
+                      ) : name === "Ecobalyse" ? (
+                        <img src="/lovable-uploads/f775ed4f-912f-41cf-9ade-08338aadf665.png" alt="Ecobalyse Logo" className="w-full h-full object-contain" />
+                      ) : name === "Electricity Maps" ? (
+                        <img src="/lovable-uploads/0cc5974c-e436-42f5-9776-ad4cd768b072.png" alt="Electricity Maps Logo" className="w-full h-full object-contain" />
+                      ) : name === "Ember" ? (
+                        <img src="/lovable-uploads/88e14343-4589-4e34-b420-395130de1641.png" alt="Ember Logo" className="w-full h-full object-contain" />
+                      ) : name === "GESPoint5" ? (
+                        <img src="/lovable-uploads/8de84824-fb1b-441b-a7c2-50b92b4072e2.png" alt="1point5 Logo" className="w-full h-full object-contain" />
                       ) : (
                         <div className="w-16 h-16 bg-[#6C5CE7]/10 rounded-lg flex items-center justify-center">
                           <div className="w-8 h-8 bg-[#6C5CE7] rounded"></div>
