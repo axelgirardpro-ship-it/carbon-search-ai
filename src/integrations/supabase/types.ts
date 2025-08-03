@@ -74,50 +74,6 @@ export type Database = {
         }
         Relationships: []
       }
-      company_invitations: {
-        Row: {
-          company_id: string
-          created_at: string
-          email: string
-          expires_at: string
-          id: string
-          invited_by: string
-          role: string
-          status: string | null
-          token: string
-        }
-        Insert: {
-          company_id: string
-          created_at?: string
-          email: string
-          expires_at: string
-          id?: string
-          invited_by: string
-          role: string
-          status?: string | null
-          token: string
-        }
-        Update: {
-          company_id?: string
-          created_at?: string
-          email?: string
-          expires_at?: string
-          id?: string
-          invited_by?: string
-          role?: string
-          status?: string | null
-          token?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "company_invitations_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       data_imports: {
         Row: {
           completed_at: string | null
@@ -355,33 +311,6 @@ export type Database = {
         }
         Relationships: []
       }
-      global_user_roles: {
-        Row: {
-          assigned_by: string | null
-          created_at: string
-          id: string
-          role: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          assigned_by?: string | null
-          created_at?: string
-          id?: string
-          role: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          assigned_by?: string | null
-          created_at?: string
-          id?: string
-          role?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           billing_address: string | null
@@ -455,31 +384,31 @@ export type Database = {
       }
       search_history: {
         Row: {
-          company_id: string | null
           created_at: string
           id: string
           results_count: number | null
           search_filters: Json | null
           search_query: string
           user_id: string
+          workspace_id: string | null
         }
         Insert: {
-          company_id?: string | null
           created_at?: string
           id?: string
           results_count?: number | null
           search_filters?: Json | null
           search_query: string
           user_id: string
+          workspace_id?: string | null
         }
         Update: {
-          company_id?: string | null
           created_at?: string
           id?: string
           results_count?: number | null
           search_filters?: Json | null
           search_query?: string
           user_id?: string
+          workspace_id?: string | null
         }
         Relationships: []
       }
@@ -567,35 +496,35 @@ export type Database = {
       user_roles: {
         Row: {
           assigned_by: string | null
-          company_id: string
           created_at: string
           id: string
           role: string
           updated_at: string
           user_id: string
+          workspace_id: string | null
         }
         Insert: {
           assigned_by?: string | null
-          company_id: string
           created_at?: string
           id?: string
           role: string
           updated_at?: string
           user_id: string
+          workspace_id?: string | null
         }
         Update: {
           assigned_by?: string | null
-          company_id?: string
           created_at?: string
           id?: string
           role?: string
           updated_at?: string
           user_id?: string
+          workspace_id?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "user_roles_company_id_fkey"
-            columns: ["company_id"]
+            columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "companies"
             referencedColumns: ["id"]
@@ -634,6 +563,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      workspace_invitations: {
+        Row: {
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string
+          role: string
+          status: string | null
+          token: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+          invited_by: string
+          role: string
+          status?: string | null
+          token: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string
+          role?: string
+          status?: string | null
+          token?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_invitations_company_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       workspaces: {
         Row: {
@@ -679,12 +652,20 @@ export type Database = {
         Args: { company_id: string }
         Returns: boolean
       }
+      has_workspace_access: {
+        Args: { workspace_id: string }
+        Returns: boolean
+      }
       is_company_owner: {
         Args: { company_id: string }
         Returns: boolean
       }
       is_supra_admin: {
         Args: { user_uuid?: string }
+        Returns: boolean
+      }
+      is_workspace_owner: {
+        Args: { workspace_id: string }
         Returns: boolean
       }
     }
