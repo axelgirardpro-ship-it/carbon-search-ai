@@ -120,18 +120,22 @@ const Index = () => {
                     <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                   </div>
-                  <div className="text-sm text-gray-500">https://app.clixtechnologies.com</div>
+                  
                 </div>
-                <div style={{position: "relative", paddingBottom: "calc(52.44791666666667% + 41px)", height: 0, width: "100%"}}>
-                  <iframe 
-                    src="https://demo.arcade.software/rg5Pizw2AGo4sO73KGPN?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true" 
-                    title="Moteur de recherche de FE Sami - Démo" 
-                    frameBorder="0" 
-                    loading="lazy" 
-                    style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%", colorScheme: "light"}}
-                    allow="clipboard-write"
-                    className="rounded-lg"
-                  />
+                <div style={{
+                position: "relative",
+                paddingBottom: "calc(52.44791666666667% + 41px)",
+                height: 0,
+                width: "100%"
+              }}>
+                  <iframe src="https://demo.arcade.software/rg5Pizw2AGo4sO73KGPN?embed&embed_mobile=tab&embed_desktop=inline&show_copy_link=true" title="Moteur de recherche de FE Sami - Démo" frameBorder="0" loading="lazy" style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  colorScheme: "light"
+                }} allow="clipboard-write" className="rounded-lg" />
                 </div>
               </div>
             </div>
