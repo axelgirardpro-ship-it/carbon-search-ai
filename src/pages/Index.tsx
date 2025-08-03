@@ -105,7 +105,9 @@ const Index = () => {
       </section>
 
       {/* Interactive Demo Section */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4" style={{
+        backgroundColor: '#d7caf5'
+      }}>
         <div className="container mx-auto text-center">
           <h2 className="text-4xl font-bold mb-12 text-indigo-950">
             Découvrez la puissance<br />
