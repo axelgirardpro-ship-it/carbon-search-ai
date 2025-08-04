@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Globe } from "lucide-react";
+import { Users, Globe, Unlink } from "lucide-react";
 
 export default function Settings() {
   const { user, userRole } = useAuth();
@@ -30,10 +30,13 @@ export default function Settings() {
     billing_siren: "",
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [googleLinked, setGoogleLinked] = useState(false);
+  const [loadingSSO, setLoadingSSO] = useState(false);
 
 
   useEffect(() => {
     fetchProfile();
+    checkGoogleLinked();
   }, [user]);
 
   const fetchProfile = async () => {
@@ -66,6 +69,86 @@ export default function Settings() {
       console.error('Error fetching profile:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const checkGoogleLinked = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase.auth.getUserIdentities();
+      if (error) {
+        console.error('Error fetching identities:', error);
+        return;
+      }
+      
+      const hasGoogleIdentity = data?.identities?.some(identity => identity.provider === 'google');
+      setGoogleLinked(!!hasGoogleIdentity);
+    } catch (error) {
+      console.error('Error checking Google linked status:', error);
+    }
+  };
+
+  const handleLinkGoogle = async () => {
+    try {
+      setLoadingSSO(true);
+      const redirectUrl = `${window.location.origin}/settings`;
+      
+      const { error } = await supabase.auth.linkIdentity({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+        },
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Liaison en cours",
+        description: "Vous allez être redirigé vers Google pour lier votre compte.",
+      });
+    } catch (error) {
+      console.error('Error linking Google account:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de lier le compte Google.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingSSO(false);
+    }
+  };
+
+  const handleUnlinkGoogle = async () => {
+    try {
+      setLoadingSSO(true);
+      
+      // Get user identities
+      const { data, error: identitiesError } = await supabase.auth.getUserIdentities();
+      if (identitiesError) throw identitiesError;
+      
+      // Find Google identity
+      const googleIdentity = data?.identities?.find(identity => identity.provider === 'google');
+      if (!googleIdentity) throw new Error('Google identity not found');
+      
+      // Unlink the identity
+      const { error } = await supabase.auth.unlinkIdentity(googleIdentity);
+      if (error) throw error;
+      
+      setGoogleLinked(false);
+      toast({
+        title: "Compte délié",
+        description: "Votre compte Google a été délié avec succès.",
+      });
+    } catch (error) {
+      console.error('Error unlinking Google account:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de délier le compte Google.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingSSO(false);
     }
   };
 
@@ -366,10 +449,31 @@ export default function Settings() {
                       <Globe className="h-5 w-5" />
                       <div>
                         <div className="font-medium">Google</div>
-                        <div className="text-sm text-muted-foreground">Connexion avec Google</div>
+                        <div className="text-sm text-muted-foreground">
+                          {googleLinked ? "Compte lié" : "Connexion avec Google"}
+                        </div>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">Lier le compte</Button>
+                    {googleLinked ? (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={handleUnlinkGoogle}
+                        disabled={loadingSSO}
+                      >
+                        <Unlink className="h-4 w-4 mr-2" />
+                        Délier
+                      </Button>
+                    ) : (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={handleLinkGoogle}
+                        disabled={loadingSSO}
+                      >
+                        Lier le compte
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
