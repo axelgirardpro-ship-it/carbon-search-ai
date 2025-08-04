@@ -9,14 +9,8 @@ import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Trash2, Download, Shield, Globe, Users } from "lucide-react";
+import { Users, Globe } from "lucide-react";
 
 export default function Settings() {
   const { user, userRole } = useAuth();
@@ -37,18 +31,6 @@ export default function Settings() {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Preferences states
-  const [notifications, setNotifications] = useState({
-    email: true,
-    push: false,
-    marketing: false,
-  });
-  const [preferences, setPreferences] = useState({
-    language: "fr",
-    timezone: "Europe/Paris",
-    units: "metric",
-    resultsPerPage: "25",
-  });
 
   useEffect(() => {
     fetchProfile();
@@ -163,21 +145,6 @@ export default function Settings() {
     setProfile(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleNotificationChange = (key: string, value: boolean) => {
-    setNotifications(prev => ({ ...prev, [key]: value }));
-    toast({
-      title: "Notifications mises à jour",
-      description: `Les notifications ${key} ont été ${value ? 'activées' : 'désactivées'}.`,
-    });
-  };
-
-  const handlePreferenceChange = (key: string, value: string) => {
-    setPreferences(prev => ({ ...prev, [key]: value }));
-    toast({
-      title: "Préférences mises à jour",
-      description: `${key} mis à jour avec succès.`,
-    });
-  };
 
   if (isLoading) {
     return <div>Chargement...</div>;
@@ -191,15 +158,7 @@ export default function Settings() {
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-8">Paramètres</h1>
           
-          <Tabs defaultValue="profile" className="space-y-8">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="profile">Profil</TabsTrigger>
-              <TabsTrigger value="preferences">Préférences</TabsTrigger>
-              <TabsTrigger value="data">Données</TabsTrigger>
-            </TabsList>
-
-            {/* Profile Tab */}
-            <TabsContent value="profile" className="space-y-6">
+          <div className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -322,155 +281,6 @@ export default function Settings() {
                 </CardContent>
               </Card>
 
-              <div className="flex justify-end">
-                <Button onClick={handleSave}>Sauvegarder les modifications</Button>
-              </div>
-            </TabsContent>
-
-            {/* Preferences Tab */}
-            <TabsContent value="preferences" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Notifications</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="email-notifications">Notifications par email</Label>
-                    <Switch
-                      id="email-notifications"
-                      checked={notifications.email}
-                      onCheckedChange={(checked) => handleNotificationChange('email', checked)}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="push-notifications">Notifications push</Label>
-                    <Switch
-                      id="push-notifications"
-                      checked={notifications.push}
-                      onCheckedChange={(checked) => handleNotificationChange('push', checked)}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="marketing-notifications">Communications marketing</Label>
-                    <Switch
-                      id="marketing-notifications"
-                      checked={notifications.marketing}
-                      onCheckedChange={(checked) => handleNotificationChange('marketing', checked)}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Préférences utilisateur</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="language">Langue</Label>
-                      <Select value={preferences.language} onValueChange={(value) => handlePreferenceChange('language', value)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="fr">Français</SelectItem>
-                          <SelectItem value="en">English</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="timezone">Fuseau horaire</Label>
-                      <Select value={preferences.timezone} onValueChange={(value) => handlePreferenceChange('timezone', value)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Europe/Paris">Europe/Paris</SelectItem>
-                          <SelectItem value="Europe/London">Europe/London</SelectItem>
-                          <SelectItem value="America/New_York">America/New_York</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="units">Unités</Label>
-                      <Select value={preferences.units} onValueChange={(value) => handlePreferenceChange('units', value)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="metric">Métrique</SelectItem>
-                          <SelectItem value="imperial">Impérial</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="results-per-page">Résultats par page</Label>
-                      <Select value={preferences.resultsPerPage} onValueChange={(value) => handlePreferenceChange('resultsPerPage', value)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="10">10</SelectItem>
-                          <SelectItem value="25">25</SelectItem>
-                          <SelectItem value="50">50</SelectItem>
-                          <SelectItem value="100">100</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="h-5 w-5" />
-                    Sécurité
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">Authentification à deux facteurs</div>
-                      <div className="text-sm text-muted-foreground">Renforcez la sécurité de votre compte</div>
-                    </div>
-                    <Button variant="outline">Configurer 2FA</Button>
-                  </div>
-                  <Separator />
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">Sessions actives</div>
-                      <div className="text-sm text-muted-foreground">Gérez vos connexions</div>
-                    </div>
-                    <Button variant="outline">Voir les sessions</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Data Tab */}
-            <TabsContent value="data" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Download className="h-5 w-5" />
-                    Export de données
-                  </CardTitle>
-                  <CardDescription>
-                    Téléchargez une copie de vos données personnelles
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="outline">
-                    <Download className="h-4 w-4 mr-2" />
-                    Exporter mes données
-                  </Button>
-                </CardContent>
-              </Card>
-
               <Card>
                 <CardHeader>
                   <CardTitle>Liaison de comptes SSO</CardTitle>
@@ -502,19 +312,10 @@ export default function Settings() {
                 </CardContent>
               </Card>
 
-              <Card className="border-destructive">
-                <CardHeader>
-                  <CardTitle className="text-destructive">Zone de danger</CardTitle>
-                  <CardDescription>
-                    Actions irréversibles concernant votre compte
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="destructive">Supprimer mon compte</Button>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+              <div className="flex justify-end">
+                <Button onClick={handleSave}>Sauvegarder les modifications</Button>
+              </div>
+          </div>
         </div>
       </div>
     </div>
