@@ -13,9 +13,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Favorites from "./pages/Favorites";
 import Import from "./pages/Import";
-import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
-import Team from "./pages/Team";
+import SimplifiedSettings from "./pages/SimplifiedSettings";
 import Debug from "./pages/Debug";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
@@ -85,9 +83,10 @@ const App = () => (
                   <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                   <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
                   <Route path="/import" element={<ProtectedRoute><Import /></ProtectedRoute>} />
-                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                  <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-                  <Route path="/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
+                  <Route path="/settings" element={<ProtectedRoute><SimplifiedSettings /></ProtectedRoute>} />
+                  {/* Redirections for old routes */}
+                  <Route path="/profile" element={<Navigate to="/settings" replace />} />
+                  <Route path="/team" element={<Navigate to="/settings" replace />} />
                   <Route path="/debug" element={<ProtectedRoute><Debug /></ProtectedRoute>} />
                   <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
                   <Route path="*" element={<NotFound />} />

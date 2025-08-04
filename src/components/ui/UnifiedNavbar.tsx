@@ -43,9 +43,9 @@ export const UnifiedNavbar = () => {
                     </Button>
                   </Link>
                 )}
-                <Link to="/profile">
+                <Link to="/settings">
                   <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
-                    Profil
+                    Paramètres
                   </Button>
                 </Link>
                 <Button 

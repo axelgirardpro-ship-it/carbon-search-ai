@@ -4,7 +4,7 @@ export const usePermissions = () => {
   const { userRole } = useAuth();
 
   const canAddUsers = () => {
-    return userRole?.role === 'admin';
+    return userRole?.role === 'admin' || userRole?.role === 'supra_admin';
   };
 
   const canImportData = () => {
