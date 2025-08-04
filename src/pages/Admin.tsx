@@ -238,7 +238,7 @@ const Admin = () => {
           
           <ContactsTable />
           
-          <SearchHistoryTable />
+          
           <ExportsMonitoringTable />
           <SessionsTable />
           
