@@ -40,10 +40,10 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
     try {
       setLoading(true);
       
-      // Get favorites with their IDs
+      // Get all favorites with their stored data
       const { data: favoritesData, error: favError } = await supabase
         .from('favorites')
-        .select('item_id, created_at')
+        .select('item_id, item_data, created_at')
         .eq('user_id', user.id)
         .eq('item_type', 'emission_factor');
 
@@ -54,33 +54,76 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
         return;
       }
 
-      // Get current emission factors data for these IDs
-      const itemIds = favoritesData.map(fav => fav.item_id);
-      const { data: currentData, error: emissionError } = await supabase
-        .from('emission_factors')
-        .select('*')
-        .in('id', itemIds);
+      // Separate UUID and non-UUID item IDs
+      const uuidIds: string[] = [];
+      const nonUuidFavorites: any[] = [];
+      
+      favoritesData.forEach(fav => {
+        // Check if item_id looks like a UUID
+        if (fav.item_id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+          uuidIds.push(fav.item_id);
+        } else {
+          // Use stored item_data for non-UUID favorites
+          if (fav.item_data) {
+            nonUuidFavorites.push({
+              ...(fav.item_data as any),
+              id: fav.item_id,
+              isFavorite: true
+            });
+          }
+        }
+      });
 
-      if (emissionError) throw emissionError;
+      let currentData: any[] = [];
+      
+      // Only query emission_factors for valid UUIDs
+      if (uuidIds.length > 0) {
+        const { data, error: emissionError } = await supabase
+          .from('emission_factors')
+          .select('*')
+          .in('id', uuidIds);
 
-      // Convert to EmissionFactor format and mark as favorites
-      const updatedFavorites = (currentData || []).map(item => ({
-        ...item,
-        isFavorite: true
-      })) as EmissionFactor[];
+        if (emissionError) {
+          console.error('Error fetching emission factors:', emissionError);
+        } else {
+          currentData = data || [];
+        }
+      }
 
-      // Update the favorites table with current data
-      const updatePromises = updatedFavorites.map(item => 
-        supabase
-          .from('favorites')
-          .update({ item_data: item as any })
-          .eq('user_id', user.id)
-          .eq('item_id', item.id)
-      );
+      // For UUID favorites, use current data if available, otherwise fall back to stored data
+      const uuidFavorites = favoritesData
+        .filter(fav => uuidIds.includes(fav.item_id))
+        .map(fav => {
+          const currentItem = currentData.find(item => item.id === fav.item_id);
+          
+          if (currentItem) {
+            // Update stored data with current data
+            supabase
+              .from('favorites')
+              .update({ item_data: currentItem })
+              .eq('user_id', user.id)
+              .eq('item_id', fav.item_id);
+              
+            return {
+              ...currentItem,
+              isFavorite: true
+            };
+          } else if (fav.item_data) {
+            // Fall back to stored data if current data not found
+            return {
+              ...(fav.item_data as any),
+              id: fav.item_id,
+              isFavorite: true
+            };
+          }
+          return null;
+        })
+        .filter(Boolean);
 
-      await Promise.all(updatePromises);
-
-      setFavorites(updatedFavorites);
+      // Combine all favorites
+      const allFavorites = [...nonUuidFavorites, ...uuidFavorites] as EmissionFactor[];
+      
+      setFavorites(allFavorites);
     } catch (error) {
       console.error('Error fetching favorites:', error);
     } finally {
