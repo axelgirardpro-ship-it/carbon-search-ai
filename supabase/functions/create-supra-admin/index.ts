@@ -89,29 +89,20 @@ serve(async (req) => {
       )
     }
 
-    // Bypass the handle_new_user trigger to avoid metadata conflicts
-    console.log('Disabling new user trigger...')
-    
-    // Disable the trigger before creating the user
-    const { error: disableError } = await supabaseAdmin.rpc('toggle_new_user_trigger', { enable_trigger: false })
-    if (disableError) {
-      console.error('Failed to disable trigger:', disableError)
-      return new Response(
-        JSON.stringify({ error: 'Failed to prepare user creation' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
     try {
-      console.log('Creating user with email:', email)
+      console.log('Creating supra admin user with email:', email)
       
-      // Create the user with minimal data since trigger is disabled
+      // Create the user with special metadata to bypass normal user setup
       const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email,
         password,
         email_confirm: true,
-        user_metadata: { created_by_supra_admin: true },
-        app_metadata: { created_by_supra_admin: true }
+        user_metadata: { 
+          created_by_supra_admin: true 
+        },
+        app_metadata: { 
+          created_by_supra_admin: true 
+        }
       })
       
       console.log('User creation result:', { 
@@ -154,7 +145,7 @@ serve(async (req) => {
           }
         })
 
-      console.log('Supra admin created successfully, re-enabling trigger...')
+      console.log('Supra admin created successfully')
       
       return new Response(
         JSON.stringify({ 
@@ -174,13 +165,6 @@ serve(async (req) => {
         JSON.stringify({ error: createUserError.message || 'Failed to create supra admin' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
-    } finally {
-      // Always re-enable the trigger, even if there was an error
-      console.log('Re-enabling new user trigger...')
-      const { error: enableError } = await supabaseAdmin.rpc('toggle_new_user_trigger', { enable_trigger: true })
-      if (enableError) {
-        console.error('Failed to re-enable trigger:', enableError)
-      }
     }
 
   } catch (error) {
