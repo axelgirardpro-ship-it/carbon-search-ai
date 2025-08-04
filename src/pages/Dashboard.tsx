@@ -9,15 +9,9 @@ import { useFavorites } from "@/contexts/FavoritesContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useQuotas, useSubscription } from "@/contexts/QuotaSubscriptionContext";
 import { useSearchHistory } from "@/hooks/useSearchHistory";
+import { useSuggestions } from "@/hooks/useSuggestions";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-
-// Removed mock data - now using Supabase data
-
-const suggestions = [
-  "glass", "recycled glass", "sodium", "verre", "verre recyclé", 
-  "aluminum", "steel", "concrete", "plastic", "wood"
-];
 
 const Dashboard = () => {
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
@@ -26,6 +20,7 @@ const Dashboard = () => {
   const { subscription } = useSubscription();
   const { recordSearch } = useSearchHistory();
   const [searchQuery, setSearchQuery] = useState("");
+  const { suggestions, recentSearches } = useSuggestions(searchQuery);
   const [filters, setFilters] = useState<Filters>({
     source: "",
     secteur: "",
@@ -260,13 +255,14 @@ const Dashboard = () => {
               Rechercher des facteurs d'émissions
             </h1>
             
-            <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-              onSearch={handleSearch}
-              suggestions={suggestions}
-              className="mb-6"
-            />
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          onSearch={handleSearch}
+          suggestions={suggestions}
+          recentSearches={recentSearches}
+          className="mb-6"
+        />
           </div>
         </div>
       </div>

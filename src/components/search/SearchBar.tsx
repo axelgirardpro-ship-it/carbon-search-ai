@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-import { Search, X } from "lucide-react";
+import { Search, X, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
   onSearch: () => void;
   suggestions?: string[];
+  recentSearches?: string[];
   placeholder?: string;
   className?: string;
 }
@@ -16,6 +18,7 @@ export const SearchBar = ({
   onChange,
   onSearch,
   suggestions = [],
+  recentSearches = [],
   placeholder = "Rechercher des facteurs d'émissions...",
   className
 }: SearchBarProps) => {
@@ -65,15 +68,48 @@ export const SearchBar = ({
         </Button>
       </div>
 
-      {showSuggestions && suggestions.length > 0 && <div className="absolute top-full left-0 right-16 bg-background border border-border rounded-md shadow-lg z-50 mt-1">
-          <div className="p-2 text-sm text-muted-foreground border-b bg-background">
-            Suggestions : {suggestions.slice(0, 3).join(", ")}...
-          </div>
-          <div className="max-h-48 overflow-y-auto bg-background">
-            {suggestions.slice(0, 8).map((suggestion, index) => <button key={index} onClick={() => handleSuggestionClick(suggestion)} className="w-full text-left px-3 py-2 hover:bg-muted text-sm text-foreground bg-background">
-                {suggestion}
-              </button>)}
-          </div>
-        </div>}
+      {showSuggestions && (suggestions.length > 0 || recentSearches.length > 0) && (
+        <div className="absolute top-full left-0 right-16 bg-background border border-border rounded-md shadow-lg z-50 mt-1">
+          {suggestions.length > 0 && (
+            <>
+              <div className="p-2 text-sm text-muted-foreground border-b bg-background">
+                Suggestions
+              </div>
+              <div className="max-h-32 overflow-y-auto bg-background">
+                {suggestions.map((suggestion, index) => (
+                  <button 
+                    key={`suggestion-${index}`} 
+                    onClick={() => handleSuggestionClick(suggestion)} 
+                    className="w-full text-left px-3 py-2 hover:bg-muted text-sm text-foreground bg-background"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+          
+          {recentSearches.length > 0 && (
+            <>
+              <div className="p-2 text-sm text-muted-foreground border-b bg-background flex items-center gap-2">
+                <Clock className="h-3 w-3" />
+                Recherches récentes
+              </div>
+              <div className="max-h-32 overflow-y-auto bg-background">
+                {recentSearches.map((search, index) => (
+                  <button 
+                    key={`recent-${index}`} 
+                    onClick={() => handleSuggestionClick(search)} 
+                    className="w-full text-left px-3 py-2 hover:bg-muted text-sm text-foreground bg-background flex items-center gap-2"
+                  >
+                    <Clock className="h-3 w-3 text-muted-foreground" />
+                    {search}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>;
 };

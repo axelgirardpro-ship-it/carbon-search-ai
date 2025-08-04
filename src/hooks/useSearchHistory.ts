@@ -33,5 +33,27 @@ export const useSearchHistory = () => {
     }
   }, [user, currentWorkspace]);
 
-  return { recordSearch };
+  const getRecentSearches = useCallback(async () => {
+    if (!user) return [];
+
+    try {
+      const { data, error } = await supabase
+        .from('search_history')
+        .select('search_query')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (error) throw error;
+
+      // Return unique search queries (last 5)
+      const uniqueSearches = [...new Set(data?.map(item => item.search_query) || [])];
+      return uniqueSearches.slice(0, 5);
+    } catch (error) {
+      console.error('Error fetching recent searches:', error);
+      return [];
+    }
+  }, [user]);
+
+  return { recordSearch, getRecentSearches };
 };
