@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Heart, Download, Copy, ChevronDown } from "lucide-react";
+import { Heart, Download, ChevronDown } from "lucide-react";
 import { EmissionFactor } from "@/types/emission-factor";
 import { cn } from "@/lib/utils";
 
@@ -43,9 +43,6 @@ export const ResultsTable = ({
     );
   };
 
-  const copyToClipboard = (value: string) => {
-    navigator.clipboard.writeText(value);
-  };
 
   if (isLoading) {
     return (
@@ -135,19 +132,9 @@ export const ResultsTable = ({
                     )}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <Badge variant="outline" className="font-mono">
-                        {item.fe}
-                      </Badge>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0"
-                        onClick={() => copyToClipboard(item.fe.toString())}
-                      >
-                        <Copy className="h-3 w-3" />
-                      </Button>
-                    </div>
+                    <Badge variant="outline" className="font-mono">
+                      {item.fe}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary">{item.unite}</Badge>
