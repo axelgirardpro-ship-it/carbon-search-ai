@@ -199,19 +199,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signUp = async (email: string, password: string, userData?: { firstName?: string; lastName?: string; company?: string }) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
-        data: {
-          first_name: userData?.firstName,
-          last_name: userData?.lastName,
-          company: userData?.company
+    try {
+      console.log('Signup attempt:', { email, userData });
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+          data: {
+            first_name: userData?.firstName,
+            last_name: userData?.lastName,
+            company: userData?.company
+          }
         }
+      });
+      
+      if (error) {
+        console.error('Supabase signup error:', error);
+      } else {
+        console.log('Signup successful:', data);
       }
-    });
-    return { data, error };
+      
+      return { data, error };
+    } catch (error) {
+      console.error('Signup error:', error);
+      return { data: null, error };
+    }
   };
 
   const signIn = async (email: string, password: string) => {
