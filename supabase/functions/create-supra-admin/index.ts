@@ -89,15 +89,22 @@ serve(async (req) => {
       )
     }
 
-    // Create the new admin user
+    // Create the new admin user with minimal metadata first
+    console.log('Creating user with email:', email)
     const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
-      user_metadata: {
+      app_metadata: {
         role: 'supra_admin',
         created_by: user.id
       }
+    })
+    
+    console.log('User creation result:', { 
+      success: !!newUser.user, 
+      userId: newUser.user?.id,
+      error: createError?.message 
     })
 
     if (createError || !newUser.user) {
