@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const UnifiedNavbar = () => {
   const { user, signOut } = useAuth();
+  const { canImportData } = usePermissions();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -34,6 +36,13 @@ export const UnifiedNavbar = () => {
                     Favoris
                   </Button>
                 </Link>
+                {canImportData() && (
+                  <Link to="/import">
+                    <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
+                      Import
+                    </Button>
+                  </Link>
+                )}
                 <Link to="/profile">
                   <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
                     Profil
