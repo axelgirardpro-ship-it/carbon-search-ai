@@ -36,9 +36,8 @@ interface AuthContextType {
   refreshUserRole: (userId: string) => Promise<void>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<{ error: any }>;
-  signInWithMicrosoft: () => Promise<{ error: any }>;
   signInWithSAML: () => Promise<{ error: any }>;
-  linkSSOAccount: (provider: 'google' | 'microsoft' | 'saml') => Promise<{ error: any }>;
+  linkSSOAccount: (provider: 'google' | 'saml') => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -213,29 +212,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const signInWithMicrosoft = async () => {
-    try {
-      const redirectUrl = `${window.location.origin}/dashboard`;
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'azure',
-        options: {
-          redirectTo: redirectUrl,
-        },
-      });
-      return { error };
-    } catch (error) {
-      console.error('Error signing in with Microsoft:', error);
-      return { error };
-    }
-  };
-
   const signInWithSAML = async () => {
     try {
       const redirectUrl = `${window.location.origin}/dashboard`;
-      // Note: SAML provider will be configured via Supabase Dashboard
-      // For now, we'll use a placeholder that will be updated when SAML is configured
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google' as any, // Temporary placeholder - will be updated for SAML
+        provider: 'saml' as any,
         options: {
           redirectTo: redirectUrl,
         },
@@ -247,12 +228,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const linkSSOAccount = async (provider: 'google' | 'microsoft' | 'saml') => {
+  const linkSSOAccount = async (provider: 'google' | 'saml') => {
     try {
-      const redirectUrl = `${window.location.origin}/profile`;
+      const redirectUrl = `${window.location.origin}/settings`;
       const providerMap = {
         google: 'google',
-        microsoft: 'azure',
         saml: 'saml'
       } as const;
       
@@ -339,7 +319,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       refreshUserRole,
       signOut,
       signInWithGoogle,
-      signInWithMicrosoft,
       signInWithSAML,
       linkSSOAccount,
     }}>

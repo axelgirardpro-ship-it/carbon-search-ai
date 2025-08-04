@@ -10,10 +10,10 @@ import { SSOProvider, useSSO } from "@/components/ui/SSOProvider";
 
 const LoginForm = () => {
   const { toast } = useToast();
-  const { signInWithGoogle, signInWithMicrosoft, signInWithSAML } = useAuth();
+  const { signInWithGoogle, signInWithSAML } = useAuth();
   const { ssoState, setProviderLoading, setLastError } = useSSO();
 
-  const handleSSOLogin = async (provider: 'google' | 'microsoft' | 'saml') => {
+  const handleSSOLogin = async (provider: 'google' | 'saml') => {
     setProviderLoading(provider, true);
     setLastError(null);
     
@@ -23,9 +23,6 @@ const LoginForm = () => {
         case 'google':
           result = await signInWithGoogle();
           break;
-        case 'microsoft':
-          result = await signInWithMicrosoft();
-          break;
         case 'saml':
           result = await signInWithSAML();
           break;
@@ -34,7 +31,6 @@ const LoginForm = () => {
       if (result.error) {
         const errorMessage = {
           google: "Erreur lors de la connexion avec Google",
-          microsoft: "Erreur lors de la connexion avec Microsoft",
           saml: "Erreur lors de la connexion SAML"
         };
         
@@ -48,7 +44,6 @@ const LoginForm = () => {
     } catch (error) {
       const errorMessage = {
         google: "Erreur lors de la connexion avec Google",
-        microsoft: "Erreur lors de la connexion avec Microsoft", 
         saml: "Erreur lors de la connexion SAML"
       };
       
@@ -112,23 +107,6 @@ const LoginForm = () => {
               }
             >
               Se connecter avec Google
-            </SSOButton>
-
-            <SSOButton
-              provider="microsoft"
-              onClick={() => handleSSOLogin('microsoft')}
-              loading={ssoState.loading.microsoft}
-              disabled={Object.values(ssoState.loading).some(loading => loading)}
-              icon={
-                <svg className="w-4 h-4" viewBox="0 0 24 24">
-                  <path fill="#f35325" d="M1 1h10v10H1z"/>
-                  <path fill="#81bc06" d="M13 1h10v10H13z"/>
-                  <path fill="#05a6f0" d="M1 13h10v10H1z"/>
-                  <path fill="#ffba08" d="M13 13h10v10H13z"/>
-                </svg>
-              }
-            >
-              Se connecter avec Microsoft
             </SSOButton>
 
             <SSOButton

@@ -9,10 +9,10 @@ import { SSOProvider, useSSO } from "@/components/ui/SSOProvider";
 
 const SignupForm = () => {
   const { toast } = useToast();
-  const { signInWithGoogle, signInWithMicrosoft, signInWithSAML } = useAuth();
+  const { signInWithGoogle, signInWithSAML } = useAuth();
   const { ssoState, setProviderLoading, setLastError } = useSSO();
 
-  const handleSSOSignup = async (provider: 'google' | 'microsoft' | 'saml') => {
+  const handleSSOSignup = async (provider: 'google' | 'saml') => {
     setProviderLoading(provider, true);
     setLastError(null);
     
@@ -22,9 +22,6 @@ const SignupForm = () => {
         case 'google':
           result = await signInWithGoogle();
           break;
-        case 'microsoft':
-          result = await signInWithMicrosoft();
-          break;
         case 'saml':
           result = await signInWithSAML();
           break;
@@ -33,7 +30,6 @@ const SignupForm = () => {
       if (result.error) {
         const errorMessage = {
           google: "Erreur lors de l'inscription avec Google",
-          microsoft: "Erreur lors de l'inscription avec Microsoft",
           saml: "Erreur lors de l'inscription SAML"
         };
         
@@ -47,7 +43,6 @@ const SignupForm = () => {
     } catch (error) {
       const errorMessage = {
         google: "Erreur lors de l'inscription avec Google",
-        microsoft: "Erreur lors de l'inscription avec Microsoft", 
         saml: "Erreur lors de l'inscription SAML"
       };
       
@@ -90,7 +85,7 @@ const SignupForm = () => {
             <h3 className="text-sm font-medium text-blue-900 mb-2">Inscription sécurisée</h3>
             <p className="text-sm text-blue-700">
               Pour des raisons de sécurité, l'inscription est uniquement disponible via SSO d'entreprise. 
-              Utilisez votre compte professionnel Google, Microsoft ou SAML pour créer votre compte.
+              Utilisez votre compte professionnel Google ou SAML pour créer votre compte.
             </p>
           </div>
 
@@ -110,23 +105,6 @@ const SignupForm = () => {
               }
             >
               S'inscrire avec Google
-            </SSOButton>
-
-            <SSOButton
-              provider="microsoft"
-              onClick={() => handleSSOSignup('microsoft')}
-              loading={ssoState.loading.microsoft}
-              disabled={Object.values(ssoState.loading).some(loading => loading)}
-              icon={
-                <svg className="w-4 h-4" viewBox="0 0 24 24">
-                  <path fill="#f35325" d="M1 1h10v10H1z"/>
-                  <path fill="#81bc06" d="M13 1h10v10H13z"/>
-                  <path fill="#05a6f0" d="M1 13h10v10H1z"/>
-                  <path fill="#ffba08" d="M13 13h10v10H13z"/>
-                </svg>
-              }
-            >
-              S'inscrire avec Microsoft
             </SSOButton>
 
             <SSOButton

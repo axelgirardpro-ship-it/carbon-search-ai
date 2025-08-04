@@ -3,7 +3,7 @@ import { Loader2 } from "lucide-react";
 import { ReactNode } from "react";
 
 interface SSOButtonProps {
-  provider: "google" | "microsoft" | "saml";
+  provider: "google" | "saml";
   onClick: () => void;
   loading?: boolean;
   disabled?: boolean;
@@ -23,7 +23,6 @@ export const SSOButton = ({
 }: SSOButtonProps) => {
   const providerStyles = {
     google: "border-red-200 hover:border-red-300 hover:bg-red-50 text-gray-700",
-    microsoft: "border-blue-200 hover:border-blue-300 hover:bg-blue-50 text-gray-700", 
     saml: "border-purple-200 hover:border-purple-300 hover:bg-purple-50 text-gray-700"
   };
 
