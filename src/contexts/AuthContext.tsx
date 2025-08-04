@@ -147,7 +147,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Get user agent and IP (IP will be handled by the server)
       const userAgent = navigator.userAgent;
       
-      // Create session record
+      // Clean up any existing sessions for this user first
+      await supabase
+        .from('user_sessions')
+        .delete()
+        .eq('user_id', session.user.id);
+      
+      // Create new session record
       const { error } = await supabase
         .from('user_sessions')
         .insert({
@@ -160,6 +166,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (error) {
         console.error('Error creating user session:', error);
+      } else {
+        console.log('User session created successfully');
       }
     } catch (error) {
       console.error('Error creating user session:', error);
@@ -189,8 +197,45 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signOut = async () => {
     try {
       setLoading(true);
+      console.log('Starting sign out process...');
+      
+      // Clean up database sessions first
+      if (session?.user) {
+        try {
+          await supabase
+            .from('user_sessions')
+            .delete()
+            .eq('user_id', session.user.id);
+          console.log('Database sessions cleaned up');
+        } catch (dbError) {
+          console.error('Error cleaning database sessions:', dbError);
+        }
+      }
+
+      // Force clear localStorage before sign out
+      localStorage.clear();
+      console.log('localStorage cleared');
+      
+      // Sign out from Supabase
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      
+      console.log('Supabase sign out completed');
+      
+      // Reset all state
+      setUser(null);
+      setSession(null);
+      setUserRole(null);
+      setSubscriptionStatus({
+        subscribed: false,
+        subscription_tier: null,
+        plan_type: 'freemium',
+        trial_active: false,
+      });
+      
+      // Add delay before potential redirect to ensure cleanup
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
     } catch (error) {
       console.error('Error signing out:', error);
     } finally {
@@ -245,13 +290,38 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signInWithGoogle = async () => {
     try {
+      console.log('Starting Google SSO sign in...');
+      
+      // Check for existing session and clean if needed
+      const { data: currentSession } = await supabase.auth.getSession();
+      if (currentSession?.session) {
+        console.log('Found existing session, cleaning up...');
+        await supabase.auth.signOut();
+        localStorage.clear();
+        // Wait for cleanup to complete
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+      
       const redirectUrl = `${window.location.origin}/dashboard`;
+      console.log('Initiating Google OAuth with redirect:', redirectUrl);
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'select_account', // Force account selection
+          },
         },
       });
+      
+      if (error) {
+        console.error('Google OAuth error:', error);
+      } else {
+        console.log('Google OAuth initiated successfully');
+      }
+      
       return { error };
     } catch (error) {
       console.error('Error signing in with Google:', error);
