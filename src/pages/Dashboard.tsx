@@ -19,7 +19,11 @@ const Dashboard = () => {
   const { incrementExport, canExport, canSearch, incrementSearch } = useQuotas();
   const { subscription } = useSubscription();
   const { recordSearch } = useSearchHistory();
+  
+  // Initialize searchQuery state first
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Now use searchQuery in other hooks
   const { suggestions, recentSearches } = useSuggestions(searchQuery);
   const [filters, setFilters] = useState<Filters>({
     source: "",
