@@ -35,7 +35,7 @@ interface AuthContextType {
   refreshSubscription: () => Promise<void>;
   refreshUserRole: (userId: string) => Promise<void>;
   signOut: () => Promise<void>;
-  signUp: (email: string, password: string) => Promise<{ data: any; error: any }>;
+  signUp: (email: string, password: string, userData?: { firstName?: string; lastName?: string; company?: string }) => Promise<{ data: any; error: any }>;
   signIn: (email: string, password: string) => Promise<{ data: any; error: any }>;
   resetPassword: (email: string) => Promise<{ data: any; error: any }>;
   signInWithGoogle: () => Promise<{ error: any }>;
@@ -198,12 +198,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, userData?: { firstName?: string; lastName?: string; company?: string }) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`
+        emailRedirectTo: `${window.location.origin}/dashboard`,
+        data: {
+          first_name: userData?.firstName,
+          last_name: userData?.lastName,
+          company: userData?.company
+        }
       }
     });
     return { data, error };

@@ -15,6 +15,9 @@ const SignupForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [company, setCompany] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { signUp, signInWithGoogle } = useAuth();
@@ -45,7 +48,11 @@ const SignupForm = () => {
     setLastError(null);
     
     try {
-      const result = await signUp(email, password);
+      const result = await signUp(email, password, {
+        firstName,
+        lastName,
+        company: company || 'Mon Entreprise'
+      });
       
       if (result.error) {
         toast({
@@ -124,6 +131,43 @@ const SignupForm = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleEmailSignup} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">Prénom</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                    placeholder="Votre prénom"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Nom</Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                    placeholder="Votre nom"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="company">Nom de l'entreprise</Label>
+                <Input
+                  id="company"
+                  type="text"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  required
+                  placeholder="Nom de votre entreprise"
+                />
+              </div>
+              
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input

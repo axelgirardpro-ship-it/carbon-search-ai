@@ -46,8 +46,8 @@ image_transformation = true
 [auth]
 enabled = true
 port = 54326
-site_url = "http://127.0.0.1:3000"
-additional_redirect_urls = ["https://127.0.0.1:3000"]
+site_url = "https://0815560b-83d3-424c-9aae-2424e8359352.lovableproject.com"
+additional_redirect_urls = ["https://0815560b-83d3-424c-9aae-2424e8359352.lovableproject.com"]
 jwt_expiry = 3600
 enable_signup = true
 enable_anonymous_sign_ins = false
