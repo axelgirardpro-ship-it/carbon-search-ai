@@ -196,7 +196,9 @@ export default function Settings() {
                       <Button 
                         onClick={() => {
                           const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('demande de plan payant')}`;
-                          window.location.href = mailtoLink;
+                          const anchor = document.createElement('a');
+                          anchor.href = mailtoLink;
+                          anchor.click();
                         }}
                       >
                         Passer sur un plan payant
@@ -207,7 +209,9 @@ export default function Settings() {
                       <Button 
                         onClick={() => {
                           const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('demande de plan premium')}`;
-                          window.location.href = mailtoLink;
+                          const anchor = document.createElement('a');
+                          anchor.href = mailtoLink;
+                          anchor.click();
                         }}
                       >
                         Passer un plan premium
@@ -219,7 +223,9 @@ export default function Settings() {
                         variant="outline" 
                         onClick={() => {
                           const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('gestion abonnement')}`;
-                          window.location.href = mailtoLink;
+                          const anchor = document.createElement('a');
+                          anchor.href = mailtoLink;
+                          anchor.click();
                         }}
                       >
                         Gérer mon abonnement
