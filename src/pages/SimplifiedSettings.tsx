@@ -186,15 +186,43 @@ export default function Settings() {
                     <div>
                       <div className="font-medium">Plan d'abonnement</div>
                       <div className="text-sm text-muted-foreground">
-                        {subscription?.subscribed ? "Plan Premium" : "Plan Freemium"}
+                        {subscription?.subscription_tier === 'premium' ? "Plan Premium" :
+                         subscription?.subscription_tier === 'standard' ? "Plan Standard" : 
+                         "Plan Freemium"}
                       </div>
                     </div>
-                    {!subscription?.subscribed && (
-                      <Button onClick={handleUpgrade}>Passer au Premium</Button>
+                    {/* Plan Freemium */}
+                    {(!subscription?.subscribed || subscription?.subscription_tier === 'freemium') && (
+                      <Button 
+                        onClick={() => {
+                          const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('demande de plan payant')}`;
+                          window.location.href = mailtoLink;
+                        }}
+                      >
+                        Passer sur un plan payant
+                      </Button>
                     )}
-                    {subscription?.subscribed && (
-                      <Button variant="outline" onClick={handleManageSubscription}>
-                        Gérer l'abonnement
+                    {/* Plan Standard */}
+                    {subscription?.subscription_tier === 'standard' && (
+                      <Button 
+                        onClick={() => {
+                          const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('demande de plan premium')}`;
+                          window.location.href = mailtoLink;
+                        }}
+                      >
+                        Passer un plan premium
+                      </Button>
+                    )}
+                    {/* Plan Premium */}
+                    {subscription?.subscription_tier === 'premium' && (
+                      <Button 
+                        variant="outline" 
+                        onClick={() => {
+                          const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('gestion abonnement')}`;
+                          window.location.href = mailtoLink;
+                        }}
+                      >
+                        Gérer mon abonnement
                       </Button>
                     )}
                   </div>
