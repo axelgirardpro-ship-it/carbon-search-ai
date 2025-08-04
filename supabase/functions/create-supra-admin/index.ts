@@ -89,81 +89,99 @@ serve(async (req) => {
       )
     }
 
-    // Alternative approach: Create user without triggering the handle_new_user trigger
-    console.log('Creating user with email:', email)
+    // Bypass the handle_new_user trigger to avoid metadata conflicts
+    console.log('Disabling new user trigger...')
     
-    // First, try to create the user with minimal data to avoid trigger conflicts
-    const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-      // Use minimal metadata to avoid trigger issues
-      user_metadata: {},
-      app_metadata: {}
-    })
-    
-    console.log('User creation result:', { 
-      success: !!newUser.user, 
-      userId: newUser.user?.id,
-      error: createError?.message,
-      fullError: createError 
-    })
-
-    if (createError || !newUser.user) {
-      console.error('Detailed error:', createError)
+    // Disable the trigger before creating the user
+    const { error: disableError } = await supabaseAdmin.rpc('toggle_new_user_trigger', { enable_trigger: false })
+    if (disableError) {
+      console.error('Failed to disable trigger:', disableError)
       return new Response(
-        JSON.stringify({ error: `Failed to create user: ${createError?.message || 'Unknown error'}` }),
+        JSON.stringify({ error: 'Failed to prepare user creation' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    console.log('User created successfully, now assigning supra_admin role...')
-
-    // Assign supra_admin role
-    const { error: roleAssignError } = await supabaseAdmin
-      .from('user_roles')
-      .insert({
-        user_id: newUser.user.id,
-        role: 'supra_admin',
-        workspace_id: null,
-        assigned_by: user.id
+    try {
+      console.log('Creating user with email:', email)
+      
+      // Create the user with minimal data since trigger is disabled
+      const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: { created_by_supra_admin: true },
+        app_metadata: { created_by_supra_admin: true }
+      })
+      
+      console.log('User creation result:', { 
+        success: !!newUser.user, 
+        userId: newUser.user?.id,
+        error: createError?.message
       })
 
-    console.log('Role assignment result:', { success: !roleAssignError, error: roleAssignError?.message })
-
-    if (roleAssignError) {
-      console.error('Role assignment failed:', roleAssignError)
-      // If role assignment fails, try to delete the created user
-      await supabaseAdmin.auth.admin.deleteUser(newUser.user.id)
-      return new Response(
-        JSON.stringify({ error: `Failed to assign role: ${roleAssignError.message}` }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
-    // Log the admin creation for audit purposes
-    await supabaseAdmin
-      .from('audit_logs')
-      .insert({
-        user_id: user.id,
-        action: 'create_supra_admin',
-        details: {
-          created_admin_email: email,
-          created_admin_id: newUser.user.id
-        }
-      })
-
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: `Supra admin account created successfully for ${email}`,
-        user_id: newUser.user.id 
-      }),
-      { 
-        status: 200, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      if (createError || !newUser.user) {
+        console.error('Detailed error:', createError)
+        throw new Error(`Failed to create user: ${createError?.message || 'Unknown error'}`)
       }
-    )
+
+      // Assign supra_admin role directly (no profile/workspace needed for supra admin)
+      const { error: roleAssignError } = await supabaseAdmin
+        .from('user_roles')
+        .insert({
+          user_id: newUser.user.id,
+          role: 'supra_admin',
+          workspace_id: null,
+          assigned_by: user.id
+        })
+
+      console.log('Role assignment result:', { success: !roleAssignError, error: roleAssignError?.message })
+
+      if (roleAssignError) {
+        console.error('Role assignment failed:', roleAssignError)
+        throw new Error(`Failed to assign role: ${roleAssignError.message}`)
+      }
+
+      // Log the admin creation for audit purposes
+      await supabaseAdmin
+        .from('audit_logs')
+        .insert({
+          user_id: user.id,
+          action: 'create_supra_admin',
+          details: {
+            created_admin_email: email,
+            created_admin_id: newUser.user.id
+          }
+        })
+
+      console.log('Supra admin created successfully, re-enabling trigger...')
+      
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          message: `Supra admin account created successfully for ${email}`,
+          user_id: newUser.user.id 
+        }),
+        { 
+          status: 200, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+
+    } catch (createUserError) {
+      console.error('Error in user creation process:', createUserError)
+      return new Response(
+        JSON.stringify({ error: createUserError.message || 'Failed to create supra admin' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    } finally {
+      // Always re-enable the trigger, even if there was an error
+      console.log('Re-enabling new user trigger...')
+      const { error: enableError } = await supabaseAdmin.rpc('toggle_new_user_trigger', { enable_trigger: true })
+      if (enableError) {
+        console.error('Failed to re-enable trigger:', enableError)
+      }
+    }
 
   } catch (error) {
     console.error('Error creating supra admin:', error)
