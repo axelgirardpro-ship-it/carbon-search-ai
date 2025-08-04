@@ -190,33 +190,29 @@ export default function Settings() {
                          subscription?.subscription_tier?.toLowerCase() === 'standard' ? "Plan Standard" : 
                          "Plan Freemium"}
                       </div>
-                      {/* Debug info - à supprimer plus tard */}
-                      <div className="text-xs text-gray-400 mt-1">
-                        Debug: subscribed={String(subscription?.subscribed)}, tier={subscription?.subscription_tier}, plan_type={subscription?.plan_type}
-                      </div>
                     </div>
                     {/* Plan Freemium */}
                     {(!subscription?.subscribed || subscription?.subscription_tier?.toLowerCase() === 'freemium') && (
                       <Button 
                         onClick={() => {
-                          try {
-                            const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('demande de plan payant')}`;
-                            console.log('Opening mailto:', mailtoLink);
-                            // Essayons plusieurs méthodes
-                            if (window.open) {
-                              window.open(mailtoLink, '_self');
-                            } else {
-                              window.location.href = mailtoLink;
-                            }
-                          } catch (error) {
-                            console.error('Error opening mailto:', error);
-                            // Fallback - copier l'email dans le clipboard
-                            navigator.clipboard?.writeText('axelgirard.pro@gmail.com');
-                            toast({
-                              title: "Email copié",
-                              description: "L'adresse email a été copiée dans le presse-papier",
-                            });
-                          }
+                          const email = 'axelgirard.pro@gmail.com';
+                          const subject = 'demande de plan payant';
+                          const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+                          
+                          // Créer un lien temporaire et le cliquer
+                          const link = document.createElement('a');
+                          link.href = mailtoLink;
+                          link.target = '_blank';
+                          link.rel = 'noopener noreferrer';
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                          
+                          // Toast pour confirmer l'action
+                          toast({
+                            title: "Email en cours d'ouverture",
+                            description: `Destinataire: ${email}`,
+                          });
                         }}
                       >
                         Passer sur un plan payant
@@ -226,22 +222,22 @@ export default function Settings() {
                     {subscription?.subscription_tier?.toLowerCase() === 'standard' && (
                       <Button 
                         onClick={() => {
-                          try {
-                            const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('demande de plan premium')}`;
-                            console.log('Opening mailto:', mailtoLink);
-                            if (window.open) {
-                              window.open(mailtoLink, '_self');
-                            } else {
-                              window.location.href = mailtoLink;
-                            }
-                          } catch (error) {
-                            console.error('Error opening mailto:', error);
-                            navigator.clipboard?.writeText('axelgirard.pro@gmail.com');
-                            toast({
-                              title: "Email copié",
-                              description: "L'adresse email a été copiée dans le presse-papier",
-                            });
-                          }
+                          const email = 'axelgirard.pro@gmail.com';
+                          const subject = 'demande de plan premium';
+                          const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+                          
+                          const link = document.createElement('a');
+                          link.href = mailtoLink;
+                          link.target = '_blank';
+                          link.rel = 'noopener noreferrer';
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                          
+                          toast({
+                            title: "Email en cours d'ouverture",
+                            description: `Destinataire: ${email}`,
+                          });
                         }}
                       >
                         Passer un plan premium
@@ -252,22 +248,22 @@ export default function Settings() {
                       <Button 
                         variant="outline" 
                         onClick={() => {
-                          try {
-                            const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('gestion abonnement')}`;
-                            console.log('Opening mailto:', mailtoLink);
-                            if (window.open) {
-                              window.open(mailtoLink, '_self');
-                            } else {
-                              window.location.href = mailtoLink;
-                            }
-                          } catch (error) {
-                            console.error('Error opening mailto:', error);
-                            navigator.clipboard?.writeText('axelgirard.pro@gmail.com');
-                            toast({
-                              title: "Email copié",
-                              description: "L'adresse email a été copiée dans le presse-papier",
-                            });
-                          }
+                          const email = 'axelgirard.pro@gmail.com';
+                          const subject = 'gestion abonnement';
+                          const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+                          
+                          const link = document.createElement('a');
+                          link.href = mailtoLink;
+                          link.target = '_blank';
+                          link.rel = 'noopener noreferrer';
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                          
+                          toast({
+                            title: "Email en cours d'ouverture",
+                            description: `Destinataire: ${email}`,
+                          });
                         }}
                       >
                         Gérer mon abonnement
