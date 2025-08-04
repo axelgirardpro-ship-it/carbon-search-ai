@@ -153,20 +153,13 @@ const Dashboard = () => {
     performSearch(searchQuery);
   };
 
-  // Debounced search effect
+  // Clear results when search query is empty
   useEffect(() => {
-    if (searchQuery.length >= 2) {
-      const timeoutId = setTimeout(() => {
-        performSearch(searchQuery);
-      }, 400);
-
-      return () => clearTimeout(timeoutId);
-    } else if (searchQuery.length === 0 && hasSearched) {
-      // Clear results when search is empty
+    if (searchQuery.length === 0 && hasSearched) {
       setResults([]);
       setHasSearched(false);
     }
-  }, [searchQuery, performSearch, hasSearched]); // Remettre performSearch dans les dépendances maintenant qu'il est stable
+  }, [searchQuery, hasSearched]);
 
   const handleFilterChange = (key: keyof Filters, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));

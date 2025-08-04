@@ -263,11 +263,18 @@ const Settings = () => {
                 <div>
                   <Label>Plan actuel</Label>
                   <p className="text-sm text-muted-foreground">
-                    Plan Gratuit - 100 recherches/mois
+                    Plan Gratuit - 10 recherches/mois
                   </p>
                 </div>
-                <Button variant="outline" size="sm">
-                  Upgrade
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('demande de plan payant')}`;
+                    window.location.href = mailtoLink;
+                  }}
+                >
+                  Passer sur un plan payant
                 </Button>
               </div>
 

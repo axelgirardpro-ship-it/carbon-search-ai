@@ -64,8 +64,12 @@ const SignupForm = () => {
       } else {
         toast({
           title: "Inscription réussie",
-          description: "Votre compte a été créé avec succès",
+          description: "Un email de confirmation a été envoyé. Vérifiez votre boîte mail.",
         });
+        // Rediriger vers la page login après inscription réussie
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 2000);
       }
     } catch (error) {
       toast({
