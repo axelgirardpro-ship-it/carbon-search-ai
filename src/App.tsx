@@ -19,6 +19,7 @@ import Team from "./pages/Team";
 import Debug from "./pages/Debug";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import DevLogin from "./pages/DevLogin";
 
 const queryClient = new QueryClient();
 
@@ -80,6 +81,7 @@ const App = () => (
                   <Route path="/" element={<Index />} />
                   <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
                   <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+                  <Route path="/dev" element={<PublicRoute><DevLogin /></PublicRoute>} />
                   <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                   <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
                   <Route path="/import" element={<ProtectedRoute><Import /></ProtectedRoute>} />

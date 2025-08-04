@@ -6,8 +6,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { SSOButton } from "@/components/ui/SSOButton";
 import { SSOProvider, useSSO } from "@/components/ui/SSOProvider";
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 
 
 const LoginForm = () => {
@@ -62,35 +60,6 @@ const LoginForm = () => {
       setLastError("Une erreur inattendue s'est produite");
     } finally {
       setProviderLoading(provider, false);
-    }
-  };
-
-  // Fonction temporaire pour la connexion admin en développement
-  const handleDevLogin = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: 'axelgirard.pro@gmail.com',
-        password: 'admin123' // Mot de passe temporaire
-      });
-
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Erreur de connexion",
-          description: error.message,
-        });
-      } else {
-        toast({
-          title: "Connexion réussie",
-          description: "Connexion en mode développement activée",
-        });
-      }
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Erreur lors de la connexion de développement",
-      });
     }
   };
 
@@ -186,23 +155,6 @@ const LoginForm = () => {
               </AlertDescription>
             </Alert>
           )}
-
-          {/* Bouton de connexion temporaire pour développement */}
-          <div className="mt-6 pt-4 border-t border-gray-200">
-            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
-              <h3 className="text-sm font-medium text-orange-900 mb-1">Mode Développement</h3>
-              <p className="text-xs text-orange-700">
-                Connexion temporaire en attendant la configuration SSO
-              </p>
-            </div>
-            <Button 
-              onClick={handleDevLogin}
-              variant="outline"
-              className="w-full"
-            >
-              Connexion Dev - axelgirard.pro@gmail.com
-            </Button>
-          </div>
 
           <div className="text-center space-y-2 pt-4">
             <p className="text-sm text-gray-600">
