@@ -89,30 +89,35 @@ serve(async (req) => {
       )
     }
 
-    // Create the new admin user with minimal metadata first
+    // Alternative approach: Create user without triggering the handle_new_user trigger
     console.log('Creating user with email:', email)
+    
+    // First, try to create the user with minimal data to avoid trigger conflicts
     const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
-      app_metadata: {
-        role: 'supra_admin',
-        created_by: user.id
-      }
+      // Use minimal metadata to avoid trigger issues
+      user_metadata: {},
+      app_metadata: {}
     })
     
     console.log('User creation result:', { 
       success: !!newUser.user, 
       userId: newUser.user?.id,
-      error: createError?.message 
+      error: createError?.message,
+      fullError: createError 
     })
 
     if (createError || !newUser.user) {
+      console.error('Detailed error:', createError)
       return new Response(
-        JSON.stringify({ error: `Failed to create user: ${createError?.message}` }),
+        JSON.stringify({ error: `Failed to create user: ${createError?.message || 'Unknown error'}` }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
+
+    console.log('User created successfully, now assigning supra_admin role...')
 
     // Assign supra_admin role
     const { error: roleAssignError } = await supabaseAdmin
@@ -124,7 +129,10 @@ serve(async (req) => {
         assigned_by: user.id
       })
 
+    console.log('Role assignment result:', { success: !roleAssignError, error: roleAssignError?.message })
+
     if (roleAssignError) {
+      console.error('Role assignment failed:', roleAssignError)
       // If role assignment fails, try to delete the created user
       await supabaseAdmin.auth.admin.deleteUser(newUser.user.id)
       return new Response(
