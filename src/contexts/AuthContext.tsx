@@ -35,9 +35,11 @@ interface AuthContextType {
   refreshSubscription: () => Promise<void>;
   refreshUserRole: (userId: string) => Promise<void>;
   signOut: () => Promise<void>;
+  signUp: (email: string, password: string) => Promise<{ data: any; error: any }>;
+  signIn: (email: string, password: string) => Promise<{ data: any; error: any }>;
+  resetPassword: (email: string) => Promise<{ data: any; error: any }>;
   signInWithGoogle: () => Promise<{ error: any }>;
-  signInWithSAML: () => Promise<{ error: any }>;
-  linkSSOAccount: (provider: 'google' | 'saml') => Promise<{ error: any }>;
+  linkSSOAccount: (provider: 'google') => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -196,6 +198,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const signUp = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/dashboard`
+      }
+    });
+    return { data, error };
+  };
+
+  const signIn = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+    return { data, error };
+  };
+
+  const resetPassword = async (email: string) => {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`
+    });
+    return { data, error };
+  };
+
   const signInWithGoogle = async () => {
     try {
       const redirectUrl = `${window.location.origin}/dashboard`;
@@ -212,32 +240,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const signInWithSAML = async () => {
-    try {
-      const redirectUrl = `${window.location.origin}/dashboard`;
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'saml' as any,
-        options: {
-          redirectTo: redirectUrl,
-        },
-      });
-      return { error };
-    } catch (error) {
-      console.error('Error signing in with SAML:', error);
-      return { error };
-    }
-  };
 
-  const linkSSOAccount = async (provider: 'google' | 'saml') => {
+  const linkSSOAccount = async (provider: 'google') => {
     try {
       const redirectUrl = `${window.location.origin}/settings`;
-      const providerMap = {
-        google: 'google',
-        saml: 'saml'
-      } as const;
       
       const { error } = await supabase.auth.linkIdentity({
-        provider: providerMap[provider] as any,
+        provider: 'google',
         options: {
           redirectTo: redirectUrl,
         },
@@ -318,8 +327,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       refreshSubscription,
       refreshUserRole,
       signOut,
+      signUp,
+      signIn,
+      resetPassword,
       signInWithGoogle,
-      signInWithSAML,
       linkSSOAccount,
     }}>
       {children}

@@ -1,54 +1,96 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ArrowLeft, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, AlertCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { SSOButton } from "@/components/ui/SSOButton";
 import { SSOProvider, useSSO } from "@/components/ui/SSOProvider";
 
 const SignupForm = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const { signInWithGoogle, signInWithSAML } = useAuth();
+  const { signUp, signInWithGoogle } = useAuth();
   const { ssoState, setProviderLoading, setLastError } = useSSO();
 
-  const handleSSOSignup = async (provider: 'google' | 'saml') => {
+  const handleEmailSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (password !== confirmPassword) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Les mots de passe ne correspondent pas",
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Le mot de passe doit contenir au moins 6 caractères",
+      });
+      return;
+    }
+
+    setLoading(true);
+    setLastError(null);
+    
+    try {
+      const result = await signUp(email, password);
+      
+      if (result.error) {
+        toast({
+          variant: "destructive",
+          title: "Erreur lors de l'inscription",
+          description: result.error.message,
+        });
+        setLastError(result.error.message);
+      } else {
+        toast({
+          title: "Inscription réussie",
+          description: "Votre compte a été créé avec succès",
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur lors de l'inscription",
+        description: "Une erreur inattendue s'est produite",
+      });
+      setLastError("Une erreur inattendue s'est produite");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSSOSignup = async (provider: 'google') => {
     setProviderLoading(provider, true);
     setLastError(null);
     
     try {
-      let result;
-      switch (provider) {
-        case 'google':
-          result = await signInWithGoogle();
-          break;
-        case 'saml':
-          result = await signInWithSAML();
-          break;
-      }
+      const result = await signInWithGoogle();
 
       if (result.error) {
-        const errorMessage = {
-          google: "Erreur lors de l'inscription avec Google",
-          saml: "Erreur lors de l'inscription SAML"
-        };
-        
         toast({
           variant: "destructive",
-          title: errorMessage[provider],
+          title: "Erreur lors de l'inscription avec Google",
           description: result.error.message,
         });
         setLastError(result.error.message);
       }
     } catch (error) {
-      const errorMessage = {
-        google: "Erreur lors de l'inscription avec Google",
-        saml: "Erreur lors de l'inscription SAML"
-      };
-      
       toast({
         variant: "destructive",
-        title: errorMessage[provider],
+        title: "Erreur lors de l'inscription avec Google",
         description: "Une erreur inattendue s'est produite",
       });
       setLastError("Une erreur inattendue s'est produite");
@@ -81,20 +123,64 @@ const SignupForm = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <h3 className="text-sm font-medium text-blue-900 mb-2">Inscription sécurisée</h3>
-            <p className="text-sm text-blue-700">
-              Pour des raisons de sécurité, l'inscription est uniquement disponible via SSO d'entreprise. 
-              Utilisez votre compte professionnel Google ou SAML pour créer votre compte.
-            </p>
-          </div>
+            <form onSubmit={handleEmailSignup} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="votre@email.com"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="password">Mot de passe</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="Au moins 6 caractères"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  placeholder="Confirmez votre mot de passe"
+                />
+              </div>
+              
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Création en cours...
+                  </>
+                ) : (
+                  "Créer un compte"
+                )}
+              </Button>
+            </form>
 
-          <div className="space-y-3">
+            <div className="my-6 text-center text-sm text-gray-500">
+              <span>ou</span>
+            </div>
+
             <SSOButton
               provider="google"
               onClick={() => handleSSOSignup('google')}
               loading={ssoState.loading.google}
-              disabled={Object.values(ssoState.loading).some(loading => loading)}
+              disabled={loading || ssoState.loading.google}
               icon={
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -107,39 +193,24 @@ const SignupForm = () => {
               S'inscrire avec Google
             </SSOButton>
 
-            <SSOButton
-              provider="saml"
-              onClick={() => handleSSOSignup('saml')}
-              loading={ssoState.loading.saml}
-              disabled={Object.values(ssoState.loading).some(loading => loading)}
-              icon={
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-              }
-            >
-              S'inscrire avec SAML
-            </SSOButton>
-          </div>
+            {/* Error Alert */}
+            {ssoState.lastError && (
+              <Alert variant="destructive" className="mt-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  {ssoState.lastError}
+                </AlertDescription>
+              </Alert>
+            )}
 
-          {/* Error Alert */}
-          {ssoState.lastError && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                {ssoState.lastError}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Vous avez déjà un compte ?{' '}
-              <Link to="/login" className="text-blue-600 hover:underline">
-                Se connecter
-              </Link>
-            </p>
-          </div>
+            <div className="text-center mt-6">
+              <p className="text-sm text-gray-600">
+                Vous avez déjà un compte ?{' '}
+                <Link to="/login" className="text-blue-600 hover:underline">
+                  Se connecter
+                </Link>
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>

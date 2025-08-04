@@ -56,21 +56,10 @@ enable_anonymous_sign_ins = false
 enabled = true
 client_id = "env(GOOGLE_CLIENT_ID)"
 secret = "env(GOOGLE_CLIENT_SECRET)"
-redirect_uri = "http://127.0.0.1:3000/dashboard"
-
-[auth.external.azure]
-enabled = true
-client_id = "env(AZURE_CLIENT_ID)"
-secret = "env(AZURE_CLIENT_SECRET)"
-url = "env(AZURE_TENANT_URL)"
-redirect_uri = "http://127.0.0.1:3000/dashboard"
-
-[auth.external.saml]
-enabled = true
-# SAML configuration will be done via Supabase Dashboard
+redirect_uri = "https://wrodvaatdujbpfpvrzge.supabase.co/auth/v1/callback"
 
 [auth.email]
-enable_signup = false
+enable_signup = true
 double_confirm_changes = true
 enable_confirmations = false
 # Email auth disabled - SSO/SAML only

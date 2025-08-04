@@ -1,55 +1,72 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ArrowLeft, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, AlertCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { SSOButton } from "@/components/ui/SSOButton";
 import { SSOProvider, useSSO } from "@/components/ui/SSOProvider";
 
-
 const LoginForm = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const { signInWithGoogle, signInWithSAML } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const { ssoState, setProviderLoading, setLastError } = useSSO();
 
-  const handleSSOLogin = async (provider: 'google' | 'saml') => {
-    setProviderLoading(provider, true);
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    setLoading(true);
     setLastError(null);
     
     try {
-      let result;
-      switch (provider) {
-        case 'google':
-          result = await signInWithGoogle();
-          break;
-        case 'saml':
-          result = await signInWithSAML();
-          break;
-      }
-
+      const result = await signIn(email, password);
+      
       if (result.error) {
-        const errorMessage = {
-          google: "Erreur lors de la connexion avec Google",
-          saml: "Erreur lors de la connexion SAML"
-        };
-        
         toast({
           variant: "destructive",
-          title: errorMessage[provider],
+          title: "Erreur lors de la connexion",
           description: result.error.message,
         });
         setLastError(result.error.message);
       }
     } catch (error) {
-      const errorMessage = {
-        google: "Erreur lors de la connexion avec Google",
-        saml: "Erreur lors de la connexion SAML"
-      };
-      
       toast({
         variant: "destructive",
-        title: errorMessage[provider],
+        title: "Erreur lors de la connexion",
+        description: "Une erreur inattendue s'est produite",
+      });
+      setLastError("Une erreur inattendue s'est produite");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSSOLogin = async (provider: 'google') => {
+    setProviderLoading(provider, true);
+    setLastError(null);
+    
+    try {
+      const result = await signInWithGoogle();
+
+      if (result.error) {
+        toast({
+          variant: "destructive",
+          title: "Erreur lors de la connexion avec Google",
+          description: result.error.message,
+        });
+        setLastError(result.error.message);
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur lors de la connexion avec Google",
         description: "Une erreur inattendue s'est produite",
       });
       setLastError("Une erreur inattendue s'est produite");
@@ -62,7 +79,7 @@ const LoginForm = () => {
     <div className="min-h-screen homepage-violet-bg flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-6">
-            <Link 
+          <Link 
             to="/" 
             className="inline-flex items-center homepage-text hover:opacity-80 transition-colors"
           >
@@ -76,27 +93,58 @@ const LoginForm = () => {
             <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-4">
               <span className="text-primary-foreground font-bold text-lg">EC</span>
             </div>
-            <CardTitle className="text-2xl">Connexion</CardTitle>
+            <CardTitle className="text-2xl">Se connecter</CardTitle>
             <CardDescription>
               Connectez-vous à votre compte EcoSearch
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* SSO Buttons */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <h3 className="text-sm font-medium text-blue-900 mb-2">Connexion sécurisée</h3>
-            <p className="text-sm text-blue-700">
-              Pour des raisons de sécurité, la connexion est uniquement disponible via SSO d'entreprise. 
-              Cela garantit l'intégrité de votre compte et empêche tout partage non autorisé.
-            </p>
-          </div>
+            <form onSubmit={handleEmailLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="votre@email.com"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="password">Mot de passe</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="Votre mot de passe"
+                />
+              </div>
+              
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Connexion...
+                  </>
+                ) : (
+                  "Se connecter"
+                )}
+              </Button>
+            </form>
 
-          <div className="space-y-3">
+            <div className="my-6 text-center text-sm text-gray-500">
+              <span>ou</span>
+            </div>
+
             <SSOButton
               provider="google"
               onClick={() => handleSSOLogin('google')}
               loading={ssoState.loading.google}
-              disabled={Object.values(ssoState.loading).some(loading => loading)}
+              disabled={loading || ssoState.loading.google}
               icon={
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -109,39 +157,24 @@ const LoginForm = () => {
               Se connecter avec Google
             </SSOButton>
 
-            <SSOButton
-              provider="saml"
-              onClick={() => handleSSOLogin('saml')}
-              loading={ssoState.loading.saml}
-              disabled={Object.values(ssoState.loading).some(loading => loading)}
-              icon={
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-              }
-            >
-              Se connecter avec SAML
-            </SSOButton>
-          </div>
+            {/* Error Alert */}
+            {ssoState.lastError && (
+              <Alert variant="destructive" className="mt-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  {ssoState.lastError}
+                </AlertDescription>
+              </Alert>
+            )}
 
-          {/* Error Alert */}
-          {ssoState.lastError && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                {ssoState.lastError}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          <div className="text-center space-y-2 pt-4">
-            <p className="text-sm text-gray-600">
-              Pas encore de compte ?{' '}
-              <Link to="/signup" className="text-blue-600 hover:underline">
-                Créer un compte
-              </Link>
-            </p>
-          </div>
+            <div className="text-center mt-6">
+              <p className="text-sm text-gray-600">
+                Pas encore de compte ?{' '}
+                <Link to="/signup" className="text-blue-600 hover:underline">
+                  S'inscrire
+                </Link>
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>

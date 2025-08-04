@@ -3,7 +3,6 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 interface SSOState {
   loading: {
     google: boolean;
-    saml: boolean;
   };
   lastError: string | null;
 }
@@ -33,7 +32,6 @@ export const SSOProvider = ({ children }: SSOProviderProps) => {
   const [ssoState, setSsoState] = useState<SSOState>({
     loading: {
       google: false,
-      saml: false,
     },
     lastError: null,
   });
