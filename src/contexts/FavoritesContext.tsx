@@ -40,23 +40,47 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
     try {
       setLoading(true);
       
-      const { data, error } = await supabase
+      // Get favorites with their IDs
+      const { data: favoritesData, error: favError } = await supabase
         .from('favorites')
+        .select('item_id, created_at')
+        .eq('user_id', user.id)
+        .eq('item_type', 'emission_factor');
+
+      if (favError) throw favError;
+
+      if (!favoritesData || favoritesData.length === 0) {
+        setFavorites([]);
+        return;
+      }
+
+      // Get current emission factors data for these IDs
+      const itemIds = favoritesData.map(fav => fav.item_id);
+      const { data: currentData, error: emissionError } = await supabase
+        .from('emission_factors')
         .select('*')
-        .eq('user_id', user.id);
+        .in('id', itemIds);
 
-      if (error) throw error;
+      if (emissionError) throw emissionError;
 
-      // Convert favorites data back to EmissionFactor format
-      const favoritesData = data.map(fav => {
-        const itemData = fav.item_data as any;
-        return {
-          ...itemData,
-          id: fav.item_id
-        };
-      }) as EmissionFactor[];
+      // Convert to EmissionFactor format and mark as favorites
+      const updatedFavorites = (currentData || []).map(item => ({
+        ...item,
+        isFavorite: true
+      })) as EmissionFactor[];
 
-      setFavorites(favoritesData);
+      // Update the favorites table with current data
+      const updatePromises = updatedFavorites.map(item => 
+        supabase
+          .from('favorites')
+          .update({ item_data: item as any })
+          .eq('user_id', user.id)
+          .eq('item_id', item.id)
+      );
+
+      await Promise.all(updatePromises);
+
+      setFavorites(updatedFavorites);
     } catch (error) {
       console.error('Error fetching favorites:', error);
     } finally {
