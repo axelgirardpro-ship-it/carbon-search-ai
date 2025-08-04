@@ -371,16 +371,6 @@ export default function Settings() {
                     </div>
                     <Button variant="outline" size="sm">Lier le compte</Button>
                   </div>
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <Globe className="h-5 w-5" />
-                      <div>
-                        <div className="font-medium">Microsoft</div>
-                        <div className="text-sm text-muted-foreground">Connexion avec Microsoft</div>
-                      </div>
-                    </div>
-                    <Button variant="outline" size="sm">Lier le compte</Button>
-                  </div>
                 </CardContent>
               </Card>
 
