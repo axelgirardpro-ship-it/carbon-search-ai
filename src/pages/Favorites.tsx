@@ -3,7 +3,7 @@ import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
 import { ResultsTable } from "@/components/search/ResultsTable";
 import { Button } from "@/components/ui/button";
 import { EmissionFactor } from "@/types/emission-factor";
-import { Heart, Plus } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { usePermissions } from "@/hooks/usePermissions";
 import { useQuotas } from "@/contexts/QuotaSubscriptionContext";
@@ -109,31 +109,6 @@ const Favorites = () => {
     }
   };
 
-  const handleAddToFavorites = async () => {
-    if (selectedItems.length === 0) {
-      toast({
-        variant: "destructive",
-        title: "Sélection requise",
-        description: "Veuillez sélectionner au moins un élément",
-      });
-      return;
-    }
-
-    try {
-      // Add selected items to favorites (for demonstration, we'll just show success)
-      toast({
-        title: "Favoris ajoutés",
-        description: `${selectedItems.length} élément(s) ajouté(s) aux favoris`,
-      });
-      setSelectedItems([]);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Erreur lors de l'ajout aux favoris",
-      });
-    }
-  };
 
   const handleExport = async () => {
     if (!canExport) {
@@ -204,15 +179,7 @@ const Favorites = () => {
               availableLocations={availableLocations}
               availableDates={availableDates}
             />
-            <div className="mb-4 flex gap-2">
-              <Button 
-                onClick={handleAddToFavorites}
-                disabled={selectedItems.length === 0}
-                variant="outline"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Ajouter aux favoris ({selectedItems.length})
-              </Button>
+            <div className="mb-4">
               <RoleGuard requirePermission="canExportData">
                 <Button 
                   onClick={handleExport}
