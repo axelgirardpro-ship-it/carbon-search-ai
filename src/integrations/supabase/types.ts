@@ -592,6 +592,10 @@ export type Database = {
         Args: { workspace_id: string }
         Returns: boolean
       }
+      toggle_new_user_trigger: {
+        Args: { enable_trigger: boolean }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
