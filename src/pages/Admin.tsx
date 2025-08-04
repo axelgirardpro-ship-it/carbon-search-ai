@@ -25,6 +25,7 @@ import { ContactsTable } from "@/components/admin/ContactsTable";
 import { SearchHistoryTable } from "@/components/admin/SearchHistoryTable";
 import { EmissionFactorAccessManager } from "@/components/admin/EmissionFactorAccessManager";
 import { CSVImporter } from "@/components/admin/CSVImporter";
+import { CreateSupraAdmin } from "@/components/admin/CreateSupraAdmin";
 import { SessionsTable } from "@/components/admin/SessionsTable";
 import { ExportsMonitoringTable } from "@/components/admin/ExportsMonitoringTable";
 
@@ -243,6 +244,12 @@ const Admin = () => {
           
           <EmissionFactorAccessManager />
           <CSVImporter />
+          
+          {/* Supra Admin Creation */}
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Gestion des Comptes Admin</h2>
+            <CreateSupraAdmin />
+          </div>
         </div>
 
         {/* Debug Info */}
