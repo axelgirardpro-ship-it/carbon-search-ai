@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { Heart, Download, ChevronDown } from "lucide-react";
 import { EmissionFactor } from "@/types/emission-factor";
 import { cn } from "@/lib/utils";
@@ -34,12 +43,119 @@ export const ResultsTable = ({
   isLoading = false
 }: ResultsTableProps) => {
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  const ITEMS_PER_PAGE = 10;
+  
+  // Reset page when results change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [results]);
 
   const toggleRowExpansion = (id: string) => {
     setExpandedRows(prev => 
       prev.includes(id) 
         ? prev.filter(rowId => rowId !== id)
         : [...prev, id]
+    );
+  };
+
+  // Pagination calculations
+  const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentResults = results.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of table
+    document.querySelector('[data-table-container]')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const renderPagination = () => {
+    if (results.length <= ITEMS_PER_PAGE) return null;
+
+    const pages = [];
+    const showEllipsis = totalPages > 7;
+
+    if (showEllipsis) {
+      // Show first page
+      pages.push(1);
+      
+      // Show ellipsis if current page is far from start
+      if (currentPage > 4) {
+        pages.push('ellipsis-start');
+      }
+      
+      // Show pages around current page
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+      
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      
+      // Show ellipsis if current page is far from end
+      if (currentPage < totalPages - 3) {
+        pages.push('ellipsis-end');
+      }
+      
+      // Show last page
+      if (totalPages > 1) {
+        pages.push(totalPages);
+      }
+    } else {
+      // Show all pages
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    }
+
+    return (
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious 
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (currentPage > 1) handlePageChange(currentPage - 1);
+              }}
+              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+            />
+          </PaginationItem>
+          
+          {pages.map((page, index) => (
+            <PaginationItem key={index}>
+              {typeof page === 'number' ? (
+                <PaginationLink
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageChange(page);
+                  }}
+                  isActive={currentPage === page}
+                >
+                  {page}
+                </PaginationLink>
+              ) : (
+                <PaginationEllipsis />
+              )}
+            </PaginationItem>
+          ))}
+          
+          <PaginationItem>
+            <PaginationNext 
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) handlePageChange(currentPage + 1);
+              }}
+              className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     );
   };
 
@@ -73,7 +189,7 @@ export const ResultsTable = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-table-container>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Checkbox
@@ -82,6 +198,11 @@ export const ResultsTable = ({
           />
           <span className="text-sm text-muted-foreground">
             {selectedItems.length} sélectionné(s) sur {results.length} résultat(s)
+            {results.length > ITEMS_PER_PAGE && (
+              <span className="ml-2">
+                (Affichage de {startIndex + 1}-{Math.min(endIndex, results.length)} sur {results.length})
+              </span>
+            )}
           </span>
         </div>
         
@@ -109,7 +230,7 @@ export const ResultsTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {results.map((item) => (
+            {currentResults.map((item) => (
               <>
                 <TableRow key={item.id} className="hover:bg-muted/50">
                   <TableCell>
@@ -213,6 +334,8 @@ export const ResultsTable = ({
           </TableBody>
         </Table>
       </div>
+
+      {renderPagination()}
     </div>
   );
 };
