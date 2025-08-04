@@ -186,46 +186,88 @@ export default function Settings() {
                     <div>
                       <div className="font-medium">Plan d'abonnement</div>
                       <div className="text-sm text-muted-foreground">
-                        {subscription?.subscription_tier === 'premium' ? "Plan Premium" :
-                         subscription?.subscription_tier === 'standard' ? "Plan Standard" : 
+                        {subscription?.subscription_tier?.toLowerCase() === 'premium' ? "Plan Premium" :
+                         subscription?.subscription_tier?.toLowerCase() === 'standard' ? "Plan Standard" : 
                          "Plan Freemium"}
+                      </div>
+                      {/* Debug info - à supprimer plus tard */}
+                      <div className="text-xs text-gray-400 mt-1">
+                        Debug: subscribed={String(subscription?.subscribed)}, tier={subscription?.subscription_tier}, plan_type={subscription?.plan_type}
                       </div>
                     </div>
                     {/* Plan Freemium */}
-                    {(!subscription?.subscribed || subscription?.subscription_tier === 'freemium') && (
+                    {(!subscription?.subscribed || subscription?.subscription_tier?.toLowerCase() === 'freemium') && (
                       <Button 
                         onClick={() => {
-                          const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('demande de plan payant')}`;
-                          const anchor = document.createElement('a');
-                          anchor.href = mailtoLink;
-                          anchor.click();
+                          try {
+                            const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('demande de plan payant')}`;
+                            console.log('Opening mailto:', mailtoLink);
+                            // Essayons plusieurs méthodes
+                            if (window.open) {
+                              window.open(mailtoLink, '_self');
+                            } else {
+                              window.location.href = mailtoLink;
+                            }
+                          } catch (error) {
+                            console.error('Error opening mailto:', error);
+                            // Fallback - copier l'email dans le clipboard
+                            navigator.clipboard?.writeText('axelgirard.pro@gmail.com');
+                            toast({
+                              title: "Email copié",
+                              description: "L'adresse email a été copiée dans le presse-papier",
+                            });
+                          }
                         }}
                       >
                         Passer sur un plan payant
                       </Button>
                     )}
                     {/* Plan Standard */}
-                    {subscription?.subscription_tier === 'standard' && (
+                    {subscription?.subscription_tier?.toLowerCase() === 'standard' && (
                       <Button 
                         onClick={() => {
-                          const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('demande de plan premium')}`;
-                          const anchor = document.createElement('a');
-                          anchor.href = mailtoLink;
-                          anchor.click();
+                          try {
+                            const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('demande de plan premium')}`;
+                            console.log('Opening mailto:', mailtoLink);
+                            if (window.open) {
+                              window.open(mailtoLink, '_self');
+                            } else {
+                              window.location.href = mailtoLink;
+                            }
+                          } catch (error) {
+                            console.error('Error opening mailto:', error);
+                            navigator.clipboard?.writeText('axelgirard.pro@gmail.com');
+                            toast({
+                              title: "Email copié",
+                              description: "L'adresse email a été copiée dans le presse-papier",
+                            });
+                          }
                         }}
                       >
                         Passer un plan premium
                       </Button>
                     )}
                     {/* Plan Premium */}
-                    {subscription?.subscription_tier === 'premium' && (
+                    {subscription?.subscription_tier?.toLowerCase() === 'premium' && (
                       <Button 
                         variant="outline" 
                         onClick={() => {
-                          const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('gestion abonnement')}`;
-                          const anchor = document.createElement('a');
-                          anchor.href = mailtoLink;
-                          anchor.click();
+                          try {
+                            const mailtoLink = `mailto:axelgirard.pro@gmail.com?subject=${encodeURIComponent('gestion abonnement')}`;
+                            console.log('Opening mailto:', mailtoLink);
+                            if (window.open) {
+                              window.open(mailtoLink, '_self');
+                            } else {
+                              window.location.href = mailtoLink;
+                            }
+                          } catch (error) {
+                            console.error('Error opening mailto:', error);
+                            navigator.clipboard?.writeText('axelgirard.pro@gmail.com');
+                            toast({
+                              title: "Email copié",
+                              description: "L'adresse email a été copiée dans le presse-papier",
+                            });
+                          }
                         }}
                       >
                         Gérer mon abonnement
