@@ -1,105 +1,16 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ArrowLeft, User, Mail, Lock, Building, AlertCircle } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { ArrowLeft, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { SSOButton } from "@/components/ui/SSOButton";
 import { SSOProvider, useSSO } from "@/components/ui/SSOProvider";
 
 const SignupForm = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    company: "",
-    termsAccepted: false,
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
   const { toast } = useToast();
   const { signInWithGoogle, signInWithMicrosoft, signInWithSAML } = useAuth();
   const { ssoState, setProviderLoading, setLastError } = useSSO();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (formData.password !== formData.confirmPassword) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Les mots de passe ne correspondent pas",
-      });
-      return;
-    }
-    
-    if (!formData.termsAccepted) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Vous devez accepter les conditions d'utilisation",
-      });
-      return;
-    }
-    
-    setIsLoading(true);
-    
-    try {
-      const redirectUrl = `${window.location.origin}/dashboard`;
-      
-      const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          emailRedirectTo: redirectUrl,
-          data: {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            company: formData.company,
-          }
-        }
-      });
-
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Erreur d'inscription",
-          description: error.message,
-        });
-        return;
-      }
-
-      if (data.user) {
-        toast({
-          title: "Inscription réussie",
-          description: "Vérifiez votre email pour confirmer votre compte.",
-        });
-        // Rediriger vers login après inscription
-        navigate("/login");
-      }
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Une erreur inattendue s'est produite",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
 
   const handleSSOSignup = async (provider: 'google' | 'microsoft' | 'saml') => {
     setProviderLoading(provider, true);

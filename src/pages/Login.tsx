@@ -1,14 +1,7 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Mail, Lock, Star, AlertCircle } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { ArrowLeft, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { SSOButton } from "@/components/ui/SSOButton";
@@ -16,51 +9,9 @@ import { SSOProvider, useSSO } from "@/components/ui/SSOProvider";
 
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-
   const { toast } = useToast();
   const { signInWithGoogle, signInWithMicrosoft, signInWithSAML } = useAuth();
   const { ssoState, setProviderLoading, setLastError } = useSSO();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
-
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Erreur de connexion",
-          description: error.message,
-        });
-        return;
-      }
-
-      if (data.user) {
-        toast({
-          title: "Connexion réussie",
-          description: "Redirection vers le tableau de bord...",
-        });
-        navigate("/dashboard");
-      }
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Une erreur inattendue s'est produite",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSSOLogin = async (provider: 'google' | 'microsoft' | 'saml') => {
     setProviderLoading(provider, true);
