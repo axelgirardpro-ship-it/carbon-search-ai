@@ -49,11 +49,19 @@ export const WorkspaceProvider = ({ children }: WorkspaceProviderProps) => {
     }
 
     try {
-      // Récupérer les workspaces de l'utilisateur (owner ou membre)
-      const { data: userWorkspaces, error } = await supabase
+      const workspaceIds = await getUserWorkspaceIds(user.id);
+      let query = supabase
         .from('workspaces')
-        .select('*')
-        .or(`owner_id.eq.${user.id},id.in.(${await getUserWorkspaceIds(user.id)})`)
+        .select('*');
+
+      // Récupérer les workspaces de l'utilisateur (owner ou membre)
+      if (workspaceIds) {
+        query = query.or(`owner_id.eq.${user.id},id.in.(${workspaceIds})`);
+      } else {
+        query = query.eq('owner_id', user.id);
+      }
+
+      const { data: userWorkspaces, error } = await query
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -80,11 +88,16 @@ export const WorkspaceProvider = ({ children }: WorkspaceProviderProps) => {
       const { data, error } = await supabase
         .from('user_roles')
         .select('workspace_id')
-        .eq('user_id', userId);
+        .eq('user_id', userId)
+        .not('workspace_id', 'is', null);
 
-      if (error || !data) return '';
+      if (error || !data || data.length === 0) return '';
       
-      return data.map(role => role.workspace_id).join(',');
+      const validIds = data
+        .map(role => role.workspace_id)
+        .filter(id => id && id.trim() !== '');
+      
+      return validIds.length > 0 ? validIds.join(',') : '';
     } catch {
       return '';
     }

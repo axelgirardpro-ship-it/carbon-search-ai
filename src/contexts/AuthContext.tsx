@@ -4,15 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface UserRole {
   id: string;
-  company_id?: string;
   workspace_id?: string;
   role: 'admin' | 'gestionnaire' | 'lecteur' | 'supra_admin';
-  companies?: {
-    id: string;
-    name: string;
-    owner_id: string;
-    plan_type: string;
-  };
   workspaces?: {
     id: string;
     name: string;
@@ -73,14 +66,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .from('user_roles')
         .select(`
           *,
-          companies (
+          workspaces (
             id,
             name,
             owner_id,
             plan_type
           )
         `)
-        .eq('user_id', userId);
+        .eq('user_id', userId)
+        .not('workspace_id', 'is', null);
 
       if (workspaceError && workspaceError.code !== 'PGRST116') {
         console.error('Error fetching workspace roles:', workspaceError);
@@ -110,7 +104,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setUserRole(supraAdminRole as UserRole);
         } else {
           // Otherwise, take the first workspace-specific role
-          const workspaceRole = allRoles.find(role => role.company_id || role.workspace_id);
+          const workspaceRole = allRoles.find(role => role.workspace_id);
           setUserRole((workspaceRole || allRoles[0]) as UserRole);
         }
       } else {

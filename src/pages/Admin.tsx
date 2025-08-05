@@ -263,7 +263,7 @@ const Admin = () => {
               <p><strong>Email:</strong> {user.email}</p>
               <p><strong>Workspace Role:</strong> {userRole?.role || 'Pas de rôle workspace'}</p>
               <p><strong>Supra Admin:</strong> {isSupraAdmin() ? 'Oui' : 'Non'}</p>
-              <p><strong>Workspace:</strong> {userRole?.companies?.name || userRole?.workspaces?.name || 'Aucun'}</p>
+              <p><strong>Workspace:</strong> {userRole?.workspaces?.name || 'Aucun'}</p>
             </div>
           </CardContent>
         </Card>
