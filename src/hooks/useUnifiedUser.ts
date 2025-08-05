@@ -43,7 +43,7 @@ export const useUnifiedUser = () => {
       // D'abord vérifier s'il y a un rôle global supra_admin
       const { data: globalRoleData } = await supabase
         .from('user_roles')
-        .select('role')
+        .select('role, original_role')
         .eq('user_id', user.id)
         .is('workspace_id', null)
         .eq('role', 'supra_admin')
@@ -66,6 +66,42 @@ export const useUnifiedUser = () => {
           trial_end: undefined,
           subscription_end: undefined,
           role: 'supra_admin',
+          original_role: globalRoleData.original_role || 'supra_admin',
+          assigned_by: undefined,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+
+        setUnifiedUser(unifiedData);
+        setLoading(false);
+        return;
+      }
+
+      // Vérifier s'il y a un rôle avec original_role = supra_admin (supra admin temporairement changé)
+      const { data: tempRoleData } = await supabase
+        .from('user_roles')
+        .select('role, original_role, workspace_id')
+        .eq('user_id', user.id)
+        .eq('original_role', 'supra_admin')
+        .single();
+
+      // Si c'est un supra_admin avec rôle temporaire, créer une structure avec ses vraies permissions
+      if (tempRoleData?.original_role === 'supra_admin') {
+        const unifiedData: UnifiedUser = {
+          id: user.id,
+          user_id: user.id,
+          workspace_id: currentWorkspace?.id || tempRoleData.workspace_id || '',
+          first_name: '',
+          last_name: '',
+          company: 'Global Admin (Rôle temporaire)',
+          position: 'Supra Administrateur',
+          phone: '',
+          email: user.email || '',
+          plan_type: 'premium',
+          subscribed: true,
+          trial_end: undefined,
+          subscription_end: undefined,
+          role: tempRoleData.role,
           original_role: 'supra_admin',
           assigned_by: undefined,
           created_at: new Date().toISOString(),
