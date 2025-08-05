@@ -21,7 +21,9 @@ const VALID_ALGOLIA_PARAMS = [
   'restrictSearchableAttributes', 'facetingAfterDistinct', 'aroundLatLng', 'aroundLatLngViaIP',
   'aroundRadius', 'aroundPrecision', 'minimumAroundRadius', 'insideBoundingBox', 'insidePolygon',
   'naturalLanguages', 'ruleContexts', 'personalizationImpact', 'userToken', 'enablePersonalization',
-  'distinct', 'attributeForDistinct', 'customRanking', 'ranking', 'relevancyStrictness'
+  'distinct', 'attributeForDistinct', 'customRanking', 'ranking', 'relevancyStrictness',
+  // Paramètres pour la recherche dans les facettes
+  'facetQuery', 'searchForFacetValues'
 ];
 
 // Wrapper pour nettoyer agressivement les paramètres

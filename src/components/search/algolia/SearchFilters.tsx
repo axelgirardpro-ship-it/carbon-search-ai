@@ -23,6 +23,27 @@ const RefinementList: React.FC<RefinementListProps> = ({
 }) => {
   const { items, refine, searchForItems, canToggleShowMore, isShowingMore, toggleShowMore } = 
     useRefinementList({ attribute, limit });
+  
+  // État local pour la recherche avec fallback côté client
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [allItems, setAllItems] = React.useState(items);
+
+  // Mettre à jour les items complets quand ils changent
+  React.useEffect(() => {
+    if (!searchQuery) {
+      setAllItems(items);
+    }
+  }, [items, searchQuery]);
+
+  // Filtrer côté client si nécessaire
+  const filteredItems = React.useMemo(() => {
+    if (!searchQuery) return items;
+    
+    // Si searchForItems ne fonctionne pas, filtrer côté client
+    return allItems.filter(item => 
+      item.label.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [items, allItems, searchQuery]);
 
   if (items.length === 0) return null;
 
@@ -39,12 +60,18 @@ const RefinementList: React.FC<RefinementListProps> = ({
           <Input
             type="search"
             placeholder={`Rechercher ${title.toLowerCase()}...`}
-            onChange={(e) => searchForItems(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => {
+              const query = e.target.value;
+              setSearchQuery(query);
+              // Essayer d'abord la recherche serveur Algolia
+              searchForItems(query);
+            }}
             className="w-full px-3 py-1 text-sm"
           />
         )}
         <div className="space-y-1 max-h-48 overflow-y-auto">
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <div key={item.value} className="flex items-center space-x-2">
               <Checkbox
                 id={`${attribute}-${item.value}`}
