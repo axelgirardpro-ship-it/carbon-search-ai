@@ -1,12 +1,11 @@
 import React from 'react';
 import { useRefinementList, useClearRefinements, useToggleRefinement, useRange } from 'react-instantsearch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { X, Filter, RotateCcw } from 'lucide-react';
+import { RotateCcw, Filter, X } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface RefinementListProps {
@@ -37,11 +36,11 @@ const RefinementList: React.FC<RefinementListProps> = ({
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-2 mt-2">
         {searchable && (
-          <input
+          <Input
             type="search"
             placeholder={`Rechercher ${title.toLowerCase()}...`}
             onChange={(e) => searchForItems(e.target.value)}
-            className="w-full px-3 py-1 text-sm border rounded-md"
+            className="w-full px-3 py-1 text-sm"
           />
         )}
         <div className="space-y-1 max-h-48 overflow-y-auto">
@@ -185,7 +184,6 @@ const FERangeInput: React.FC = () => {
 };
 
 export const SearchFilters: React.FC = () => {
-
   return (
     <Card className="bg-card border border-border">
       <CardHeader className="pb-3">
