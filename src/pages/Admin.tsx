@@ -15,7 +15,8 @@ import {
   Download,
   Heart
 } from "lucide-react";
-import { useGlobalState } from "@/contexts/GlobalStateContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useSupraAdmin } from "@/hooks/useSupraAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { CompaniesTable } from "@/components/admin/CompaniesTable";
@@ -31,7 +32,8 @@ import { ExportsMonitoringTable } from "@/components/admin/ExportsMonitoringTabl
 import { TestEnvironmentControls } from "@/components/admin/TestEnvironmentControls";
 
 const Admin = () => {
-  const { user, permissions, unifiedUser } = useGlobalState();
+  const { user } = useAuth();
+  const { isSupraAdmin, loading: supraAdminLoading } = useSupraAdmin();
   const { toast } = useToast();
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -45,7 +47,7 @@ const Admin = () => {
 
   useEffect(() => {
     const loadAdminStats = async () => {
-      if (!user || (!permissions.isSupraAdmin && !permissions.isOriginalSupraAdmin)) {
+      if (!user || !isSupraAdmin) {
         setLoading(false);
         return;
       }
@@ -102,10 +104,25 @@ const Admin = () => {
     };
 
     loadAdminStats();
-  }, [user, permissions.isSupraAdmin, permissions.isOriginalSupraAdmin, toast]);
+  }, [user, isSupraAdmin, toast]);
+
+  // Show loading while checking permissions
+  if (supraAdminLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <UnifiedNavbar />
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Vérification des permissions...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Redirect if not supra admin
-  if (!user || (!permissions.isSupraAdmin && !permissions.isOriginalSupraAdmin)) {
+  if (!user || !isSupraAdmin) {
     return (
       <div className="min-h-screen bg-background">
         <UnifiedNavbar />
@@ -265,9 +282,7 @@ const Admin = () => {
             <div className="space-y-2 text-sm">
               <p><strong>User ID:</strong> {user.id}</p>
               <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Workspace Role:</strong> {unifiedUser?.role || 'Pas de rôle workspace'}</p>
-              <p><strong>Supra Admin:</strong> {permissions.isSupraAdmin ? 'Oui' : 'Non'}</p>
-              <p><strong>Workspace:</strong> {unifiedUser?.company || 'Aucun'}</p>
+              <p><strong>Supra Admin:</strong> {isSupraAdmin ? 'Oui' : 'Non'}</p>
             </div>
           </CardContent>
         </Card>
