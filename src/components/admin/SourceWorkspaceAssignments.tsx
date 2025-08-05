@@ -92,14 +92,21 @@ export const SourceWorkspaceAssignments = () => {
 
       setAssignments(transformedAssignments);
 
-      // Fetch workspaces for dropdown
-      const { data: workspacesData, error: workspacesError } = await supabase
-        .from('workspaces')
-        .select('id, name, plan_type')
-        .order('name');
+      // Fetch workspaces for dropdown using admin function
+      const { data: workspacesResponse, error: workspacesError } = await supabase.functions.invoke('get-admin-workspaces', {
+        body: { planFilter: 'all' }
+      });
 
       if (workspacesError) throw workspacesError;
-      setWorkspaces(workspacesData || []);
+
+      // Transform workspaces data
+      const workspacesData = workspacesResponse?.data?.map((ws: any) => ({
+        id: ws.id,
+        name: ws.name,
+        plan_type: ws.plan_type
+      })) || [];
+
+      setWorkspaces(workspacesData);
 
       // Fetch available sources
       const { data: sourcesData, error: sourcesError } = await supabase
