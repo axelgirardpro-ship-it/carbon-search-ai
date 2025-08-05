@@ -115,6 +115,23 @@ export const QuotaSubscriptionProvider = ({ children }: QuotaSubscriptionProvide
 
     try {
       setLoading(true);
+      
+      // Vérifier d'abord dans la base de données Supabase (pour les admins configurés manuellement)
+      const { data: workspacePlan, error: workspaceError } = await supabase
+        .rpc('get_user_workspace_plan', { user_uuid: user.id });
+      
+      if (!workspaceError && workspacePlan && workspacePlan !== 'freemium') {
+        // Utilisateur a un plan premium/standard dans Supabase
+        setSubscription({
+          subscribed: true,
+          subscription_end: null,
+          plan_type: workspacePlan,
+          trial_active: false
+        });
+        return;
+      }
+
+      // Sinon, vérifier via Stripe (fonction Edge)
       const { data, error } = await supabase.functions.invoke('check-subscription');
 
       if (error) throw error;
