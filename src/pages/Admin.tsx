@@ -24,6 +24,7 @@ import { FreemiumCompaniesTable } from "@/components/admin/FreemiumCompaniesTabl
 import { ContactsTable } from "@/components/admin/ContactsTable";
 import { SearchHistoryTable } from "@/components/admin/SearchHistoryTable";
 import { EmissionFactorAccessManager } from "@/components/admin/EmissionFactorAccessManager";
+import { SourceWorkspaceAssignments } from "@/components/admin/SourceWorkspaceAssignments";
 import { CSVImporter } from "@/components/admin/CSVImporter";
 import { CreateSupraAdmin } from "@/components/admin/CreateSupraAdmin";
 import { SessionsTable } from "@/components/admin/SessionsTable";
@@ -243,6 +244,7 @@ const Admin = () => {
           <SessionsTable />
           
           <EmissionFactorAccessManager />
+          <SourceWorkspaceAssignments />
           <CSVImporter />
           
           {/* Supra Admin Creation */}
