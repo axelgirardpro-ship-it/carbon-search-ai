@@ -4,10 +4,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Heart, Download, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { PremiumBlur } from '@/components/ui/PremiumBlur';
 import { useEmissionFactorAccess } from '@/hooks/useEmissionFactorAccess';
+import { usePermissions } from '@/hooks/usePermissions';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AlgoliaHit {
   objectID: string;
@@ -213,8 +218,30 @@ const StateResults: React.FC = () => {
 export const SearchResults: React.FC = () => {
   const { hits } = useHits<AlgoliaHit>();
   const [expandedRows, setExpandedRows] = React.useState<Set<string>>(new Set());
+  const [selectedItems, setSelectedItems] = React.useState<Set<string>>(new Set());
+  const [quotaData, setQuotaData] = React.useState<any>(null);
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { hasAccess } = useEmissionFactorAccess();
+  const { canExport } = usePermissions();
+  const { toast } = useToast();
+  const { user } = useAuth();
+
+  // Charger les quotas utilisateur
+  React.useEffect(() => {
+    const fetchQuotas = async () => {
+      if (!user) return;
+      
+      const { data } = await supabase
+        .from('search_quotas')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+        
+      setQuotaData(data);
+    };
+    
+    fetchQuotas();
+  }, [user]);
 
   const toggleRowExpansion = (id: string) => {
     const newExpanded = new Set(expandedRows);
@@ -231,6 +258,135 @@ export const SearchResults: React.FC = () => {
       return { __html: hit._highlightResult[attribute].value };
     }
     return { __html: hit[attribute as keyof AlgoliaHit] || '' };
+  };
+
+  const handleItemSelect = (id: string) => {
+    const newSelected = new Set(selectedItems);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedItems(newSelected);
+  };
+
+  const handleSelectAll = () => {
+    if (selectedItems.size === hits.length) {
+      setSelectedItems(new Set());
+    } else {
+      setSelectedItems(new Set(hits.map(hit => hit.objectID)));
+    }
+  };
+
+  const incrementExport = async () => {
+    if (!user || !quotaData) return;
+    
+    const { error } = await supabase
+      .from('search_quotas')
+      .update({ exports_used: quotaData.exports_used + 1 })
+      .eq('user_id', user.id);
+    
+    if (error) throw error;
+    
+    setQuotaData(prev => prev ? { ...prev, exports_used: prev.exports_used + 1 } : null);
+  };
+
+  const handleExport = async () => {
+    if (!canExport || !quotaData) {
+      toast({
+        title: "Export non autorisé",
+        description: "Limite d'exports atteinte. Veuillez upgrader votre abonnement.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (selectedItems.size === 0) {
+      toast({
+        title: "Aucune sélection",
+        description: "Veuillez sélectionner au moins un facteur d'émission.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (quotaData.exports_used >= quotaData.exports_limit) {
+      toast({
+        title: "Quota dépassé",
+        description: "Vous avez atteint votre limite d'exports mensuelle.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await incrementExport();
+      
+      const selectedResults = hits.filter(hit => selectedItems.has(hit.objectID));
+      const csvHeaders = [
+        "Nom",
+        "Description", 
+        "FE",
+        "Unité donnée d'activité",
+        "Source",
+        "Secteur",
+        "Sous-secteur",
+        "Localisation",
+        "Date",
+        "Incertitude",
+        "Périmètre",
+        "Contributeur",
+        "Commentaires"
+      ];
+      
+      const csvContent = [
+        csvHeaders.join(","),
+        ...selectedResults.map(hit => [
+          `"${hit.Nom || ''}"`,
+          `"${hit.Description || ''}"`,
+          hit.FE || '',
+          `"${hit['Unité donnée d\'activité'] || ''}"`,
+          `"${hit.Source || ''}"`,
+          `"${hit.Secteur || ''}"`,
+          `"${hit['Sous-secteur'] || ''}"`,
+          `"${hit.Localisation || ''}"`,
+          hit.Date || '',
+          `"${hit.Incertitude || ''}"`,
+          `"${hit.Périmètre || ''}"`,
+          `"${hit.Contributeur || ''}"`,
+          `"${hit.Commentaires || ''}"`
+        ].join(","))
+      ].join("\n");
+      
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const timestamp = new Date().toISOString().split('T')[0];
+      const filename = `facteurs_emissions_${timestamp}.csv`;
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Export réussi",
+        description: `${selectedItems.size} facteur(s) d'émission exporté(s)`,
+      });
+      
+      setSelectedItems(new Set());
+      
+    } catch (error) {
+      console.error('Error during export:', error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de l'export",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleFavoriteToggle = async (hit: AlgoliaHit) => {
@@ -264,6 +420,32 @@ export const SearchResults: React.FC = () => {
       
       {hits.length > 0 && (
         <>
+          {/* Header avec sélection et export */}
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 p-4 bg-muted/20 rounded-lg">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  checked={selectedItems.size === hits.length && hits.length > 0}
+                  onCheckedChange={handleSelectAll}
+                />
+                <span className="text-sm font-medium">
+                  {selectedItems.size === hits.length && hits.length > 0 ? 'Tout désélectionner' : 'Tout sélectionner'}
+                </span>
+              </div>
+              {selectedItems.size > 0 && (
+                <Badge variant="secondary">
+                  {selectedItems.size} sélectionné{selectedItems.size > 1 ? 's' : ''}
+                </Badge>
+              )}
+            </div>
+            {selectedItems.size > 0 && (
+              <Button onClick={handleExport} className="flex items-center gap-2">
+                <Download className="h-4 w-4" />
+                Exporter ({selectedItems.size})
+              </Button>
+            )}
+          </div>
+
           {/* Header avec contrôles de tri et pagination */}
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div className="text-sm text-muted-foreground">
@@ -286,7 +468,13 @@ export const SearchResults: React.FC = () => {
                 <Card key={hit.objectID} className="relative overflow-hidden">
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start gap-4">
-                      <div className="flex-1">
+                      <div className="flex items-start gap-3 flex-1">
+                        <Checkbox
+                          checked={selectedItems.has(hit.objectID)}
+                          onCheckedChange={() => handleItemSelect(hit.objectID)}
+                          className="mt-1"
+                        />
+                        <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">
                           <h3 
                             className="text-lg font-semibold text-foreground leading-tight cursor-pointer hover:text-primary"
@@ -389,6 +577,7 @@ export const SearchResults: React.FC = () => {
                             )}
                           </div>
                         )}
+                        </div>
                       </div>
                     </div>
                   </CardContent>
