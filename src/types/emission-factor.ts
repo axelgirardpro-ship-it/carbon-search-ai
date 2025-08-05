@@ -14,6 +14,7 @@ export interface EmissionFactor {
   contributeur?: string;
   commentaires?: string;
   isFavorite?: boolean;
+  workspace_id?: string;
 }
 
 export interface SearchFilters {

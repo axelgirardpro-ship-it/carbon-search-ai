@@ -42,12 +42,8 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
       try {
         let query = supabase.from('emission_factors').select('"Source", "Secteur", "Sous-secteur", "Unité donnée d\'activité", "Localisation", "Date"');
         
-        // Apply workspace filtering like in search
-        if (currentWorkspace) {
-          query = query.or(`is_public.eq.true,workspace_id.eq.${currentWorkspace.id}`);
-        } else {
-          query = query.eq('is_public', true);
-        }
+        // RLS policies now handle access control automatically
+        // No need for manual filtering based on is_public
 
         const { data, error } = await query;
 

@@ -53,7 +53,7 @@ const Favorites = () => {
 
       // Import type filter
       if (filters.importType !== 'all') {
-        const isImported = (favorite as any).source_type === 'private';
+        const isImported = Boolean(favorite.workspace_id);
         if (filters.importType === 'imported' && !isImported) return false;
         if (filters.importType === 'not_imported' && isImported) return false;
       }

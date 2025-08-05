@@ -159,8 +159,6 @@ const Import = () => {
         "Localisation": row.localisation || row.location || 'Non spécifié',
         "Date": parseInt(row.date || new Date().getFullYear().toString()),
         "Incertitude": row.incertitude || row.uncertainty || '',
-        plan_tier: 'standard', // Par défaut
-        is_public: false,
       }));
 
       const { data: insertedFactors, error: insertError } = await supabase

@@ -114,10 +114,10 @@ export const CSVImporter = () => {
 
   const downloadTemplate = () => {
     const templateData = [
-      ['nom', 'description', 'fe', 'unite', 'secteur', 'categorie', 'source', 'localisation', 'date', 'incertitude', 'plan_tier', 'is_public'],
-      ['Transport routier - Voiture particulière essence', 'Facteur d\'émission pour voiture particulière essence', '0.193', 'kg CO2e/km', 'Transport', 'Transport routier', 'ADEME 2024', 'France', '2024', '±15%', 'standard', 'true'],
-      ['Électricité - Mix énergétique français', 'Facteur d\'émission du mix électrique français', '0.079', 'kg CO2e/kWh', 'Énergie', 'Électricité', 'RTE 2024', 'France', '2024', '±10%', 'premium', 'true'],
-      ['Gaz naturel - Combustion', 'Facteur d\'émission pour la combustion de gaz naturel', '0.234', 'kg CO2e/kWh', 'Énergie', 'Gaz', 'ADEME 2024', 'France', '2024', '±5%', 'standard', 'true']
+      ['nom', 'description', 'fe', 'unite', 'secteur', 'categorie', 'source', 'localisation', 'date', 'incertitude'],
+      ['Transport routier - Voiture particulière essence', 'Facteur d\'émission pour voiture particulière essence', '0.193', 'kg CO2e/km', 'Transport', 'Transport routier', 'ADEME 2024', 'France', '2024', '±15%'],
+      ['Électricité - Mix énergétique français', 'Facteur d\'émission du mix électrique français', '0.079', 'kg CO2e/kWh', 'Énergie', 'Électricité', 'RTE 2024', 'France', '2024', '±10%'],
+      ['Gaz naturel - Combustion', 'Facteur d\'émission pour la combustion de gaz naturel', '0.234', 'kg CO2e/kWh', 'Énergie', 'Gaz', 'ADEME 2024', 'France', '2024', '±5%']
     ];
     
     const csvContent = templateData.map(row => 
@@ -178,7 +178,7 @@ export const CSVImporter = () => {
       // Créer le contenu CSV
       const headers = [
         'nom', 'description', 'fe', 'unite', 'secteur', 'categorie', 
-        'source', 'localisation', 'date', 'incertitude', 'plan_tier', 'is_public'
+        'source', 'localisation', 'date', 'incertitude'
       ];
 
       const csvRows = [
@@ -193,9 +193,7 @@ export const CSVImporter = () => {
           `"${row["Source"] || ''}"`,
           `"${row["Localisation"] || ''}"`,
           `"${row["Date"] || ''}"`,
-          `"${row["Incertitude"] || ''}"`,
-          `"${row.plan_tier || 'standard'}"`,
-          row.is_public ? 'true' : 'false'
+          `"${row["Incertitude"] || ''}"`
         ].join(','))
       ];
 
@@ -450,23 +448,16 @@ export const CSVImporter = () => {
           <div>
             <div className="font-medium mb-2">Format CSV attendu :</div>
             <div className="font-mono text-xs bg-muted p-2 rounded">
-              nom,description,fe,unite,secteur,categorie,source,localisation,date,incertitude,plan_tier,is_public
+              nom,description,fe,unite,secteur,categorie,source,localisation,date,incertitude
             </div>
           </div>
           
           <div>
-            <div className="font-medium mb-2">Valeurs autorisées pour plan_tier :</div>
+            <div className="font-medium mb-2">Notes importantes :</div>
             <div className="text-xs space-y-1">
-              <div><span className="font-mono bg-muted px-1 rounded">standard</span> - Accessible à tous les utilisateurs</div>
-              <div><span className="font-mono bg-muted px-1 rounded">premium</span> - Accessible uniquement aux utilisateurs premium</div>
-            </div>
-          </div>
-          
-          <div>
-            <div className="font-medium mb-2">Valeurs autorisées pour is_public :</div>
-            <div className="text-xs space-y-1">
-              <div><span className="font-mono bg-muted px-1 rounded">true</span> ou <span className="font-mono bg-muted px-1 rounded">1</span> - Données publiques</div>
-              <div><span className="font-mono bg-muted px-1 rounded">false</span> ou <span className="font-mono bg-muted px-1 rounded">0</span> - Données privées</div>
+              <div>• Les données importées sont automatiquement privées à votre workspace</div>
+              <div>• L'accès premium/standard est géré par les sources globales</div>
+              <div>• Les colonnes plan_tier et is_public ne sont plus utilisées</div>
             </div>
           </div>
         </div>

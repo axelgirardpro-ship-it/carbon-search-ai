@@ -1,5 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
+import { supabase } from '@/integrations/supabase/client';
 
 export const useEmissionFactorAccess = () => {
   const { subscriptionStatus } = useAuth();
@@ -32,11 +33,27 @@ export const useEmissionFactorAccess = () => {
     return null;
   };
 
+  const checkIsPremiumSource = async (source: string): Promise<boolean> => {
+    try {
+      const { data } = await supabase
+        .from('fe_sources')
+        .select('access_level')
+        .eq('source_name', source)
+        .eq('is_global', true)
+        .single();
+      
+      return data?.access_level === 'premium';
+    } catch (error) {
+      return false;
+    }
+  };
+
   return {
     isPremiumUser,
     isFreemiumUser,
     isStandardUser,
     shouldBlurPremiumContent,
-    getSourceLabel
+    getSourceLabel,
+    checkIsPremiumSource
   };
 };
