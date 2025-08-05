@@ -1,9 +1,10 @@
 import React from 'react';
-import { useInfiniteHits } from 'react-instantsearch';
+import { useHits, useHitsPerPage, usePagination } from 'react-instantsearch';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Heart, Download, ChevronDown, ChevronUp } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Heart, Download, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { PremiumBlur } from '@/components/ui/PremiumBlur';
 import { useEmissionFactorAccess } from '@/hooks/useEmissionFactorAccess';
@@ -26,8 +27,80 @@ interface AlgoliaHit {
   _highlightResult?: any;
 }
 
+const HitsPerPageComponent: React.FC = () => {
+  const { items, refine } = useHitsPerPage({
+    items: [
+      { label: '9 par page', value: 9, default: true },
+      { label: '18 par page', value: 18 },
+      { label: '36 par page', value: 36 },
+    ],
+  });
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-muted-foreground">Résultats par page:</span>
+      <Select value={String(items.find(item => item.isRefined)?.value || 9)} onValueChange={(value) => refine(Number(value))}>
+        <SelectTrigger className="w-auto">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {items.map((item) => (
+            <SelectItem key={item.value} value={String(item.value)}>
+              {item.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+};
+
+const PaginationComponent: React.FC = () => {
+  const { pages, currentRefinement, nbPages, isFirstPage, isLastPage, refine } = usePagination();
+
+  if (nbPages <= 1) return null;
+
+  return (
+    <div className="flex items-center justify-center gap-2 mt-6">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => refine(currentRefinement - 1)}
+        disabled={isFirstPage}
+      >
+        <ChevronLeft className="h-4 w-4" />
+        Précédent
+      </Button>
+      
+      <div className="flex items-center gap-1">
+        {pages.map((page) => (
+          <Button
+            key={page}
+            variant={page === currentRefinement ? "default" : "outline"}
+            size="sm"
+            onClick={() => refine(page)}
+            className="w-10"
+          >
+            {page + 1}
+          </Button>
+        ))}
+      </div>
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => refine(currentRefinement + 1)}
+        disabled={isLastPage}
+      >
+        Suivant
+        <ChevronRight className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+};
+
 export const SearchResults: React.FC = () => {
-  const { hits, isLastPage, showMore } = useInfiniteHits<AlgoliaHit>();
+  const { hits } = useHits<AlgoliaHit>();
   const { favorites, addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { hasAccess, getSourceLabel } = useEmissionFactorAccess();
   const [expandedRows, setExpandedRows] = React.useState<Set<string>>(new Set());
@@ -59,7 +132,17 @@ export const SearchResults: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Header avec hits per page */}
+      <div className="flex justify-between items-center">
+        <div className="text-sm text-muted-foreground">
+          {hits.length} résultat{hits.length > 1 ? 's' : ''} trouvé{hits.length > 1 ? 's' : ''}
+        </div>
+        <HitsPerPageComponent />
+      </div>
+
+      {/* Results */}
+      <div className="space-y-4">
       {hits.map((hit) => {
         const isExpanded = expandedRows.has(hit.objectID);
         const isItemFavorite = isFavorite(hit.objectID);
@@ -184,14 +267,10 @@ export const SearchResults: React.FC = () => {
           </Card>
         );
       })}
+      </div>
 
-      {!isLastPage && (
-        <div className="text-center pt-6">
-          <Button onClick={showMore} variant="outline">
-            Charger plus de résultats
-          </Button>
-        </div>
-      )}
+      {/* Pagination */}
+      <PaginationComponent />
     </div>
   );
 };
