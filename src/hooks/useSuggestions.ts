@@ -18,7 +18,7 @@ export const useSuggestions = (searchQuery: string) => {
       const { data, error } = await supabase
         .from('emission_factors')
         .select('nom')
-        .or(`nom.ilike.%${query}%,description.ilike.%${query}%,categorie.ilike.%${query}%,secteur.ilike.%${query}%`)
+        .or(`nom.ilike.%${query}%,description.ilike.%${query}%,secteur.ilike.%${query}%`)
         .or(`workspace_id.eq.${currentWorkspace.id},is_public.eq.true`)
         .limit(3);
 
