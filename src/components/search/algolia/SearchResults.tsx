@@ -384,12 +384,13 @@ export const SearchResults: React.FC = () => {
       {hits.length > 0 && (
         <>
           {/* Header avec sélection et export */}
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 p-4 bg-violet-100 rounded-lg">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 p-4 bg-white rounded-lg border border-violet-200">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Checkbox
                   checked={selectedItems.size === hits.length && hits.length > 0}
                   onCheckedChange={handleSelectAll}
+                  className="border-indigo-950 data-[state=checked]:bg-indigo-950 data-[state=checked]:border-indigo-950"
                 />
                 <span className="text-sm font-medium font-montserrat text-indigo-950">
                   {selectedItems.size === hits.length && hits.length > 0 ? 'Tout désélectionner' : 'Tout sélectionner'}
@@ -436,12 +437,12 @@ export const SearchResults: React.FC = () => {
                         <Checkbox
                           checked={selectedItems.has(hit.objectID)}
                           onCheckedChange={() => handleItemSelect(hit.objectID)}
-                          className="mt-1"
+                          className="mt-1 border-indigo-950 data-[state=checked]:bg-indigo-950 data-[state=checked]:border-indigo-950"
                         />
                         <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">
                           <h3 
-                            className="text-lg font-semibold text-foreground leading-tight cursor-pointer hover:text-primary"
+                            className="text-lg font-semibold text-foreground leading-tight cursor-pointer hover:text-orange-500 font-montserrat"
                             onClick={() => toggleRowExpansion(hit.objectID)}
                             dangerouslySetInnerHTML={getHighlightedText(hit, 'Nom')}
                           />
@@ -474,7 +475,7 @@ export const SearchResults: React.FC = () => {
                           <div>
                             <span className="text-sm font-medium text-muted-foreground">Facteur d'émission</span>
                             <PremiumBlur isBlurred={shouldBlur}>
-                              <p className="text-lg font-bold text-primary">{hit.FE?.toLocaleString()} kgCO₂eq</p>
+                              <p className="text-lg font-bold text-indigo-950 font-montserrat">{hit.FE?.toLocaleString()} kgCO₂eq</p>
                             </PremiumBlur>
                           </div>
                           <div>

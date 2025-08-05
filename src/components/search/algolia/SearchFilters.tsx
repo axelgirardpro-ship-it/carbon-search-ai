@@ -29,7 +29,7 @@ const RefinementList: React.FC<RefinementListProps> = ({
   return (
     <Collapsible defaultOpen>
       <CollapsibleTrigger asChild>
-        <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+        <Button variant="ghost" className="w-full justify-between p-0 h-auto hover:text-indigo-950">
           <h3 className="font-medium font-montserrat text-indigo-950">{title}</h3>
           <Filter className="h-4 w-4 text-indigo-950" />
         </Button>
@@ -50,6 +50,7 @@ const RefinementList: React.FC<RefinementListProps> = ({
                 id={`${attribute}-${item.value}`}
                 checked={item.isRefined}
                 onCheckedChange={() => refine(item.value)}
+                className="border-indigo-950 data-[state=checked]:bg-indigo-950 data-[state=checked]:border-indigo-950"
               />
               <label
                 htmlFor={`${attribute}-${item.value}`}
@@ -101,11 +102,12 @@ const RecentDataToggle: React.FC = () => {
   });
 
   return (
-    <div className="flex items-center space-x-3 p-3 bg-muted/30 rounded-lg">
+    <div className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-violet-200">
       <Switch
         checked={value.isRefined}
         onCheckedChange={() => refine(value)}
         id="recent-data"
+        className="data-[state=checked]:bg-indigo-950"
       />
       <label htmlFor="recent-data" className="text-sm font-medium cursor-pointer font-montserrat text-indigo-950">
         Données récentes (&lt; 3 ans)
@@ -139,7 +141,7 @@ const FERangeInput: React.FC = () => {
   return (
     <Collapsible defaultOpen>
       <CollapsibleTrigger asChild>
-        <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+        <Button variant="ghost" className="w-full justify-between p-0 h-auto hover:text-indigo-950">
           <h3 className="font-medium font-montserrat text-indigo-950">Facteur d'émission (FE)</h3>
           <Filter className="h-4 w-4 text-indigo-950" />
         </Button>
