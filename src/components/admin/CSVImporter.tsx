@@ -184,16 +184,16 @@ export const CSVImporter = () => {
       const csvRows = [
         headers.join(','), // En-têtes
         ...data.map(row => [
-          `"${row.nom || ''}"`,
-          `"${row.description || ''}"`,
-          row.fe || 0,
-          `"${row.unite || ''}"`,
-          `"${row.secteur || ''}"`,
-          `"${row.categorie || ''}"`,
-          `"${row.source || ''}"`,
-          `"${row.localisation || ''}"`,
-          `"${row.date || ''}"`,
-          `"${row.incertitude || ''}"`,
+          `"${row["Nom"] || ''}"`,
+          `"${row["Description"] || ''}"`,
+          row["FE"] || 0,
+          `"${row["Unité donnée d'activité"] || ''}"`,
+          `"${row["Secteur"] || ''}"`,
+          `"${row["Sous-secteur"] || ''}"`,
+          `"${row["Source"] || ''}"`,
+          `"${row["Localisation"] || ''}"`,
+          `"${row["Date"] || ''}"`,
+          `"${row["Incertitude"] || ''}"`,
           `"${row.plan_tier || 'standard'}"`,
           row.is_public ? 'true' : 'false'
         ].join(','))

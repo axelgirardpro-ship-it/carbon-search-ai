@@ -125,7 +125,7 @@ const Dashboard = () => {
         sousSecteur: item["Sous-secteur"] || '',
         localisation: item["Localisation"] || '',
         date: Number(item["Date"]) || 0,
-        incertitude: item["Incertitude"] || '',
+        incertitude: String(item["Incertitude"] || ''),
         perimetre: item["Périmètre"] || '',
         contributeur: item["Contributeur"] || '',
         commentaires: item["Commentaires"] || '',

@@ -149,19 +149,18 @@ const Import = () => {
       const emissionFactors = data.map(row => ({
         workspace_id: currentWorkspace.id,
         dataset_id: dataset.id,
-        nom: row.nom || row.name || 'Sans nom',
-        description: row.description || '',
-        fe: parseFloat(row.fe || row.factor || '0'),
-        unite: row.unite || row.unit || '',
-        source: row.source || 'Import CSV',
-        secteur: row.secteur || row.sector || 'Non spécifié',
-        categorie: row.categorie || row.category || 'Non spécifié',
-        localisation: row.localisation || row.location || 'Non spécifié',
-        date: row.date || new Date().getFullYear().toString(),
-        incertitude: row.incertitude || row.uncertainty || '',
-        plan_tier: 'freemium', // Par défaut
+        "Nom": row.nom || row.name || 'Sans nom',
+        "Description": row.description || '',
+        "FE": parseFloat(row.fe || row.factor || '0'),
+        "Unité donnée d'activité": row.unite || row.unit || '',
+        "Source": row.source || 'Import CSV',
+        "Secteur": row.secteur || row.sector || 'Non spécifié',
+        "Sous-secteur": row.categorie || row.category || 'Non spécifié',
+        "Localisation": row.localisation || row.location || 'Non spécifié',
+        "Date": parseInt(row.date || new Date().getFullYear().toString()),
+        "Incertitude": row.incertitude || row.uncertainty || '',
+        plan_tier: 'standard', // Par défaut
         is_public: false,
-        source_type: 'private',
       }));
 
       const { data: insertedFactors, error: insertError } = await supabase
