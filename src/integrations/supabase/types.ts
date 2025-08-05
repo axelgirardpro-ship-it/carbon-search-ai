@@ -137,6 +137,13 @@ export type Database = {
             foreignKeyName: "datasets_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
+            referencedRelation: "workspace_plans"
+            referencedColumns: ["workspace_id"]
+          },
+          {
+            foreignKeyName: "datasets_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
             referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
@@ -215,6 +222,13 @@ export type Database = {
             foreignKeyName: "emission_factors_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
+            referencedRelation: "workspace_plans"
+            referencedColumns: ["workspace_id"]
+          },
+          {
+            foreignKeyName: "emission_factors_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
             referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
@@ -249,14 +263,6 @@ export type Database = {
       }
       profiles: {
         Row: {
-          billing_address: string | null
-          billing_company: string | null
-          billing_country: string | null
-          billing_first_name: string | null
-          billing_last_name: string | null
-          billing_postal_code: string | null
-          billing_siren: string | null
-          billing_vat_number: string | null
           company: string | null
           created_at: string
           first_name: string | null
@@ -269,14 +275,6 @@ export type Database = {
           workspace_id: string
         }
         Insert: {
-          billing_address?: string | null
-          billing_company?: string | null
-          billing_country?: string | null
-          billing_first_name?: string | null
-          billing_last_name?: string | null
-          billing_postal_code?: string | null
-          billing_siren?: string | null
-          billing_vat_number?: string | null
           company?: string | null
           created_at?: string
           first_name?: string | null
@@ -289,14 +287,6 @@ export type Database = {
           workspace_id: string
         }
         Update: {
-          billing_address?: string | null
-          billing_company?: string | null
-          billing_country?: string | null
-          billing_first_name?: string | null
-          billing_last_name?: string | null
-          billing_postal_code?: string | null
-          billing_siren?: string | null
-          billing_vat_number?: string | null
           company?: string | null
           created_at?: string
           first_name?: string | null
@@ -309,6 +299,13 @@ export type Database = {
           workspace_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_profiles_workspace"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace_plans"
+            referencedColumns: ["workspace_id"]
+          },
           {
             foreignKeyName: "fk_profiles_workspace"
             columns: ["workspace_id"]
@@ -400,6 +397,7 @@ export type Database = {
           trial_end: string | null
           updated_at: string
           user_id: string | null
+          workspace_id: string | null
         }
         Insert: {
           created_at?: string
@@ -413,6 +411,7 @@ export type Database = {
           trial_end?: string | null
           updated_at?: string
           user_id?: string | null
+          workspace_id?: string | null
         }
         Update: {
           created_at?: string
@@ -426,8 +425,24 @@ export type Database = {
           trial_end?: string | null
           updated_at?: string
           user_id?: string | null
+          workspace_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "subscribers_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace_plans"
+            referencedColumns: ["workspace_id"]
+          },
+          {
+            foreignKeyName: "subscribers_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -530,6 +545,12 @@ export type Database = {
       }
       workspaces: {
         Row: {
+          billing_address: string | null
+          billing_company: string | null
+          billing_country: string | null
+          billing_postal_code: string | null
+          billing_siren: string | null
+          billing_vat_number: string | null
           created_at: string
           id: string
           name: string
@@ -538,6 +559,12 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          billing_address?: string | null
+          billing_company?: string | null
+          billing_country?: string | null
+          billing_postal_code?: string | null
+          billing_siren?: string | null
+          billing_vat_number?: string | null
           created_at?: string
           id?: string
           name: string
@@ -546,6 +573,12 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          billing_address?: string | null
+          billing_company?: string | null
+          billing_country?: string | null
+          billing_postal_code?: string | null
+          billing_siren?: string | null
+          billing_vat_number?: string | null
           created_at?: string
           id?: string
           name?: string
@@ -557,7 +590,19 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      workspace_plans: {
+        Row: {
+          owner_id: string | null
+          plan_type: string | null
+          subscribed: boolean | null
+          subscription_end: string | null
+          subscription_tier: string | null
+          trial_end: string | null
+          workspace_id: string | null
+          workspace_name: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       cleanup_expired_sessions: {
@@ -570,6 +615,10 @@ export type Database = {
       }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_user_workspace_plan: {
+        Args: { user_uuid?: string }
         Returns: string
       }
       has_company_access: {
