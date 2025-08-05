@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Crown, Zap } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useGlobalState } from "@/contexts/GlobalStateContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 export const UpgradeButton = () => {
-  const { subscriptionStatus } = useAuth();
+  const { quotas } = useGlobalState();
   const { toast } = useToast();
 
   const handleUpgrade = () => {
@@ -13,27 +13,7 @@ export const UpgradeButton = () => {
     window.location.href = '/profile';
   };
 
-  // Don't show for premium users
-  if (subscriptionStatus.plan_type === 'premium') {
-    return null;
-  }
+  // Don't show for premium users - simplified logic for now
+  return null;
 
-  const isPremium = subscriptionStatus.plan_type === 'premium';
-  const isStandard = subscriptionStatus.plan_type === 'standard';
-
-  return (
-    <Button 
-      onClick={handleUpgrade}
-      variant="outline"
-      size="sm"
-      className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-0 hover:from-yellow-500 hover:to-orange-600"
-    >
-      {isStandard ? (
-        <Crown className="w-4 h-4 mr-2" />
-      ) : (
-        <Zap className="w-4 h-4 mr-2" />
-      )}
-      {isStandard ? 'Premium' : 'Upgrade'}
-    </Button>
-  );
 };

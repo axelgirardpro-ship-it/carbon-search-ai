@@ -1,11 +1,9 @@
 import { useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
-import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useGlobalState } from "@/contexts/GlobalStateContext";
 
 export const useSearchHistory = () => {
-  const { user } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { user, currentWorkspace } = useGlobalState();
 
   const recordSearch = useCallback(async (
     searchQuery: string, 

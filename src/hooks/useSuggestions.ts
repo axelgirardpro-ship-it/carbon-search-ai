@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
-import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useGlobalState } from "@/contexts/GlobalStateContext";
 
 export const useSuggestions = (searchQuery: string) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { user, currentWorkspace } = useGlobalState();
 
   // Fetch suggestions from emission_factors based on search query
   const fetchSuggestions = async (query: string) => {

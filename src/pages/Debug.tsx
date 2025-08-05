@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
+import { useGlobalState } from "@/contexts/GlobalStateContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Debug() {
-  const { user, subscriptionStatus } = useAuth();
+  const { user } = useGlobalState();
   const { toast } = useToast();
   const [debugInfo, setDebugInfo] = useState<any>({});
   const [loading, setLoading] = useState(false);
@@ -86,7 +86,7 @@ export default function Debug() {
           <CardContent className="space-y-2">
             <p><strong>User ID:</strong> {user?.id || "Not found"}</p>
             <p><strong>Email:</strong> {user?.email || "Not found"}</p>
-            <p><strong>Subscription Status:</strong> {JSON.stringify(subscriptionStatus, null, 2)}</p>
+            <p><strong>Subscription Status:</strong> Plan type déplacé vers GlobalState</p>
           </CardContent>
         </Card>
 

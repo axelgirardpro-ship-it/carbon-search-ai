@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Crown, Unlock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/contexts/AuthContext';
+import { useGlobalState } from "@/contexts/GlobalStateContext";
 
 interface PremiumBlurProps {
   isBlurred?: boolean;
@@ -18,9 +18,9 @@ export const PremiumBlur = ({
   className,
   showUpgradeButton = false 
 }: PremiumBlurProps) => {
-  const { subscriptionStatus } = useAuth();
+  const { currentWorkspace } = useGlobalState();
 
-  if (!isBlurred || subscriptionStatus.plan_type === 'premium') {
+  if (!isBlurred || currentWorkspace?.plan_type === 'premium') {
     return <>{children}</>;
   }
 

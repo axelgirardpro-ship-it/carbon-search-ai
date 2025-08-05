@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button";
 import { EmissionFactor } from "@/types/emission-factor";
 import { Heart } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
-import { usePermissions } from "@/hooks/usePermissions";
-import { useQuotas } from "@/contexts/QuotaSubscriptionContext";
+import { usePermissions, useQuotaSubscription } from "@/contexts/GlobalStateContext";
 import { useToast } from "@/hooks/use-toast";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 import { FavoritesFilterPanel, FavoritesFilters } from "@/components/search/FavoritesFilterPanel";
@@ -14,7 +13,7 @@ import { FavoritesFilterPanel, FavoritesFilters } from "@/components/search/Favo
 const Favorites = () => {
   const { favorites, loading, removeFromFavorites, addToFavorites } = useFavorites();
   const { canExportData } = usePermissions();
-  const { incrementExport, canExport } = useQuotas();
+  const { incrementExport, canExport } = useQuotaSubscription();
   const { toast } = useToast();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [filters, setFilters] = useState<FavoritesFilters>({

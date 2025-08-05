@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useGlobalState } from "@/contexts/GlobalStateContext";
 
 export interface Filters {
   source: string;
@@ -27,7 +27,7 @@ interface FilterPanelProps {
 }
 
 export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterPanelProps) => {
-  const { currentWorkspace } = useWorkspace();
+  const { currentWorkspace } = useGlobalState();
   const [filterOptions, setFilterOptions] = useState({
     source: [] as string[],
     secteur: [] as string[],

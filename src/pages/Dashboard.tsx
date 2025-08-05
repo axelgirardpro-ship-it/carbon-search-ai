@@ -6,8 +6,7 @@ import { ResultsTable } from "@/components/search/ResultsTable";
 import { QuotaWidget } from "@/components/ui/QuotaWidget";
 import { EmissionFactor } from "@/types/emission-factor";
 import { useFavorites } from "@/contexts/FavoritesContext";
-import { useWorkspace } from "@/contexts/WorkspaceContext";
-import { useQuotas, useSubscription } from "@/contexts/QuotaSubscriptionContext";
+import { useGlobalState, useQuotaSubscription } from "@/contexts/GlobalStateContext";
 import { useSearchHistory } from "@/hooks/useSearchHistory";
 import { useSuggestions } from "@/hooks/useSuggestions";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,9 +14,9 @@ import { toast } from "sonner";
 
 const Dashboard = () => {
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
-  const { currentWorkspace } = useWorkspace();
-  const { incrementExport, canExport, canSearch, incrementSearch } = useQuotas();
-  const { subscription } = useSubscription();
+  const { currentWorkspace } = useGlobalState();
+  const { incrementExport, canExport, canSearch, incrementSearch } = useQuotaSubscription();
+  const { subscription } = useQuotaSubscription();
   const { recordSearch } = useSearchHistory();
   
   // Initialize searchQuery state first

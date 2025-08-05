@@ -9,9 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Upload, Download, FileText, Check, AlertCircle, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
-import { useWorkspace } from "@/contexts/WorkspaceContext";
-import { usePermissions } from "@/hooks/usePermissions";
+import { useGlobalState, usePermissions } from "@/contexts/GlobalStateContext";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 
 const Import = () => {
@@ -23,8 +21,7 @@ const Import = () => {
   const [importStatus, setImportStatus] = useState<"idle" | "uploading" | "processing" | "success" | "error">("idle");
   const [importResults, setImportResults] = useState<{ success: number; errors: string[] } | null>(null);
   const { toast } = useToast();
-  const { user } = useAuth();
-  const { currentWorkspace } = useWorkspace();
+  const { user, currentWorkspace } = useGlobalState();
   const { canImportData } = usePermissions();
 
   const downloadTemplate = () => {
@@ -98,7 +95,7 @@ const Import = () => {
       return;
     }
 
-    if (!canImportData()) {
+    if (!canImportData) {
       toast({
         variant: "destructive",
         title: "Permission refusée",

@@ -2,13 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { useSubscription, useQuotas } from "@/contexts/QuotaSubscriptionContext";
+import { useQuotaSubscription } from "@/contexts/GlobalStateContext";
 import { Link } from "react-router-dom";
 import { Zap, Crown, TrendingUp, AlertTriangle } from "lucide-react";
 
 export const QuotaWidget = () => {
-  const { subscription, refreshSubscription } = useSubscription();
-  const { searchesUsed, searchesLimit, exportsUsed, exportsLimit, canSearch, canExport } = useQuotas();
+  const { subscription, searchesUsed, searchesLimit, exportsUsed, exportsLimit, canSearch, canExport } = useQuotaSubscription();
 
   const searchProgress = searchesLimit === -1 ? 0 : (searchesUsed / searchesLimit) * 100;
   const exportProgress = exportsLimit === -1 ? 0 : (exportsUsed / exportsLimit) * 100;

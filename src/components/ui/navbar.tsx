@@ -1,9 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { User, Settings, Heart, Upload, LogOut, Shield } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { useToast } from "@/hooks/use-toast";
-import { usePermissions } from "@/hooks/usePermissions";
+import { useGlobalState, usePermissions } from "@/contexts/GlobalStateContext";
 import { UpgradeButton } from "@/components/ui/UpgradeButton";
 import {
   DropdownMenu,
@@ -17,24 +15,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { user, signOut } = useGlobalState();
   const { isSupraAdmin } = usePermissions();
-  const { toast } = useToast();
 
   const handleSignOut = async () => {
     try {
       await signOut();
       navigate('/login');
-      toast({
-        title: "Déconnexion réussie",
-        description: "Vous avez été déconnecté avec succès",
-      });
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Erreur lors de la déconnexion",
-      });
+      console.error('Erreur lors de la déconnexion:', error);
     }
   };
 
@@ -101,7 +90,7 @@ export const Navbar = () => {
                     <span>Paramètres</span>
                   </Link>
                 </DropdownMenuItem>
-                {isSupraAdmin() && (
+                {isSupraAdmin && (
                   <DropdownMenuItem asChild>
                     <Link to="/admin" className="cursor-pointer">
                       <Shield className="mr-2 h-4 w-4" />

@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Upload, File, CheckCircle, XCircle, AlertTriangle, Download, FileDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { usePermissions } from "@/hooks/usePermissions";
+import { usePermissions } from "@/contexts/GlobalStateContext";
 
 interface ImportResult {
   importId: string;
@@ -30,7 +30,7 @@ export const CSVImporter = () => {
   const { toast } = useToast();
   const { canImportData, userRole, getRoleLabel } = usePermissions();
 
-  console.log('CSVImporter - User role:', userRole?.role, 'Can import:', canImportData());
+  console.log('CSVImporter - User role:', userRole?.role, 'Can import:', canImportData);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -233,7 +233,7 @@ export const CSVImporter = () => {
   };
 
   // Vérification des permissions
-  if (!canImportData()) {
+  if (!canImportData) {
     return (
       <Card>
         <CardHeader>
