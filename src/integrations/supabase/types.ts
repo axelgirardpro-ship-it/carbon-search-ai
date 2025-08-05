@@ -146,7 +146,7 @@ export type Database = {
         Row: {
           Commentaires: string | null
           Contributeur: string | null
-          created_at: string
+          created_at: string | null
           dataset_id: string | null
           Date: number | null
           Description: string | null
@@ -160,13 +160,13 @@ export type Database = {
           Source: string
           "Sous-secteur": string | null
           "Unité donnée d'activité": string
-          updated_at: string
+          updated_at: string | null
           workspace_id: string | null
         }
         Insert: {
           Commentaires?: string | null
           Contributeur?: string | null
-          created_at?: string
+          created_at?: string | null
           dataset_id?: string | null
           Date?: number | null
           Description?: string | null
@@ -180,13 +180,13 @@ export type Database = {
           Source: string
           "Sous-secteur"?: string | null
           "Unité donnée d'activité": string
-          updated_at?: string
+          updated_at?: string | null
           workspace_id?: string | null
         }
         Update: {
           Commentaires?: string | null
           Contributeur?: string | null
-          created_at?: string
+          created_at?: string | null
           dataset_id?: string | null
           Date?: number | null
           Description?: string | null
@@ -200,7 +200,7 @@ export type Database = {
           Source?: string
           "Sous-secteur"?: string | null
           "Unité donnée d'activité"?: string
-          updated_at?: string
+          updated_at?: string | null
           workspace_id?: string | null
         }
         Relationships: [
