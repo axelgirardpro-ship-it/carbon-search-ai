@@ -14,7 +14,7 @@ import { useWorkspace } from "@/contexts/WorkspaceContext";
 export interface Filters {
   source: string;
   secteur: string;
-  categorie: string;
+  sousSecteur: string;
   uniteActivite: string;
   localisation: string;
   anneeRapport: string;
@@ -31,10 +31,10 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
   const [filterOptions, setFilterOptions] = useState({
     source: [] as string[],
     secteur: [] as string[],
-    categorie: [] as string[],
+    sousSecteur: [] as string[],
     uniteActivite: [] as string[],
     localisation: [] as string[],
-    anneeRapport: [] as string[]
+    date: [] as string[]
   });
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
         // Extract unique values for each filter
         const sources = [...new Set((data as any)?.map((item: any) => item.Source).filter(Boolean))] as string[];
         const secteurs = [...new Set((data as any)?.map((item: any) => item.Secteur).filter(Boolean))] as string[];
-        const categories = [...new Set((data as any)?.map((item: any) => item['Sous-secteur']).filter(Boolean))] as string[];
+        const sousSecteurs = [...new Set((data as any)?.map((item: any) => item['Sous-secteur']).filter(Boolean))] as string[];
         const unites = [...new Set((data as any)?.map((item: any) => item['Unité donnée d\'activité']).filter(Boolean))] as string[];
         const localisations = [...new Set((data as any)?.map((item: any) => item.Localisation).filter(Boolean))] as string[];
         const dates = [...new Set((data as any)?.map((item: any) => item.Date).filter(Boolean))] as string[];
@@ -67,10 +67,10 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
         setFilterOptions({
           source: sources.sort(),
           secteur: secteurs.sort(),
-          categorie: categories.sort(),
+          sousSecteur: sousSecteurs.sort(),
           uniteActivite: unites.sort(),
           localisation: localisations.sort(),
-          anneeRapport: dates.sort().reverse().map(String) // Most recent first
+          date: dates.sort().reverse().map(String)
         });
       } catch (error) {
         console.error('Error in fetchFilterOptions:', error);
@@ -122,12 +122,12 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
           </SelectContent>
         </Select>
 
-        <Select value={filters.categorie} onValueChange={(value) => onFilterChange("categorie", value)}>
+        <Select value={filters.sousSecteur} onValueChange={(value) => onFilterChange("sousSecteur", value)}>
           <SelectTrigger>
-            <SelectValue placeholder="Catégorie" />
+            <SelectValue placeholder="Sous-secteur" />
           </SelectTrigger>
           <SelectContent>
-            {filterOptions.categorie.map((option) => (
+            {filterOptions.sousSecteur.map((option) => (
               <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}
           </SelectContent>
@@ -157,10 +157,10 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
 
         <Select value={filters.anneeRapport} onValueChange={(value) => onFilterChange("anneeRapport", value)}>
           <SelectTrigger>
-            <SelectValue placeholder="Année" />
+            <SelectValue placeholder="Date" />
           </SelectTrigger>
           <SelectContent>
-            {filterOptions.anneeRapport.map((option) => (
+            {filterOptions.date.map((option) => (
               <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}
           </SelectContent>

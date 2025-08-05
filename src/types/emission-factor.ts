@@ -3,20 +3,23 @@ export interface EmissionFactor {
   nom: string;
   description?: string;
   fe: number;
-  unite: string;
+  uniteActivite: string;
   source: string;
   secteur: string;
-  categorie: string;
+  sousSecteur?: string;
   localisation: string;
   date: number;
   incertitude?: string;
+  perimetre?: string;
+  contributeur?: string;
+  commentaires?: string;
   isFavorite?: boolean;
 }
 
 export interface SearchFilters {
   source: string;
   secteur: string;
-  categorie: string;
+  sousSecteur: string;
   uniteActivite: string;
   localisation: string;
   anneeRapport: string;

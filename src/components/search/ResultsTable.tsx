@@ -221,7 +221,7 @@ export const ResultsTable = ({
               <TableHead className="w-12"></TableHead>
               <TableHead>Nom</TableHead>
               <TableHead>FE</TableHead>
-              <TableHead>Unité</TableHead>
+              <TableHead>Unité donnée d'activité</TableHead>
               <TableHead>Source</TableHead>
               <TableHead>Localisation</TableHead>
               <TableHead>Date</TableHead>
@@ -258,7 +258,7 @@ export const ResultsTable = ({
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{item.unite}</Badge>
+                    <Badge variant="secondary">{item.uniteActivite}</Badge>
                   </TableCell>
                   <TableCell>{item.source}</TableCell>
                   <TableCell>
@@ -304,27 +304,63 @@ export const ResultsTable = ({
                 {expandedRows.includes(item.id) && (
                   <TableRow>
                     <TableCell colSpan={9} className="bg-muted/20">
-                      <div className="p-4 space-y-2">
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                          <div>
-                            <span className="font-medium">Secteur: </span>
-                            {item.secteur}
-                          </div>
-                          <div>
-                            <span className="font-medium">Catégorie: </span>
-                            {item.categorie}
-                          </div>
-                          <div>
-                            <span className="font-medium">Incertitude: </span>
-                            {item.incertitude || "N/A"}
-                          </div>
-                        </div>
-                        {item.description && (
-                          <div className="text-sm">
-                            <span className="font-medium">Description complète: </span>
-                            {item.description}
-                          </div>
-                        )}
+                       <div className="p-4 space-y-3">
+                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                           <div>
+                             <span className="font-medium">Nom: </span>
+                             {item.nom}
+                           </div>
+                           <div>
+                             <span className="font-medium">FE: </span>
+                             {item.fe}
+                           </div>
+                           <div>
+                             <span className="font-medium">Unité donnée d'activité: </span>
+                             {item.uniteActivite}
+                           </div>
+                           <div>
+                             <span className="font-medium">Source: </span>
+                             {item.source}
+                           </div>
+                           <div>
+                             <span className="font-medium">Secteur: </span>
+                             {item.secteur}
+                           </div>
+                           <div>
+                             <span className="font-medium">Sous-secteur: </span>
+                             {item.sousSecteur || "N/A"}
+                           </div>
+                           <div>
+                             <span className="font-medium">Date: </span>
+                             {item.date}
+                           </div>
+                           <div>
+                             <span className="font-medium">Localisation: </span>
+                             {item.localisation}
+                           </div>
+                           <div>
+                             <span className="font-medium">Incertitude: </span>
+                             {item.incertitude || "N/A"}
+                           </div>
+                           <div>
+                             <span className="font-medium">Périmètre: </span>
+                             {item.perimetre || "N/A"}
+                           </div>
+                           <div>
+                             <span className="font-medium">Contributeur: </span>
+                             {item.contributeur || "N/A"}
+                           </div>
+                           <div>
+                             <span className="font-medium">Commentaires: </span>
+                             {item.commentaires || "N/A"}
+                           </div>
+                         </div>
+                         {item.description && (
+                           <div className="text-sm">
+                             <span className="font-medium">Description: </span>
+                             {item.description}
+                           </div>
+                         )}
                       </div>
                     </TableCell>
                   </TableRow>

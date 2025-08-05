@@ -28,7 +28,7 @@ const Dashboard = () => {
   const [filters, setFilters] = useState<Filters>({
     source: "",
     secteur: "",
-    categorie: "",
+    sousSecteur: "",
     uniteActivite: "",
     localisation: "",
     anneeRapport: ""
@@ -103,8 +103,11 @@ const Dashboard = () => {
       if (filters.secteur) {
         supabaseQuery = supabaseQuery.ilike('Secteur', `%${filters.secteur}%`);
       }
-      if (filters.categorie) {
-        supabaseQuery = supabaseQuery.ilike('Sous-secteur', `%${filters.categorie}%`);
+      if (filters.sousSecteur) {
+        supabaseQuery = supabaseQuery.ilike('Sous-secteur', `%${filters.sousSecteur}%`);
+      }
+      if (filters.uniteActivite) {
+        supabaseQuery = supabaseQuery.ilike('Unité donnée d\'activité', `%${filters.uniteActivite}%`);
       }
       if (filters.localisation) {
         supabaseQuery = supabaseQuery.ilike('Localisation', `%${filters.localisation}%`);
@@ -124,16 +127,19 @@ const Dashboard = () => {
       // Transform Supabase data to match EmissionFactor interface
       const searchResults: EmissionFactor[] = (data || []).map(item => ({
         id: item.id,
-        nom: item.nom,
+        nom: item.nom || '',
         description: item.description || '',
         fe: Number(item.fe),
-        unite: item.unite,
-        source: item.source,
-        secteur: item.secteur,
-        categorie: item.categorie,
-        localisation: item.localisation,
-        date: item.date,
+        uniteActivite: item.unite || '',
+        source: item.source || '',
+        secteur: item.secteur || '',
+        sousSecteur: item.categorie || '',
+        localisation: item.localisation || '',
+        date: item.date || 0,
         incertitude: item.incertitude || '',
+        perimetre: '',
+        contributeur: '',
+        commentaires: '',
         isFavorite: isFavorite(item.id)
       }));
       
@@ -169,7 +175,7 @@ const Dashboard = () => {
     setFilters({
       source: "",
       secteur: "",
-      categorie: "",
+      sousSecteur: "",
       uniteActivite: "",
       localisation: "",
       anneeRapport: ""
@@ -221,8 +227,8 @@ const Dashboard = () => {
       
       const selectedResults = results.filter(r => selectedItems.includes(r.id));
       const csvContent = [
-        "Nom,FE,Unité,Source,Localisation,Date",
-        ...selectedResults.map(r => `"${r.nom}",${r.fe},"${r.unite}","${r.source}","${r.localisation}","${r.date}"`)
+        "Nom,FE,Unité donnée d'activité,Source,Localisation,Date",
+        ...selectedResults.map(r => `"${r.nom}",${r.fe},"${r.uniteActivite}","${r.source}","${r.localisation}","${r.date}"`)
       ].join("\n");
       
       const blob = new Blob([csvContent], { type: "text/csv" });

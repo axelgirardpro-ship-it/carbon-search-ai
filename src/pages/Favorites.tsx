@@ -125,8 +125,8 @@ const Favorites = () => {
       
       const selectedFavorites = filteredFavorites.filter(f => selectedItems.includes(f.id));
       const csvContent = [
-        "Nom,FE,Unité,Source,Localisation,Date",
-        ...selectedFavorites.map(f => `"${f.nom}",${f.fe},"${f.unite}","${f.source}","${f.localisation}","${f.date}"`)
+        "Nom,FE,Unité donnée d'activité,Source,Localisation,Date",
+        ...selectedFavorites.map(f => `"${f.nom}",${f.fe},"${f.uniteActivite}","${f.source}","${f.localisation}","${f.date}"`)
       ].join("\n");
       
       const blob = new Blob([csvContent], { type: "text/csv" });
