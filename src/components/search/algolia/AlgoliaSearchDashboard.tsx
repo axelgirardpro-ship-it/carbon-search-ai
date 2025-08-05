@@ -2,48 +2,21 @@ import React from 'react';
 import { SearchProvider } from './SearchProvider';
 import { SearchBox } from './SearchBox';
 import { SearchResults } from './SearchResults';
-import { SearchFilters } from './SearchFilters';
-import { SearchStats } from './SearchStats';
 import { UnifiedNavbar } from '@/components/ui/UnifiedNavbar';
-import { QuotaWidget } from '@/components/ui/QuotaWidget';
 
 const AlgoliaSearchContent: React.FC = () => {
+  console.log('AlgoliaSearchContent mounting...');
 
   return (
     <div className="min-h-screen bg-background">
       <UnifiedNavbar />
       
       <main className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <section className="text-center py-12 mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Base de données des facteurs d'émission
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Recherchez parmi plus de 55 000 facteurs d'émission provenant de sources officielles
-          </p>
-          
-          <div className="max-w-2xl mx-auto">
-            <SearchBox />
-          </div>
-
-          <div className="mt-6">
-            <QuotaWidget quotaData={{}} isLoading={false} />
-          </div>
-        </section>
-
-        {/* Search Interface */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Filters Sidebar */}
-          <aside className="lg:col-span-1">
-            <SearchFilters />
-          </aside>
-
-          {/* Results Section */}
-          <section className="lg:col-span-3">
-            <SearchStats />
-            <SearchResults />
-          </section>
+        <h1 className="text-2xl font-bold mb-8">Debug Algolia - Version Simplifiée</h1>
+        
+        <div className="space-y-6">
+          <SearchBox />
+          <SearchResults />
         </div>
       </main>
     </div>
@@ -51,6 +24,8 @@ const AlgoliaSearchContent: React.FC = () => {
 };
 
 export const AlgoliaSearchDashboard: React.FC = () => {
+  console.log('AlgoliaSearchDashboard mounting...');
+  
   return (
     <SearchProvider>
       <AlgoliaSearchContent />
