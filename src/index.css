@@ -4,9 +4,8 @@
 
 @layer base {
   :root {
-    /* Spec colors - Orange/Purple theme */
-    --primary-orange: 17 100% 59%; /* #FF6B35 */
-    --primary-purple: 248 85% 66%; /* #6C5CE7 */
+    /* Spec colors - Indigo theme */
+    --primary-indigo: 231 57% 15%; /* #1e1b4b - indigo-950 */
     --text-primary: 206 22% 21%; /* #2D3436 */
     --text-indigo-950: 231 57% 15%; /* #1e1b4b - indigo-950 */
     --background-light: 220 14% 98%; /* #F8F9FA */
@@ -19,13 +18,13 @@
     --card-foreground: 206 22% 21%;
     --popover: 0 0% 100%;
     --popover-foreground: 206 22% 21%;
-    --primary: 17 100% 59%; /* primary-orange */
+    --primary: 231 57% 15%; /* primary-indigo */
     --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 206 22% 21%;
     --muted: 220 14% 98%; /* background-light */
     --muted-foreground: 207 12% 43%; /* text-secondary */
-    --accent: 248 85% 66%; /* primary-purple */
+    --accent: 231 57% 15%; /* primary-indigo */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;

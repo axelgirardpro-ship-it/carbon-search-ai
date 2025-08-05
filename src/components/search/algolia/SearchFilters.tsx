@@ -50,7 +50,7 @@ const RefinementList: React.FC<RefinementListProps> = ({
   return (
     <Collapsible defaultOpen>
       <CollapsibleTrigger asChild>
-        <Button variant="ghost" className="w-full justify-between p-0 h-auto hover:text-indigo-950">
+        <Button variant="ghost" className="w-full justify-between p-0 h-auto text-indigo-950">
           <h3 className="font-medium font-montserrat text-indigo-950">{title}</h3>
           <Filter className="h-4 w-4 text-indigo-950" />
         </Button>
@@ -129,7 +129,7 @@ const RecentDataToggle: React.FC = () => {
   });
 
   return (
-    <div className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-violet-200">
+    <div className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-border">
       <Switch
         checked={value.isRefined}
         onCheckedChange={() => refine(value)}
@@ -168,7 +168,7 @@ const FERangeInput: React.FC = () => {
   return (
     <Collapsible defaultOpen>
       <CollapsibleTrigger asChild>
-        <Button variant="ghost" className="w-full justify-between p-0 h-auto hover:text-indigo-950">
+        <Button variant="ghost" className="w-full justify-between p-0 h-auto text-indigo-950">
           <h3 className="font-medium font-montserrat text-indigo-950">Facteur d'émission (FE)</h3>
           <Filter className="h-4 w-4 text-indigo-950" />
         </Button>
@@ -214,7 +214,7 @@ const FERangeInput: React.FC = () => {
 
 export const SearchFilters: React.FC = () => {
   return (
-    <Card className="bg-violet-100 border border-violet-200">
+    <Card className="bg-background border border-border">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-montserrat text-indigo-950">FILTRER PAR :</CardTitle>

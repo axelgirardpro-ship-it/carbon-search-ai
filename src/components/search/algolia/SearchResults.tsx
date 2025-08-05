@@ -384,7 +384,7 @@ export const SearchResults: React.FC = () => {
       {hits.length > 0 && (
         <>
           {/* Header avec sélection et export */}
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 p-4 bg-white rounded-lg border border-violet-200">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 p-4 bg-white rounded-lg border border-border">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Checkbox
@@ -430,7 +430,7 @@ export const SearchResults: React.FC = () => {
               const shouldBlur = shouldBlurPremiumContent(hit.Source);
 
               return (
-                <Card key={hit.objectID} className="relative overflow-hidden bg-white border border-violet-200 hover:shadow-lg transition-shadow">
+                <Card key={hit.objectID} className="relative overflow-hidden bg-white border border-border hover:shadow-lg transition-shadow">
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start gap-4">
                       <div className="flex items-start gap-3 flex-1">
@@ -442,7 +442,7 @@ export const SearchResults: React.FC = () => {
                         <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">
                           <h3 
-                            className="text-lg font-semibold text-indigo-950 leading-tight cursor-pointer hover:text-orange-500 font-montserrat"
+                            className="text-lg font-semibold text-indigo-950 leading-tight cursor-pointer font-montserrat"
                             onClick={() => toggleRowExpansion(hit.objectID)}
                             dangerouslySetInnerHTML={getHighlightedText(hit, 'Nom')}
                           />
@@ -500,7 +500,7 @@ export const SearchResults: React.FC = () => {
                           <div className="mt-4 pt-4 border-t space-y-3">
                             {hit.Description && (
                               <div>
-                                <span className="text-sm font-medium text-muted-foreground">Description</span>
+                                <span className="text-sm font-medium text-indigo-950">Description</span>
                                 <PremiumBlur isBlurred={shouldBlur}>
                                   <p className="text-sm mt-1" dangerouslySetInnerHTML={getHighlightedText(hit, 'Description')} />
                                 </PremiumBlur>
@@ -508,14 +508,14 @@ export const SearchResults: React.FC = () => {
                             )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div>
-                                <span className="text-sm font-medium text-muted-foreground">Unité</span>
+                                <span className="text-sm font-medium text-indigo-950">Unité</span>
                                 <PremiumBlur isBlurred={shouldBlur}>
                                   <p className="text-sm mt-1">{hit['Unité donnée d\'activité']}</p>
                                 </PremiumBlur>
                               </div>
                               {hit.Périmètre && (
                                 <div>
-                                  <span className="text-sm font-medium text-muted-foreground">Périmètre</span>
+                                  <span className="text-sm font-medium text-indigo-950">Périmètre</span>
                                   <PremiumBlur isBlurred={shouldBlur}>
                                     <p className="text-sm mt-1">{hit.Périmètre}</p>
                                   </PremiumBlur>
@@ -523,7 +523,7 @@ export const SearchResults: React.FC = () => {
                               )}
                               {hit.Incertitude && (
                                 <div>
-                                  <span className="text-sm font-medium text-muted-foreground">Incertitude</span>
+                                  <span className="text-sm font-medium text-indigo-950">Incertitude</span>
                                   <PremiumBlur isBlurred={shouldBlur}>
                                     <p className="text-sm mt-1">{hit.Incertitude}</p>
                                   </PremiumBlur>
@@ -531,7 +531,7 @@ export const SearchResults: React.FC = () => {
                               )}
                               {hit.Contributeur && (
                                 <div>
-                                  <span className="text-sm font-medium text-muted-foreground">Contributeur</span>
+                                  <span className="text-sm font-medium text-indigo-950">Contributeur</span>
                                   <PremiumBlur isBlurred={shouldBlur}>
                                     <p className="text-sm mt-1">{hit.Contributeur}</p>
                                   </PremiumBlur>
@@ -540,7 +540,7 @@ export const SearchResults: React.FC = () => {
                             </div>
                             {hit.Commentaires && (
                               <div>
-                                <span className="text-sm font-medium text-muted-foreground">Commentaires</span>
+                                <span className="text-sm font-medium text-indigo-950">Commentaires</span>
                                 <PremiumBlur isBlurred={shouldBlur}>
                                   <p className="text-sm mt-1">{hit.Commentaires}</p>
                                 </PremiumBlur>
