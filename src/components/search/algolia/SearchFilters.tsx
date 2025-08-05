@@ -87,18 +87,19 @@ export const SearchFilters: React.FC = () => {
   };
 
   return (
-    <Card>
+    <Card className="bg-filter-bg">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Filtres</CardTitle>
+          <CardTitle className="text-lg">FILTRER PAR :</CardTitle>
           {currentRefinements.length > 0 && (
             <Button
               variant="ghost"
               size="sm"
               onClick={clearAllRefinements}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-slate-950 hover:text-slate-800"
             >
-              Effacer tout
+              <X className="w-4 h-4 mr-1" />
+              RÉINITIALISER LES FILTRES
             </Button>
           )}
         </div>
@@ -144,8 +145,8 @@ export const SearchFilters: React.FC = () => {
           limit={15}
         />
         <RefinementList
-          attribute="Unité activité"
-          title="Unité d'activité"
+          attribute="Unité donnée d'activité"
+          title="Unité"
           searchable
           limit={15}
         />
@@ -157,7 +158,7 @@ export const SearchFilters: React.FC = () => {
         />
         <RefinementList
           attribute="Date"
-          title="Année de rapport"
+          title="Date"
           limit={10}
         />
       </CardContent>
