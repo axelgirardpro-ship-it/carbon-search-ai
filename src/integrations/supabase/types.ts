@@ -144,62 +144,71 @@ export type Database = {
       }
       emission_factors: {
         Row: {
-          categorie: string
+          Commentaires: string | null
+          Contributeur: string | null
           created_at: string
           dataset_id: string | null
-          date: number
-          description: string | null
-          fe: number
+          Date: number | null
+          Description: string | null
+          FE: number
           id: string
-          incertitude: string | null
+          Incertitude: number | null
           is_public: boolean | null
-          localisation: string
-          nom: string
+          Localisation: string | null
+          Nom: string
+          Périmètre: string | null
           plan_tier: string | null
-          secteur: string
-          source: string
+          Secteur: string
+          Source: string
           source_type: string | null
-          unite: string
+          "Sous-secteur": string | null
+          "Unité donnée d'activité": string
           updated_at: string
           workspace_id: string | null
         }
         Insert: {
-          categorie: string
+          Commentaires?: string | null
+          Contributeur?: string | null
           created_at?: string
           dataset_id?: string | null
-          date: number
-          description?: string | null
-          fe: number
+          Date?: number | null
+          Description?: string | null
+          FE: number
           id?: string
-          incertitude?: string | null
+          Incertitude?: number | null
           is_public?: boolean | null
-          localisation: string
-          nom: string
+          Localisation?: string | null
+          Nom: string
+          Périmètre?: string | null
           plan_tier?: string | null
-          secteur: string
-          source: string
+          Secteur: string
+          Source: string
           source_type?: string | null
-          unite: string
+          "Sous-secteur"?: string | null
+          "Unité donnée d'activité": string
           updated_at?: string
           workspace_id?: string | null
         }
         Update: {
-          categorie?: string
+          Commentaires?: string | null
+          Contributeur?: string | null
           created_at?: string
           dataset_id?: string | null
-          date?: number
-          description?: string | null
-          fe?: number
+          Date?: number | null
+          Description?: string | null
+          FE?: number
           id?: string
-          incertitude?: string | null
+          Incertitude?: number | null
           is_public?: boolean | null
-          localisation?: string
-          nom?: string
+          Localisation?: string | null
+          Nom?: string
+          Périmètre?: string | null
           plan_tier?: string | null
-          secteur?: string
-          source?: string
+          Secteur?: string
+          Source?: string
           source_type?: string | null
-          unite?: string
+          "Sous-secteur"?: string | null
+          "Unité donnée d'activité"?: string
           updated_at?: string
           workspace_id?: string | null
         }
@@ -244,6 +253,60 @@ export type Database = {
           item_id?: string
           item_type?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      fe_source_workspace_assignments: {
+        Row: {
+          assigned_by: string | null
+          created_at: string
+          id: string
+          source_name: string
+          workspace_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          source_name: string
+          workspace_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          source_name?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      fe_sources: {
+        Row: {
+          access_level: string
+          auto_detected: boolean
+          created_at: string
+          id: string
+          is_global: boolean
+          source_name: string
+          updated_at: string
+        }
+        Insert: {
+          access_level?: string
+          auto_detected?: boolean
+          created_at?: string
+          id?: string
+          is_global?: boolean
+          source_name: string
+          updated_at?: string
+        }
+        Update: {
+          access_level?: string
+          auto_detected?: boolean
+          created_at?: string
+          id?: string
+          is_global?: boolean
+          source_name?: string
+          updated_at?: string
         }
         Relationships: []
       }
