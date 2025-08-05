@@ -38,10 +38,10 @@ export const CompaniesTable = () => {
     try {
       setLoading(true);
       
-      // Get all workspaces for admin management
-      console.log('CompaniesTable: Calling edge function for all workspaces');
+      // Get only paying workspaces (standard and premium)
+      console.log('CompaniesTable: Calling edge function for paying workspaces only');
       const { data, error } = await supabase.functions.invoke('get-admin-workspaces', {
-        body: { planFilter: 'all' }
+        body: { planFilter: 'paying' }
       });
 
       console.log('CompaniesTable: Edge function response:', { data, error });
@@ -49,8 +49,12 @@ export const CompaniesTable = () => {
       if (error) throw error;
 
       if (data?.data) {
-        console.log('CompaniesTable: Setting companies:', data.data.map((c: any) => `${c.name}: ${c.plan_type}`));
-        setCompanies(data.data);
+        // Filter client-side as well to ensure only standard/premium plans
+        const payingCompanies = data.data.filter((company: Company) => 
+          company.plan_type === 'standard' || company.plan_type === 'premium'
+        );
+        console.log('CompaniesTable: Setting paying companies:', payingCompanies.map((c: any) => `${c.name}: ${c.plan_type}`));
+        setCompanies(payingCompanies);
       }
     } catch (error) {
       console.error('Error fetching companies:', error);
