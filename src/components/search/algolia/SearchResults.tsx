@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHits, useHitsPerPage, usePagination } from 'react-instantsearch';
+import { useHits, useHitsPerPage, usePagination, useSortBy } from 'react-instantsearch';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -47,6 +47,42 @@ const HitsPerPageComponent: React.FC = () => {
           {items.map((item) => (
             <SelectItem key={item.value} value={String(item.value)}>
               {item.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+};
+
+const SortByComponent: React.FC = () => {
+  const { options, refine, currentRefinement } = useSortBy({
+    items: [
+      { label: 'Pertinence', value: 'emission_factors' },
+      { label: 'FE croissant', value: 'emission_factors_fe_asc' },
+      { label: 'FE décroissant', value: 'emission_factors_fe_desc' },
+      { label: 'Plus récent', value: 'emission_factors_date_desc' },
+      { label: 'Plus ancien', value: 'emission_factors_date_asc' },
+      { label: 'Nom A-Z', value: 'emission_factors_nom_asc' },
+      { label: 'Nom Z-A', value: 'emission_factors_nom_desc' },
+      { label: 'Source A-Z', value: 'emission_factors_source_asc' },
+    ],
+  });
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-muted-foreground">Trier par:</span>
+      <Select 
+        value={currentRefinement || 'emission_factors'} 
+        onValueChange={(value) => refine(value)}
+      >
+        <SelectTrigger className="w-auto min-w-[140px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
             </SelectItem>
           ))}
         </SelectContent>
@@ -133,12 +169,15 @@ export const SearchResults: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header avec hits per page */}
-      <div className="flex justify-between items-center">
+      {/* Header avec contrôles de tri et pagination */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div className="text-sm text-muted-foreground">
           {hits.length} résultat{hits.length > 1 ? 's' : ''} trouvé{hits.length > 1 ? 's' : ''}
         </div>
-        <HitsPerPageComponent />
+        <div className="flex flex-col sm:flex-row gap-4">
+          <SortByComponent />
+          <HitsPerPageComponent />
+        </div>
       </div>
 
       {/* Results */}
