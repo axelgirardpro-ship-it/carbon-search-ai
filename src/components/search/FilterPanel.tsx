@@ -70,7 +70,7 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
           categorie: categories.sort(),
           uniteActivite: unites.sort(),
           localisation: localisations.sort(),
-          anneeRapport: dates.sort().reverse() // Most recent first
+          anneeRapport: dates.sort().reverse().map(String) // Most recent first
         });
       } catch (error) {
         console.error('Error in fetchFilterOptions:', error);

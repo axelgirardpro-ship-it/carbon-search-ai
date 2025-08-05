@@ -8,7 +8,7 @@ export interface EmissionFactor {
   secteur: string;
   categorie: string;
   localisation: string;
-  date: string;
+  date: number;
   incertitude?: string;
   isFavorite?: boolean;
 }

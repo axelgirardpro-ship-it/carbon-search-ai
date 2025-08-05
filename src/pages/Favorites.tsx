@@ -47,7 +47,7 @@ const Favorites = () => {
       }
 
       // Date filter
-      if (filters.date && favorite.date !== filters.date) {
+      if (filters.date && favorite.date.toString() !== filters.date) {
         return false;
       }
 
@@ -74,7 +74,7 @@ const Favorites = () => {
   );
   
   const availableDates = useMemo(() => 
-    [...new Set(favorites.map(f => f.date))].filter(Boolean).sort().reverse(), 
+    [...new Set(favorites.map(f => f.date))].filter(Boolean).sort().reverse().map(String), 
     [favorites]
   );
 
