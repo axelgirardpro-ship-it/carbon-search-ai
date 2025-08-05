@@ -70,14 +70,6 @@ export const QuotaWidget = () => {
               </Badge>
             )}
           </div>
-          {(isNearLimit || isAtLimit) && !subscription?.subscribed && (
-            <Link to="/profile">
-              <Button size="sm" className="h-7 text-xs">
-                <Zap className="w-3 h-3 mr-1" />
-                Upgrade
-              </Button>
-            </Link>
-          )}
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -113,15 +105,9 @@ export const QuotaWidget = () => {
 
         {isAtLimit && (
           <div className="pt-2 border-t">
-            <p className="text-xs text-muted-foreground text-center mb-2">
-              Vous avez atteint vos limites mensuelles
+            <p className="text-xs text-muted-foreground text-center">
+              Vous avez atteint vos limites mensuelles. Contactez l'administrateur pour augmenter votre plan.
             </p>
-            <Link to="/profile" className="block">
-              <Button size="sm" className="w-full">
-                <TrendingUp className="w-4 h-4 mr-2" />
-                Passer au plan payant
-              </Button>
-            </Link>
           </div>
         )}
       </CardContent>

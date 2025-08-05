@@ -116,37 +116,38 @@ export const QuotaSubscriptionProvider = ({ children }: QuotaSubscriptionProvide
     try {
       setLoading(true);
       
-      // Vérifier d'abord dans la base de données Supabase (pour les admins configurés manuellement)
+      // Récupérer le plan depuis la base de données Supabase uniquement
       const { data: workspacePlan, error: workspaceError } = await supabase
         .rpc('get_user_workspace_plan', { user_uuid: user.id });
       
-      if (!workspaceError && workspacePlan && workspacePlan !== 'freemium') {
-        // Utilisateur a un plan premium/standard dans Supabase
+      if (workspaceError) {
+        console.error('Error fetching workspace plan:', workspaceError);
         setSubscription({
-          subscribed: true,
+          subscribed: false,
           subscription_end: null,
-          plan_type: workspacePlan,
+          plan_type: 'freemium',
           trial_active: false
         });
         return;
       }
-
-      // Sinon, vérifier via Stripe (fonction Edge)
-      const { data, error } = await supabase.functions.invoke('check-subscription');
-
-      if (error) throw error;
-
-      if (data) {
-        setSubscription({
-          subscribed: data.subscribed || false,
-          subscription_end: data.subscription_end || null,
-          plan_type: data.plan_type || 'freemium',
-          trial_active: data.trial_active || false
-        });
-      }
+      
+      const planType = workspacePlan || 'freemium';
+      const isSubscribed = planType !== 'freemium';
+      
+      setSubscription({
+        subscribed: isSubscribed,
+        subscription_end: null,
+        plan_type: planType,
+        trial_active: false
+      });
     } catch (error) {
       console.error('Error fetching subscription:', error);
-      setSubscription(null);
+      setSubscription({
+        subscribed: false,
+        subscription_end: null,
+        plan_type: 'freemium',
+        trial_active: false
+      });
     } finally {
       setLoading(false);
     }
@@ -206,44 +207,13 @@ export const QuotaSubscriptionProvider = ({ children }: QuotaSubscriptionProvide
     }
   };
 
+  // Fonctions Stripe supprimées - plus utilisées
   const createCheckoutSession = async (plan: string) => {
-    if (!user) {
-      throw new Error('User must be authenticated to create checkout session');
-    }
-
-    try {
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { plan }
-      });
-
-      if (error) throw error;
-
-      if (data?.url) {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Error creating checkout session:', error);
-      throw error;
-    }
+    throw new Error('Stripe checkout is no longer supported');
   };
 
   const openCustomerPortal = async () => {
-    if (!user) {
-      throw new Error('User must be authenticated to access customer portal');
-    }
-
-    try {
-      const { data, error } = await supabase.functions.invoke('customer-portal');
-
-      if (error) throw error;
-
-      if (data?.url) {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Error opening customer portal:', error);
-      throw error;
-    }
+    throw new Error('Stripe customer portal is no longer supported');
   };
 
   useEffect(() => {
