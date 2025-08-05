@@ -3,9 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
-import { QuotaSubscriptionProvider } from "@/contexts/QuotaSubscriptionContext";
+import { GlobalStateProvider, useGlobalState } from "@/contexts/GlobalStateContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
@@ -23,9 +21,9 @@ const queryClient = new QueryClient();
 
 // Composant pour protéger les routes authentifiées
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
+  const { user, authLoading } = useGlobalState();
   
-  if (loading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -45,9 +43,9 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 // Composant pour les routes publiques (rediriger si connecté)
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
+  const { user, authLoading } = useGlobalState();
   
-  if (loading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -67,36 +65,32 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <WorkspaceProvider>
-        <QuotaSubscriptionProvider>
-          <FavoritesProvider>
-            <TooltipProvider>
-                <Toaster />
-                <Sonner />
-                <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-                  <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
-                  <Route path="/dev" element={<PublicRoute><DevLogin /></PublicRoute>} />
-                  <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                  <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
-                  <Route path="/import" element={<ProtectedRoute><Import /></ProtectedRoute>} />
-                  <Route path="/settings" element={<ProtectedRoute><SimplifiedSettings /></ProtectedRoute>} />
-                  {/* Redirections for old routes */}
-                  <Route path="/profile" element={<Navigate to="/settings" replace />} />
-                  <Route path="/team" element={<Navigate to="/settings" replace />} />
-                  <Route path="/debug" element={<ProtectedRoute><Debug /></ProtectedRoute>} />
-                  <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </BrowserRouter>
-            </TooltipProvider>
-          </FavoritesProvider>
-        </QuotaSubscriptionProvider>
-      </WorkspaceProvider>
-    </AuthProvider>
+    <GlobalStateProvider>
+      <FavoritesProvider>
+        <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+              <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+              <Route path="/dev" element={<PublicRoute><DevLogin /></PublicRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+              <Route path="/import" element={<ProtectedRoute><Import /></ProtectedRoute>} />
+              <Route path="/settings" element={<ProtectedRoute><SimplifiedSettings /></ProtectedRoute>} />
+              {/* Redirections for old routes */}
+              <Route path="/profile" element={<Navigate to="/settings" replace />} />
+              <Route path="/team" element={<Navigate to="/settings" replace />} />
+              <Route path="/debug" element={<ProtectedRoute><Debug /></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </FavoritesProvider>
+    </GlobalStateProvider>
   </QueryClientProvider>
 );
 
