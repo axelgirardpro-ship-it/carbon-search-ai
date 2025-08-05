@@ -17,15 +17,15 @@ export const useSuggestions = (searchQuery: string) => {
     try {
       const { data, error } = await supabase
         .from('emission_factors')
-        .select('Nom')
-        .or(`Nom.ilike.%${query}%,Description.ilike.%${query}%,Secteur.ilike.%${query}%`)
+        .select('nom')
+        .or(`nom.ilike.%${query}%,description.ilike.%${query}%,secteur.ilike.%${query}%`)
         .or(`workspace_id.eq.${currentWorkspace.id},is_public.eq.true`)
         .limit(3);
 
       if (error) throw error;
 
       // Get unique suggestions
-      const uniqueNames = [...new Set((data as any)?.map((item: any) => item.Nom) || [])];
+      const uniqueNames = [...new Set(data?.map(item => item.nom) || [])];
       return uniqueNames.slice(0, 3);
     } catch (error) {
       console.error('Error fetching suggestions:', error);

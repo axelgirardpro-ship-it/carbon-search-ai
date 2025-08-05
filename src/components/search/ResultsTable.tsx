@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
@@ -231,8 +231,8 @@ export const ResultsTable = ({
           </TableHeader>
           <TableBody>
             {currentResults.map((item) => (
-              <>
-                <TableRow key={item.id} className="hover:bg-muted/50">
+              <React.Fragment key={item.id}>
+                <TableRow className="hover:bg-muted/50">
                   <TableCell>
                     <Checkbox
                       checked={selectedItems.includes(item.id)}
@@ -365,7 +365,7 @@ export const ResultsTable = ({
                     </TableCell>
                   </TableRow>
                 )}
-              </>
+              </React.Fragment>
             ))}
           </TableBody>
         </Table>

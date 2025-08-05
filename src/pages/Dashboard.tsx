@@ -93,27 +93,27 @@ const Dashboard = () => {
 
       // Apply search filter if query is provided
       if (query.trim()) {
-        supabaseQuery = supabaseQuery.or(`Nom.ilike.%${query}%,Description.ilike.%${query}%`);
+        supabaseQuery = supabaseQuery.or(`nom.ilike.%${query}%,description.ilike.%${query}%`);
       }
 
       // Apply other filters
       if (filters.source) {
-        supabaseQuery = supabaseQuery.ilike('Source', `%${filters.source}%`);
+        supabaseQuery = supabaseQuery.ilike('source', `%${filters.source}%`);
       }
       if (filters.secteur) {
-        supabaseQuery = supabaseQuery.ilike('Secteur', `%${filters.secteur}%`);
+        supabaseQuery = supabaseQuery.ilike('secteur', `%${filters.secteur}%`);
       }
       if (filters.sousSecteur) {
-        supabaseQuery = supabaseQuery.ilike('Sous-secteur', `%${filters.sousSecteur}%`);
+        supabaseQuery = supabaseQuery.ilike('categorie', `%${filters.sousSecteur}%`);
       }
       if (filters.uniteActivite) {
-        supabaseQuery = supabaseQuery.ilike('Unité donnée d\'activité', `%${filters.uniteActivite}%`);
+        supabaseQuery = supabaseQuery.ilike('unite', `%${filters.uniteActivite}%`);
       }
       if (filters.localisation) {
-        supabaseQuery = supabaseQuery.ilike('Localisation', `%${filters.localisation}%`);
+        supabaseQuery = supabaseQuery.ilike('localisation', `%${filters.localisation}%`);
       }
       if (filters.anneeRapport) {
-        supabaseQuery = supabaseQuery.ilike('Date', `%${filters.anneeRapport}%`);
+        supabaseQuery = supabaseQuery.ilike('date', `%${filters.anneeRapport}%`);
       }
 
       const { data, error } = await supabaseQuery.limit(100);
@@ -129,13 +129,13 @@ const Dashboard = () => {
         id: item.id,
         nom: item.nom || '',
         description: item.description || '',
-        fe: Number(item.fe),
+        fe: Number(item.fe) || 0,
         uniteActivite: item.unite || '',
         source: item.source || '',
         secteur: item.secteur || '',
         sousSecteur: item.categorie || '',
         localisation: item.localisation || '',
-        date: item.date || 0,
+        date: Number(item.date) || 0,
         incertitude: item.incertitude || '',
         perimetre: '',
         contributeur: '',
