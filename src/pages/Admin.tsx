@@ -31,8 +31,7 @@ import { ExportsMonitoringTable } from "@/components/admin/ExportsMonitoringTabl
 import { TestEnvironmentControls } from "@/components/admin/TestEnvironmentControls";
 
 const Admin = () => {
-  const { user, userRole } = useAuth();
-  const { isSupraAdmin, isOriginalSupraAdmin } = usePermissions();
+  const { user, permissions, unifiedUser } = useGlobalState();
   const { toast } = useToast();
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -46,7 +45,7 @@ const Admin = () => {
 
   useEffect(() => {
     const loadAdminStats = async () => {
-      if (!user || (!isSupraAdmin() && !isOriginalSupraAdmin())) {
+      if (!user || (!permissions.isSupraAdmin && !permissions.isOriginalSupraAdmin)) {
         setLoading(false);
         return;
       }
@@ -103,10 +102,10 @@ const Admin = () => {
     };
 
     loadAdminStats();
-  }, [user, isSupraAdmin, isOriginalSupraAdmin, toast]);
+  }, [user, permissions.isSupraAdmin, permissions.isOriginalSupraAdmin, toast]);
 
   // Redirect if not supra admin
-  if (!user || (!isSupraAdmin() && !isOriginalSupraAdmin())) {
+  if (!user || (!permissions.isSupraAdmin && !permissions.isOriginalSupraAdmin)) {
     return (
       <div className="min-h-screen bg-background">
         <UnifiedNavbar />
@@ -266,9 +265,9 @@ const Admin = () => {
             <div className="space-y-2 text-sm">
               <p><strong>User ID:</strong> {user.id}</p>
               <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Workspace Role:</strong> {userRole?.role || 'Pas de rôle workspace'}</p>
-              <p><strong>Supra Admin:</strong> {isSupraAdmin() ? 'Oui' : 'Non'}</p>
-              <p><strong>Workspace:</strong> {userRole?.workspaces?.name || 'Aucun'}</p>
+              <p><strong>Workspace Role:</strong> {unifiedUser?.role || 'Pas de rôle workspace'}</p>
+              <p><strong>Supra Admin:</strong> {permissions.isSupraAdmin ? 'Oui' : 'Non'}</p>
+              <p><strong>Workspace:</strong> {unifiedUser?.company || 'Aucun'}</p>
             </div>
           </CardContent>
         </Card>

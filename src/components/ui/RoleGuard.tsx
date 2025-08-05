@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { usePermissions } from "@/hooks/usePermissions";
+import { usePermissions } from "@/contexts/GlobalStateContext";
 
 interface RoleGuardProps {
   children: ReactNode;
@@ -26,7 +26,7 @@ export const RoleGuard = ({
 
   // Check by permission
   if (requirePermission) {
-    const hasPermission = permissions[requirePermission]();
+    const hasPermission = permissions[requirePermission];
     if (!hasPermission) {
       return <>{fallback}</>;
     }

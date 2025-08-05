@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { useGlobalState } from "@/contexts/GlobalStateContext";
 import { EmissionFactor } from '@/types/emission-factor';
 
 interface FavoritesContextType {
@@ -27,7 +27,7 @@ interface FavoritesProviderProps {
 }
 
 export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
-  const { user } = useAuth();
+  const { user } = useGlobalState();
   const [favorites, setFavorites] = useState<EmissionFactor[]>([]);
   const [loading, setLoading] = useState(false);
 

@@ -738,25 +738,30 @@ export const useUnifiedUser = () => {
 
 export const usePermissions = () => {
   const { permissions, unifiedUser, currentWorkspace } = useGlobalState();
+  
+  const getRoleLabel = () => {
+    switch (unifiedUser?.role) {
+      case 'supra_admin': return 'Supra Administrateur';
+      case 'admin': return 'Administrateur';
+      case 'gestionnaire': return 'Gestionnaire';
+      case 'lecteur': return 'Lecteur';
+      default: return 'Non assigné';
+    }
+  };
+
+  const getPlanLabel = () => {
+    switch (currentWorkspace?.plan_type) {
+      case 'premium': return 'Premium';
+      case 'standard': return 'Standard';
+      case 'freemium': return 'Freemium';
+      default: return 'Freemium';
+    }
+  };
+
   return {
     ...permissions,
-    getRoleLabel: () => {
-      switch (unifiedUser?.role) {
-        case 'supra_admin': return 'Supra Administrateur';
-        case 'admin': return 'Administrateur';
-        case 'gestionnaire': return 'Gestionnaire';
-        case 'lecteur': return 'Lecteur';
-        default: return 'Non assigné';
-      }
-    },
-    getPlanLabel: () => {
-      switch (currentWorkspace?.plan_type) {
-        case 'premium': return 'Premium';
-        case 'standard': return 'Standard';
-        case 'freemium': return 'Freemium';
-        default: return 'Freemium';
-      }
-    },
+    getRoleLabel,
+    getPlanLabel,
     userRole: unifiedUser,
     workspacePlan: currentWorkspace,
   };
