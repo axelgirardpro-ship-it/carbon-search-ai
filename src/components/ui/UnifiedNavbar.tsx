@@ -2,10 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSupraAdmin } from "@/hooks/useSupraAdmin";
+import { usePermissions } from "@/hooks/usePermissions";
+import { Lock } from "lucide-react";
 
 export const UnifiedNavbar = () => {
   const { user, signOut } = useAuth();
   const { isSupraAdmin } = useSupraAdmin();
+  const { canUseFavorites } = usePermissions();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -31,11 +34,23 @@ export const UnifiedNavbar = () => {
                     Recherche
                   </Button>
                 </Link>
-                <Link to="/favorites">
-                  <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
+                {canUseFavorites ? (
+                  <Link to="/favorites">
+                    <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
+                      Favoris
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button 
+                    variant="ghost" 
+                    className="homepage-text opacity-50 cursor-not-allowed"
+                    disabled
+                    title="Fonctionnalité disponible uniquement avec le plan Premium"
+                  >
+                    <Lock className="h-4 w-4 mr-2" />
                     Favoris
                   </Button>
-                </Link>
+                )}
                 {isSupraAdmin && (
                   <Link to="/import">
                     <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">

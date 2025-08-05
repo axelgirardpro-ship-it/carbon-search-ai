@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from "@/contexts/AuthContext";
+import { usePermissions } from "@/hooks/usePermissions";
 import { EmissionFactor } from '@/types/emission-factor';
 
 interface FavoritesContextType {
@@ -28,11 +29,12 @@ interface FavoritesProviderProps {
 
 export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
   const { user } = useAuth();
+  const { canUseFavorites } = usePermissions();
   const [favorites, setFavorites] = useState<EmissionFactor[]>([]);
   const [loading, setLoading] = useState(false);
 
   const refreshFavorites = async () => {
-    if (!user) {
+    if (!user || !canUseFavorites) {
       setFavorites([]);
       return;
     }
@@ -194,7 +196,7 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
   };
 
   const addToFavorites = async (item: EmissionFactor) => {
-    if (!user) return;
+    if (!user || !canUseFavorites) return;
 
     try {
       const { error } = await supabase
@@ -215,7 +217,7 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
   };
 
   const removeFromFavorites = async (itemId: string) => {
-    if (!user) return;
+    if (!user || !canUseFavorites) return;
 
     try {
       const { error } = await supabase
@@ -239,7 +241,7 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
 
   useEffect(() => {
     refreshFavorites();
-  }, [user]);
+  }, [user, canUseFavorites]);
 
   return (
     <FavoritesContext.Provider value={{

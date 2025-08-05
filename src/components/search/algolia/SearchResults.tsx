@@ -5,11 +5,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Heart, Download, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { Heart, Download, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Search, Lock } from 'lucide-react';
 import { useFavorites } from '@/contexts/FavoritesContext';
+import { usePermissions } from '@/hooks/usePermissions';
 import { PremiumBlur } from '@/components/ui/PremiumBlur';
 import { useEmissionFactorAccess } from '@/hooks/useEmissionFactorAccess';
-import { usePermissions } from '@/hooks/usePermissions';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -221,6 +221,7 @@ export const SearchResults: React.FC = () => {
   const [expandedRows, setExpandedRows] = React.useState<Set<string>>(new Set());
   const [selectedItems, setSelectedItems] = React.useState<Set<string>>(new Set());
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
+  const { canUseFavorites } = usePermissions();
   const { hasAccess } = useEmissionFactorAccess();
   const { canExport } = usePermissions();
   const { toast } = useToast();
@@ -447,10 +448,16 @@ export const SearchResults: React.FC = () => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleFavoriteToggle(hit)}
-                              className={`${isFav ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-foreground'}`}
+                              onClick={() => canUseFavorites ? handleFavoriteToggle(hit) : undefined}
+                              disabled={!canUseFavorites}
+                              className={`${isFav ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-foreground'} ${!canUseFavorites ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              title={!canUseFavorites ? "Fonctionnalité disponible uniquement avec le plan Premium" : ""}
                             >
-                              <Heart className={`h-4 w-4 ${isFav ? 'fill-current' : ''}`} />
+                              {!canUseFavorites ? (
+                                <Lock className="h-4 w-4" />
+                              ) : (
+                                <Heart className={`h-4 w-4 ${isFav ? 'fill-current' : ''}`} />
+                              )}
                             </Button>
                             <Button
                               variant="ghost"
