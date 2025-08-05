@@ -153,14 +153,12 @@ export type Database = {
           FE: number
           id: string
           Incertitude: number | null
-          is_public: boolean | null
           Localisation: string | null
           Nom: string
           Périmètre: string | null
           plan_tier: string | null
           Secteur: string
           Source: string
-          source_type: string | null
           "Sous-secteur": string | null
           "Unité donnée d'activité": string
           updated_at: string
@@ -176,14 +174,12 @@ export type Database = {
           FE: number
           id?: string
           Incertitude?: number | null
-          is_public?: boolean | null
           Localisation?: string | null
           Nom: string
           Périmètre?: string | null
           plan_tier?: string | null
           Secteur: string
           Source: string
-          source_type?: string | null
           "Sous-secteur"?: string | null
           "Unité donnée d'activité": string
           updated_at?: string
@@ -199,14 +195,12 @@ export type Database = {
           FE?: number
           id?: string
           Incertitude?: number | null
-          is_public?: boolean | null
           Localisation?: string | null
           Nom?: string
           Périmètre?: string | null
           plan_tier?: string | null
           Secteur?: string
           Source?: string
-          source_type?: string | null
           "Sous-secteur"?: string | null
           "Unité donnée d'activité"?: string
           updated_at?: string
