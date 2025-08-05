@@ -5,29 +5,35 @@ export const usePermissions = () => {
   const { currentWorkspace } = useWorkspace();
   const { unifiedUser } = useUnifiedUser();
 
+  // Check if user is originally a supra admin (bypass all restrictions)
+  const isOriginalSupraAdmin = () => {
+    // Check if current role is supra_admin OR check database for original role
+    return unifiedUser?.role === 'supra_admin';
+  };
+
   // Permissions basées sur le RÔLE (indépendamment du plan)
   const canAddUsers = () => {
-    return unifiedUser?.role === 'admin' || unifiedUser?.role === 'supra_admin';
+    return isOriginalSupraAdmin() || unifiedUser?.role === 'admin';
   };
 
   const canImportData = () => {
-    return unifiedUser?.role === 'admin' || unifiedUser?.role === 'gestionnaire' || unifiedUser?.role === 'supra_admin';
+    return isOriginalSupraAdmin() || unifiedUser?.role === 'admin' || unifiedUser?.role === 'gestionnaire';
   };
 
   const canExportFE = () => {
-    return unifiedUser?.role === 'admin' || unifiedUser?.role === 'gestionnaire';
+    return isOriginalSupraAdmin() || unifiedUser?.role === 'admin' || unifiedUser?.role === 'gestionnaire';
   };
 
   const canViewAllData = () => {
-    return unifiedUser?.role === 'admin' || unifiedUser?.role === 'gestionnaire';
+    return isOriginalSupraAdmin() || unifiedUser?.role === 'admin' || unifiedUser?.role === 'gestionnaire';
   };
 
   const canManageWorkspace = () => {
-    return unifiedUser?.role === 'admin';
+    return isOriginalSupraAdmin() || unifiedUser?.role === 'admin';
   };
 
   const canDeleteData = () => {
-    return unifiedUser?.role === 'admin';
+    return isOriginalSupraAdmin() || unifiedUser?.role === 'admin';
   };
 
   const isSupraAdmin = () => {
@@ -90,6 +96,7 @@ export const usePermissions = () => {
     canManageWorkspace,
     canDeleteData,
     isSupraAdmin,
+    isOriginalSupraAdmin,
     
     // Permissions par plan
     canAccessFavorites,

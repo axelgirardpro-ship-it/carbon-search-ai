@@ -375,6 +375,7 @@ export type Database = {
           assigned_by: string | null
           created_at: string
           id: string
+          original_role: string | null
           role: string
           updated_at: string
           user_id: string
@@ -384,6 +385,7 @@ export type Database = {
           assigned_by?: string | null
           created_at?: string
           id?: string
+          original_role?: string | null
           role: string
           updated_at?: string
           user_id: string
@@ -393,6 +395,7 @@ export type Database = {
           assigned_by?: string | null
           created_at?: string
           id?: string
+          original_role?: string | null
           role?: string
           updated_at?: string
           user_id?: string
@@ -610,6 +613,10 @@ export type Database = {
       }
       is_company_owner: {
         Args: { company_id: string }
+        Returns: boolean
+      }
+      is_original_supra_admin: {
+        Args: { user_uuid?: string }
         Returns: boolean
       }
       is_supra_admin: {

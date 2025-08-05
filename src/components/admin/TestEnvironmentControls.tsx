@@ -11,18 +11,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useUnifiedUser } from "@/hooks/useUnifiedUser";
 
 export const TestEnvironmentControls = () => {
-  const { user, userRole, refreshUserRole } = useAuth();
+  const { user } = useAuth();
   const { currentWorkspace, refreshWorkspaces } = useWorkspace();
-  const { isSupraAdmin } = usePermissions();
+  const { isSupraAdmin, isOriginalSupraAdmin } = usePermissions();
+  const { unifiedUser, refreshUser } = useUnifiedUser();
   const { toast } = useToast();
   const [tempRole, setTempRole] = useState<string>("");
   const [tempPlanType, setTempPlanType] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
-  // Ne pas afficher ce composant si pas supra admin
-  if (!isSupraAdmin()) {
+  // Ne pas afficher ce composant si pas supra admin ou supra admin original
+  if (!isSupraAdmin() && !isOriginalSupraAdmin()) {
     return null;
   }
 
@@ -31,17 +33,22 @@ export const TestEnvironmentControls = () => {
 
     setLoading(true);
     try {
-      // Mettre à jour le rôle temporaire pour ce workspace
+      // Set original_role if changing from supra_admin for first time
+      const updateData: any = { role: tempRole };
+      if (unifiedUser?.role === 'supra_admin') {
+        updateData.original_role = 'supra_admin';
+      }
+
       const { error } = await supabase
         .from('user_roles')
-        .update({ role: tempRole })
+        .update(updateData)
         .eq('user_id', user.id)
         .eq('workspace_id', currentWorkspace.id);
 
       if (error) throw error;
 
       // Rafraîchir les données utilisateur
-      await refreshUserRole(user.id);
+      await refreshUser();
       
       toast({
         title: "Rôle temporaire modifié",
@@ -92,25 +99,25 @@ export const TestEnvironmentControls = () => {
   };
 
   const resetToSupraAdmin = async () => {
-    if (!user) return;
+    if (!user || !currentWorkspace) return;
 
     setLoading(true);
     try {
-      // Remettre le rôle supra_admin global
+      // Reset to supra_admin role and clear original_role
       const { error } = await supabase
         .from('user_roles')
-        .update({ role: 'supra_admin' })
+        .update({ role: 'supra_admin', original_role: null })
         .eq('user_id', user.id)
-        .is('workspace_id', null);
+        .eq('workspace_id', currentWorkspace.id);
 
       if (error) throw error;
 
       // Rafraîchir les données utilisateur
-      await refreshUserRole(user.id);
+      await refreshUser();
       
       toast({
         title: "Retour au statut Supra Admin",
-        description: "Votre statut de Supra Admin global a été restauré.",
+        description: "Votre statut de Supra Admin a été restauré.",
       });
     } catch (error) {
       console.error('Error resetting to supra admin:', error);
@@ -142,9 +149,12 @@ export const TestEnvironmentControls = () => {
           <AlertDescription>
             <strong>Configuration actuelle:</strong>
             <div className="mt-2 space-y-1">
-              <div>Rôle: <Badge variant="outline">{userRole?.role || 'supra_admin'}</Badge></div>
+              <div>Rôle: <Badge variant="outline">{unifiedUser?.role || 'supra_admin'}</Badge></div>
               <div>Workspace: <Badge variant="outline">{currentWorkspace?.name || 'Aucun'}</Badge></div>
               <div>Plan: <Badge variant="outline">{currentWorkspace?.plan_type || 'N/A'}</Badge></div>
+              {isOriginalSupraAdmin() && unifiedUser?.role !== 'supra_admin' && (
+                <div>Status: <Badge variant="secondary">Supra Admin temporairement en {unifiedUser?.role}</Badge></div>
+              )}
             </div>
           </AlertDescription>
         </Alert>
@@ -163,6 +173,7 @@ export const TestEnvironmentControls = () => {
                     <SelectValue placeholder="Sélectionner un rôle" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="supra_admin">Supra Admin</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>
                     <SelectItem value="gestionnaire">Gestionnaire</SelectItem>
                     <SelectItem value="lecteur">Lecteur</SelectItem>
