@@ -1,10 +1,10 @@
 import React from 'react';
-import { useHits, useHitsPerPage, usePagination, useSortBy } from 'react-instantsearch';
+import { useHits, useHitsPerPage, usePagination, useSortBy, useSearchBox } from 'react-instantsearch';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Heart, Download, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Heart, Download, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { PremiumBlur } from '@/components/ui/PremiumBlur';
 import { useEmissionFactorAccess } from '@/hooks/useEmissionFactorAccess';
@@ -135,6 +135,45 @@ const PaginationComponent: React.FC = () => {
   );
 };
 
+const StateResults: React.FC = () => {
+  const { query } = useSearchBox();
+  const { hits } = useHits<AlgoliaHit>();
+
+  if (hits.length === 0 && query) {
+    return (
+      <div className="text-center py-12">
+        <Search className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+        <h3 className="text-lg font-medium mb-2">Aucun résultat trouvé</h3>
+        <p className="text-muted-foreground mb-4">
+          Nous n'avons trouvé aucun facteur d'émission pour "{query}"
+        </p>
+        <div className="text-sm text-muted-foreground">
+          <p>Suggestions :</p>
+          <ul className="mt-2 space-y-1">
+            <li>• Vérifiez l'orthographe de votre recherche</li>
+            <li>• Essayez des termes plus généraux</li>
+            <li>• Utilisez moins de filtres</li>
+          </ul>
+        </div>
+      </div>
+    );
+  }
+
+  if (hits.length === 0 && !query) {
+    return (
+      <div className="text-center py-12">
+        <Search className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+        <h3 className="text-lg font-medium mb-2">Commencez votre recherche</h3>
+        <p className="text-muted-foreground">
+          Utilisez la barre de recherche ou les filtres pour explorer notre base de données
+        </p>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 export const SearchResults: React.FC = () => {
   const { hits } = useHits<AlgoliaHit>();
   const { favorites, addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
@@ -169,18 +208,22 @@ export const SearchResults: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header avec contrôles de tri et pagination */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div className="text-sm text-muted-foreground">
-          {hits.length} résultat{hits.length > 1 ? 's' : ''} trouvé{hits.length > 1 ? 's' : ''}
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <SortByComponent />
-          <HitsPerPageComponent />
-        </div>
-      </div>
+      <StateResults />
+      
+      {hits.length > 0 && (
+        <>
+          {/* Header avec contrôles de tri et pagination */}
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div className="text-sm text-muted-foreground">
+              {hits.length} résultat{hits.length > 1 ? 's' : ''} trouvé{hits.length > 1 ? 's' : ''}
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <SortByComponent />
+              <HitsPerPageComponent />
+            </div>
+          </div>
 
-      {/* Results */}
+          {/* Results */}
       <div className="space-y-4">
       {hits.map((hit) => {
         const isExpanded = expandedRows.has(hit.objectID);
@@ -308,8 +351,10 @@ export const SearchResults: React.FC = () => {
       })}
       </div>
 
-      {/* Pagination */}
-      <PaginationComponent />
+          {/* Pagination */}
+          <PaginationComponent />
+        </>
+      )}
     </div>
   );
 };

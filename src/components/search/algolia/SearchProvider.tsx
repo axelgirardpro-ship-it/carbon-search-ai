@@ -1,5 +1,5 @@
 import React from 'react';
-import { InstantSearch } from 'react-instantsearch';
+import { InstantSearch, Configure } from 'react-instantsearch';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 
 const searchClient = algoliasearch('6BGAS85TYS', 'e06b7614aaff866708fbd2872de90d37');
@@ -18,6 +18,12 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
         preserveSharedStateOnUnmount: true,
       }}
     >
+      <Configure
+        hitsPerPage={9}
+        snippetEllipsisText="..."
+        highlightPreTag='<mark class="bg-yellow-200">'
+        highlightPostTag="</mark>"
+      />
       {children}
     </InstantSearch>
   );
