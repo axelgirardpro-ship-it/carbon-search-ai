@@ -7,8 +7,8 @@ export const usePermissions = () => {
 
   // Check if user is originally a supra admin (bypass all restrictions)
   const isOriginalSupraAdmin = () => {
-    // Check if current role is supra_admin OR check database for original role
-    return unifiedUser?.role === 'supra_admin';
+    // Check if current role is supra_admin OR if original_role was supra_admin
+    return unifiedUser?.role === 'supra_admin' || unifiedUser?.original_role === 'supra_admin';
   };
 
   // Permissions basées sur le RÔLE (indépendamment du plan)

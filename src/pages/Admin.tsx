@@ -33,7 +33,7 @@ import { TestEnvironmentControls } from "@/components/admin/TestEnvironmentContr
 
 const Admin = () => {
   const { user, userRole } = useAuth();
-  const { isSupraAdmin } = usePermissions();
+  const { isSupraAdmin, isOriginalSupraAdmin } = usePermissions();
   const { toast } = useToast();
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -47,7 +47,7 @@ const Admin = () => {
 
   useEffect(() => {
     const loadAdminStats = async () => {
-      if (!user || !isSupraAdmin()) {
+      if (!user || (!isSupraAdmin() && !isOriginalSupraAdmin())) {
         setLoading(false);
         return;
       }
@@ -104,10 +104,10 @@ const Admin = () => {
     };
 
     loadAdminStats();
-  }, [user, isSupraAdmin, toast]);
+  }, [user, isSupraAdmin, isOriginalSupraAdmin, toast]);
 
   // Redirect if not supra admin
-  if (!user || !isSupraAdmin()) {
+  if (!user || (!isSupraAdmin() && !isOriginalSupraAdmin())) {
     return (
       <div className="min-h-screen bg-background">
         <UnifiedNavbar />

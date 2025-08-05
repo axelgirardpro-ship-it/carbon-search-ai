@@ -18,6 +18,7 @@ interface UnifiedUser {
   trial_end?: string;
   subscription_end?: string;
   role: string;
+  original_role?: string;
   assigned_by?: string;
   created_at: string;
   updated_at: string;
@@ -65,6 +66,7 @@ export const useUnifiedUser = () => {
           trial_end: undefined,
           subscription_end: undefined,
           role: 'supra_admin',
+          original_role: 'supra_admin',
           assigned_by: undefined,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
@@ -100,7 +102,7 @@ export const useUnifiedUser = () => {
       // Récupérer le rôle depuis user_roles
       const { data: roleData, error: roleError } = await supabase
         .from('user_roles')
-        .select('role')
+        .select('role, original_role')
         .eq('user_id', user.id)
         .eq('workspace_id', currentWorkspace.id)
         .single();
@@ -115,7 +117,8 @@ export const useUnifiedUser = () => {
       // Combiner les données
       const unifiedData: UnifiedUser = {
         ...userData,
-        role: roleData.role
+        role: roleData.role,
+        original_role: roleData.original_role
       };
 
       setUnifiedUser(unifiedData);
