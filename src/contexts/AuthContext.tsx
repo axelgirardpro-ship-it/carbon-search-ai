@@ -134,18 +134,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       if (error) throw error;
       
-      // Get additional subscription details from workspace_plans view
+      // Get workspace details directly from workspaces table
       const { data: workspaceDetails } = await supabase
-        .from('workspace_plans')
-        .select('*')
+        .from('workspaces')
+        .select('plan_type, subscription_tier')
         .eq('owner_id', session.user.id)
         .single();
       
+      const planType = workspacePlan || 'freemium';
+      const isSubscribed = planType !== 'freemium';
+      
       setSubscriptionStatus({
-        subscribed: workspaceDetails?.subscribed || false,
+        subscribed: isSubscribed,
         subscription_tier: workspaceDetails?.subscription_tier || null,
-        plan_type: workspacePlan || 'freemium',
-        trial_active: workspaceDetails?.trial_end ? new Date(workspaceDetails.trial_end) > new Date() : false,
+        plan_type: planType,
+        trial_active: false, // Les trials sont maintenant gérés au niveau workspace si nécessaire
       });
     } catch (error) {
       console.error('Error refreshing subscription:', error);
