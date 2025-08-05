@@ -40,6 +40,7 @@ export const usePermissions = () => {
   };
 
   const canExportFromDashboard = () => {
+    // Seuls les comptes premium peuvent exporter
     return currentWorkspace?.plan_type === 'premium';
   };
 

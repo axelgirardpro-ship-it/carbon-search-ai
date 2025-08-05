@@ -44,7 +44,7 @@ export const QuotaWidget = () => {
             <div className="flex justify-between text-sm">
               <span>Exports</span>
               <span className="text-primary font-medium">
-                {isPremium ? 'Illimitées ∞' : '100 / mois'}
+                {isPremium ? '1000 / mois' : 'Non disponible'}
               </span>
             </div>
           </div>
