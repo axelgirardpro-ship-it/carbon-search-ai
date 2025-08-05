@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,10 +6,18 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Settings as SettingsIcon, Bell, Shield, CreditCard, Download } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Settings as SettingsIcon, Bell, Shield, CreditCard, Download, User, Building } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 
 const Settings = () => {
+  const { user } = useAuth();
+  const { userProfile, loading: userLoading } = useUser();
+  const { currentWorkspace, loading: workspaceLoading } = useWorkspace();
+  
   const [notifications, setNotifications] = useState({
     email: true,
     favoriteUpdates: false,
@@ -57,6 +65,124 @@ const Settings = () => {
               Personnalisez votre expérience EcoSearch
             </p>
           </div>
+          
+          {/* User Profile */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <User className="w-5 h-5 mr-2" />
+                Informations du compte
+              </CardTitle>
+              <CardDescription>
+                Informations générales sur votre compte
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {userLoading ? (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Email</Label>
+                      <Skeleton className="h-4 w-full mt-1" />
+                    </div>
+                    <div>
+                      <Label>Nom complet</Label>
+                      <Skeleton className="h-4 w-full mt-1" />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium">Email</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {user?.email || 'Non renseigné'}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium">Nom complet</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {userProfile?.first_name && userProfile?.last_name 
+                        ? `${userProfile.first_name} ${userProfile.last_name}`
+                        : 'Non renseigné'}
+                    </p>
+                  </div>
+                </div>
+              )}
+              
+              <Separator />
+              
+              {userLoading ? (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Rôle</Label>
+                    <Skeleton className="h-4 w-full mt-1" />
+                  </div>
+                  <div>
+                    <Label>Plan du workspace</Label>
+                    <Skeleton className="h-4 w-full mt-1" />
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium">Rôle</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {userProfile?.role || 'Non assigné'}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium">Plan du workspace</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {userProfile?.plan_type || 'Freemium'}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Workspace */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Building className="w-5 h-5 mr-2" />
+                Workspace
+              </CardTitle>
+              <CardDescription>
+                Informations sur votre espace de travail
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {workspaceLoading ? (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Nom du workspace</Label>
+                    <Skeleton className="h-4 w-full mt-1" />
+                  </div>
+                  <div>
+                    <Label>Plan</Label>
+                    <Skeleton className="h-4 w-full mt-1" />
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium">Nom du workspace</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {currentWorkspace?.name || 'Aucun workspace'}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium">Plan</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {currentWorkspace?.plan_type || 'Freemium'}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Notifications */}
           <Card className="mb-6">
@@ -263,7 +389,9 @@ const Settings = () => {
                 <div>
                   <Label>Plan actuel</Label>
                   <p className="text-sm text-muted-foreground">
-                    Plan Gratuit - 10 recherches/mois
+                    {currentWorkspace?.plan_type === 'premium' ? 'Plan Premium - Illimité' :
+                     currentWorkspace?.plan_type === 'standard' ? 'Plan Standard - 100 recherches/mois' :
+                     'Plan Gratuit - 10 recherches/mois'}
                   </p>
                 </div>
                 <Button 
