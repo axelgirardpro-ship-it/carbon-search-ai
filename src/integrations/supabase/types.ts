@@ -519,7 +519,6 @@ export type Database = {
           phone: string | null
           plan_type: string | null
           position: string | null
-          role: string
           subscribed: boolean | null
           subscription_end: string | null
           subscription_tier: string | null
@@ -539,7 +538,6 @@ export type Database = {
           phone?: string | null
           plan_type?: string | null
           position?: string | null
-          role: string
           subscribed?: boolean | null
           subscription_end?: string | null
           subscription_tier?: string | null
@@ -559,7 +557,6 @@ export type Database = {
           phone?: string | null
           plan_type?: string | null
           position?: string | null
-          role?: string
           subscribed?: boolean | null
           subscription_end?: string | null
           subscription_tier?: string | null
@@ -584,6 +581,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      users_new: {
+        Row: {
+          assigned_by: string | null
+          company: string | null
+          created_at: string
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          phone: string | null
+          plan_type: string
+          position: string | null
+          subscribed: boolean | null
+          subscription_end: string | null
+          subscription_tier: string | null
+          trial_end: string | null
+          updated_at: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          company?: string | null
+          created_at?: string
+          email: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          plan_type?: string
+          position?: string | null
+          subscribed?: boolean | null
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          trial_end?: string | null
+          updated_at?: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          plan_type?: string
+          position?: string | null
+          subscribed?: boolean | null
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          trial_end?: string | null
+          updated_at?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: []
       }
       workspace_invitations: {
         Row: {
