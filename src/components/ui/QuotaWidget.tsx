@@ -2,12 +2,71 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { useQuotaSubscription } from "@/contexts/GlobalStateContext";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 import { Zap, Crown, TrendingUp, AlertTriangle } from "lucide-react";
 
-export const QuotaWidget = () => {
-  const { subscription, searchesUsed, searchesLimit, exportsUsed, exportsLimit, canSearch, canExport } = useQuotaSubscription();
+interface QuotaWidgetProps {
+  quotaData: any;
+  isLoading: boolean;
+}
+
+export const QuotaWidget = ({ quotaData, isLoading }: QuotaWidgetProps) => {
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-6 w-20" />
+            <Skeleton className="h-4 w-16" />
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+            <Skeleton className="h-2 w-full" />
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+            <Skeleton className="h-2 w-full" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!quotaData) {
+    return (
+      <Card className="border-destructive/50">
+        <CardHeader className="pb-3">
+          <Badge variant="destructive">
+            <AlertTriangle className="w-3 h-3 mr-1" />
+            Erreur
+          </Badge>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Impossible de charger les informations de quota.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const searchesUsed = quotaData.searches_used || 0;
+  const searchesLimit = quotaData.searches_limit || 10;
+  const exportsUsed = quotaData.exports_used || 0;
+  const exportsLimit = quotaData.exports_limit || 0;
+  const planType = quotaData.plan_type || 'freemium';
+  
+  const canSearch = searchesUsed < searchesLimit;
+  const canExport = exportsUsed < exportsLimit;
 
   const searchProgress = searchesLimit === -1 ? 0 : (searchesUsed / searchesLimit) * 100;
   const exportProgress = exportsLimit === -1 ? 0 : (exportsUsed / exportsLimit) * 100;
@@ -16,8 +75,8 @@ export const QuotaWidget = () => {
   const isAtLimit = !canSearch || !canExport;
 
   // Gestion des différents plans (premium, standard, freemium, trial)
-  if (subscription?.subscribed && (subscription?.plan_type === 'premium' || subscription?.plan_type === 'standard')) {
-    const isPremium = subscription.plan_type === 'premium';
+  if (planType === 'premium' || planType === 'standard') {
+    const isPremium = planType === 'premium';
     
     return (
       <Card className={`border-primary/20 ${isPremium ? 'bg-gradient-to-r from-primary/5 to-primary/10' : 'bg-gradient-to-r from-blue-500/5 to-blue-600/10'}`}>
@@ -57,10 +116,10 @@ export const QuotaWidget = () => {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Badge variant={subscription?.subscribed && subscription?.plan_type === 'premium' ? "default" : subscription?.trial_active ? "default" : "secondary"}>
-              {subscription?.subscribed && subscription?.plan_type === 'premium' ? 'Premium' : 
-               subscription?.subscribed && subscription?.plan_type === 'standard' ? 'Standard' :
-               subscription?.trial_active ? "Essai" : "Freemium"}
+            <Badge variant={planType === 'premium' ? "default" : planType === 'standard' ? "default" : "secondary"}>
+              {planType === 'premium' ? 'Premium' : 
+               planType === 'standard' ? 'Standard' :
+               "Freemium"}
             </Badge>
             {isAtLimit && (
               <Badge variant="destructive">

@@ -6,7 +6,8 @@ import { ResultsTable } from "@/components/search/ResultsTable";
 import { QuotaWidget } from "@/components/ui/QuotaWidget";
 import { EmissionFactor } from "@/types/emission-factor";
 import { useFavorites } from "@/contexts/FavoritesContext";
-import { useGlobalState, useQuotaSubscription } from "@/contexts/GlobalStateContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useSearchHistory } from "@/hooks/useSearchHistory";
 import { useSuggestions } from "@/hooks/useSuggestions";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,10 +15,13 @@ import { toast } from "sonner";
 
 const Dashboard = () => {
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
-  const { currentWorkspace } = useGlobalState();
-  const { incrementExport, canExport, canSearch, incrementSearch } = useQuotaSubscription();
-  const { subscription } = useQuotaSubscription();
+  const { user } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const { recordSearch } = useSearchHistory();
+  
+  // State pour la gestion des quotas
+  const [quotaData, setQuotaData] = useState<any>(null);
+  const [isLoadingQuota, setIsLoadingQuota] = useState(true);
   
   // Initialize searchQuery state first
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,19 +41,99 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   
-  // Refs pour éviter les boucles infinies
-  const canSearchRef = useRef(canSearch);
-  const incrementSearchRef = useRef(incrementSearch);
-  
-  // Mettre à jour les refs quand les valeurs changent
+  // Charger les quotas de l'utilisateur
+  const loadQuotaData = useCallback(async () => {
+    if (!user) return;
+    
+    setIsLoadingQuota(true);
+    try {
+      const { data, error } = await supabase
+        .from('search_quotas')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error loading quota:', error);
+        return;
+      }
+      
+      // Si aucun quota n'existe, en créer un par défaut
+      if (!data) {
+        const { data: newQuota, error: insertError } = await supabase
+          .from('search_quotas')
+          .insert({
+            user_id: user.id,
+            plan_type: 'freemium',
+            searches_limit: 10,
+            exports_limit: 0,
+            searches_used: 0,
+            exports_used: 0
+          })
+          .select()
+          .single();
+        
+        if (insertError) {
+          console.error('Error creating quota:', insertError);
+          return;
+        }
+        
+        setQuotaData(newQuota);
+      } else {
+        setQuotaData(data);
+      }
+    } catch (error) {
+      console.error('Error in loadQuotaData:', error);
+    } finally {
+      setIsLoadingQuota(false);
+    }
+  }, [user]);
+
   useEffect(() => {
-    canSearchRef.current = canSearch;
-    incrementSearchRef.current = incrementSearch;
-  }, [canSearch, incrementSearch]);
+    loadQuotaData();
+  }, [loadQuotaData]);
+  
+  // Fonctions pour gérer les quotas
+  const canSearch = quotaData ? quotaData.searches_used < quotaData.searches_limit : false;
+  const canExport = quotaData ? quotaData.exports_used < quotaData.exports_limit : false;
+  
+  const incrementSearch = async () => {
+    if (!user || !quotaData) return;
+    
+    const { error } = await supabase
+      .from('search_quotas')
+      .update({ searches_used: quotaData.searches_used + 1 })
+      .eq('user_id', user.id);
+    
+    if (error) {
+      console.error('Error incrementing search:', error);
+      throw error;
+    }
+    
+    // Mettre à jour l'état local
+    setQuotaData(prev => prev ? { ...prev, searches_used: prev.searches_used + 1 } : null);
+  };
+  
+  const incrementExport = async () => {
+    if (!user || !quotaData) return;
+    
+    const { error } = await supabase
+      .from('search_quotas')
+      .update({ exports_used: quotaData.exports_used + 1 })
+      .eq('user_id', user.id);
+    
+    if (error) {
+      console.error('Error incrementing export:', error);
+      throw error;
+    }
+    
+    // Mettre à jour l'état local
+    setQuotaData(prev => prev ? { ...prev, exports_used: prev.exports_used + 1 } : null);
+  };
 
   const performSearch = useCallback(async (query: string) => {
-    // Vérifier si l'utilisateur peut effectuer une recherche (utiliser la ref)
-    if (!canSearchRef.current) {
+    // Vérifier si l'utilisateur peut effectuer une recherche
+    if (!canSearch) {
       toast.error("Limite de recherche atteinte. Passez à un plan payant pour continuer.");
       return;
     }
@@ -65,8 +149,6 @@ const Dashboard = () => {
     setHasSearched(true);
     
     try {
-      // Incrémenter le compteur de recherches seulement pour les vraies recherches
-      await incrementSearchRef.current();
       
       let supabaseQuery = supabase
         .from('emission_factors')
@@ -133,6 +215,11 @@ const Dashboard = () => {
       
       setResults(searchResults);
       
+      // Incrémenter le compteur de recherches seulement si des résultats sont trouvés
+      if (searchResults.length > 0) {
+        await incrementSearch();
+      }
+      
       // Record search in history (called separately to avoid dependency issues)
       recordSearch(query, filters, searchResults.length);
     } catch (error) {
@@ -141,7 +228,7 @@ const Dashboard = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [filters, isFavorite, currentWorkspace, subscription]); // Ajouter subscription aux dépendances
+  }, [filters, isFavorite, currentWorkspace, canSearch, incrementSearch, recordSearch]);
 
   const handleSearch = () => {
     performSearch(searchQuery);
@@ -262,7 +349,7 @@ const Dashboard = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Quota Widget */}
         <div className="mb-6">
-          <QuotaWidget />
+          <QuotaWidget quotaData={quotaData} isLoading={isLoadingQuota} />
         </div>
         
         <FilterPanel
