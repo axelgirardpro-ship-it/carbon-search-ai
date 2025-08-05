@@ -30,8 +30,8 @@ const RefinementList: React.FC<RefinementListProps> = ({
     <Collapsible defaultOpen>
       <CollapsibleTrigger asChild>
         <Button variant="ghost" className="w-full justify-between p-0 h-auto">
-          <h3 className="font-medium">{title}</h3>
-          <Filter className="h-4 w-4" />
+          <h3 className="font-medium font-montserrat text-indigo-950">{title}</h3>
+          <Filter className="h-4 w-4 text-indigo-950" />
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-2 mt-2">
@@ -86,7 +86,7 @@ const ClearRefinementsWidget: React.FC = () => {
       variant="ghost"
       size="sm"
       onClick={refine}
-      className="text-slate-950 hover:text-slate-800"
+      className="text-indigo-950 hover:text-indigo-800 font-montserrat"
     >
       <RotateCcw className="w-4 h-4 mr-1" />
       RÉINITIALISER LES FILTRES
@@ -107,7 +107,7 @@ const RecentDataToggle: React.FC = () => {
         onCheckedChange={() => refine(value)}
         id="recent-data"
       />
-      <label htmlFor="recent-data" className="text-sm font-medium cursor-pointer">
+      <label htmlFor="recent-data" className="text-sm font-medium cursor-pointer font-montserrat text-indigo-950">
         Données récentes (&lt; 3 ans)
       </label>
     </div>
@@ -140,8 +140,8 @@ const FERangeInput: React.FC = () => {
     <Collapsible defaultOpen>
       <CollapsibleTrigger asChild>
         <Button variant="ghost" className="w-full justify-between p-0 h-auto">
-          <h3 className="font-medium">Facteur d'émission (FE)</h3>
-          <Filter className="h-4 w-4" />
+          <h3 className="font-medium font-montserrat text-indigo-950">Facteur d'émission (FE)</h3>
+          <Filter className="h-4 w-4 text-indigo-950" />
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-3 mt-2">
@@ -185,10 +185,10 @@ const FERangeInput: React.FC = () => {
 
 export const SearchFilters: React.FC = () => {
   return (
-    <Card className="bg-card border border-border">
+    <Card className="bg-violet-100 border border-violet-200">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">FILTRER PAR :</CardTitle>
+          <CardTitle className="text-lg font-montserrat text-indigo-950">FILTRER PAR :</CardTitle>
           <ClearRefinementsWidget />
         </div>
       </CardHeader>

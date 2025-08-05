@@ -15,25 +15,33 @@ const AlgoliaSearchContent: React.FC = () => {
     <div className="min-h-screen bg-background">
       <UnifiedNavbar />
       
-      <main className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <section className="text-center py-12 mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Base de données des facteurs d'émission
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Recherchez parmi plus de 55 000 facteurs d'émission provenant de sources officielles
-          </p>
+      {/* Hero Section */}
+      <section className="py-20 px-4" style={{backgroundColor: '#d7caf5'}}>
+        <div className="container mx-auto">
+          <div className="text-center space-y-6">
+            <h1 className="font-montserrat font-bold text-4xl md:text-5xl leading-tight text-indigo-950">
+              Le moteur de recherche<br />
+              de FE le plus puissant<br />
+              du marché
+            </h1>
+            <p className="font-montserrat text-lg text-indigo-950 max-w-2xl mx-auto">
+              Accédez à plus de 255 000 facteurs d'émissions français et internationaux<br />
+              agrégés et enrichis par nos experts.
+            </p>
           
-          <div className="max-w-2xl mx-auto">
-            <SearchBox />
-          </div>
+            
+            <div className="max-w-2xl mx-auto">
+              <SearchBox />
+            </div>
 
-          <div className="mt-6">
-            <QuotaWidget quotaData={quotaData} isLoading={isLoading} />
+            <div className="mt-6">
+              <QuotaWidget quotaData={quotaData} isLoading={isLoading} />
+            </div>
           </div>
-        </section>
+        </div>
+      </section>
 
+      <main className="container mx-auto px-4 py-8">
         {/* Search Interface */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filters Sidebar */}

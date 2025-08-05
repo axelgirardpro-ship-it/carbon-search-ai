@@ -5,7 +5,7 @@ export const SearchStats: React.FC = () => {
   const { nbHits, nbSortedHits, areHitsSorted, processingTimeMS } = useStats();
 
   return (
-    <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
+    <div className="flex items-center justify-between text-sm text-indigo-950 mb-4 font-montserrat">
       <div>
         {areHitsSorted && nbSortedHits !== nbHits ? (
           <span>

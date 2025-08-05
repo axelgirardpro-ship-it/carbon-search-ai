@@ -44,7 +44,7 @@ const HitsPerPageComponent: React.FC = () => {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-muted-foreground">Résultats par page:</span>
+      <span className="text-sm text-indigo-950 font-montserrat">Résultats par page:</span>
       <Select value={String(items.find(item => item.isRefined)?.value || 9)} onValueChange={(value) => refine(Number(value))}>
         <SelectTrigger className="w-auto">
           <SelectValue />
@@ -77,7 +77,7 @@ const SortByComponent: React.FC = () => {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-muted-foreground">Trier par:</span>
+      <span className="text-sm text-indigo-950 font-montserrat">Trier par:</span>
       <Select 
         value={currentRefinement || 'emission_factors'} 
         onValueChange={(value) => refine(value)}
@@ -384,14 +384,14 @@ export const SearchResults: React.FC = () => {
       {hits.length > 0 && (
         <>
           {/* Header avec sélection et export */}
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 p-4 bg-muted/20 rounded-lg">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 p-4 bg-violet-100 rounded-lg">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Checkbox
                   checked={selectedItems.size === hits.length && hits.length > 0}
                   onCheckedChange={handleSelectAll}
                 />
-                <span className="text-sm font-medium">
+                <span className="text-sm font-medium font-montserrat text-indigo-950">
                   {selectedItems.size === hits.length && hits.length > 0 ? 'Tout désélectionner' : 'Tout sélectionner'}
                 </span>
               </div>
@@ -402,7 +402,7 @@ export const SearchResults: React.FC = () => {
               )}
             </div>
             {selectedItems.size > 0 && (
-              <Button onClick={handleExport} className="flex items-center gap-2">
+              <Button onClick={handleExport} className="flex items-center gap-2 bg-slate-950 hover:bg-slate-800 text-white font-montserrat">
                 <Download className="h-4 w-4" />
                 Exporter ({selectedItems.size})
               </Button>
@@ -411,9 +411,9 @@ export const SearchResults: React.FC = () => {
 
           {/* Header avec contrôles de tri et pagination */}
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            <div className="text-sm text-muted-foreground">
-              {hits.length} résultat{hits.length > 1 ? 's' : ''} trouvé{hits.length > 1 ? 's' : ''}
-            </div>
+              <div className="text-sm text-indigo-950 font-montserrat">
+                {hits.length} résultat{hits.length > 1 ? 's' : ''} trouvé{hits.length > 1 ? 's' : ''}
+              </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <SortByComponent />
               <HitsPerPageComponent />
@@ -429,7 +429,7 @@ export const SearchResults: React.FC = () => {
               const shouldBlur = shouldBlurPremiumContent(hit.Source);
 
               return (
-                <Card key={hit.objectID} className="relative overflow-hidden">
+                <Card key={hit.objectID} className="relative overflow-hidden bg-white border border-violet-200 hover:shadow-lg transition-shadow">
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start gap-4">
                       <div className="flex items-start gap-3 flex-1">
