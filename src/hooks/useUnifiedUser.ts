@@ -15,7 +15,6 @@ interface UnifiedUser {
   email: string;
   plan_type: string;
   subscribed: boolean;
-  subscription_tier?: string;
   trial_end?: string;
   subscription_end?: string;
   role: string;

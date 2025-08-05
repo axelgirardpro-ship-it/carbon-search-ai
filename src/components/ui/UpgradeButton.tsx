@@ -14,12 +14,12 @@ export const UpgradeButton = () => {
   };
 
   // Don't show for premium users
-  if (subscriptionStatus.subscribed && subscriptionStatus.subscription_tier === 'premium') {
+  if (subscriptionStatus.plan_type === 'premium') {
     return null;
   }
 
-  const isPremium = subscriptionStatus.subscribed && subscriptionStatus.subscription_tier === 'premium';
-  const isStandard = subscriptionStatus.subscribed && subscriptionStatus.subscription_tier === 'standard';
+  const isPremium = subscriptionStatus.plan_type === 'premium';
+  const isStandard = subscriptionStatus.plan_type === 'standard';
 
   return (
     <Button 

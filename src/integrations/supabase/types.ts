@@ -393,7 +393,6 @@ export type Database = {
           position: string | null
           subscribed: boolean | null
           subscription_end: string | null
-          subscription_tier: string | null
           trial_end: string | null
           updated_at: string
           user_id: string
@@ -412,7 +411,6 @@ export type Database = {
           position?: string | null
           subscribed?: boolean | null
           subscription_end?: string | null
-          subscription_tier?: string | null
           trial_end?: string | null
           updated_at?: string
           user_id: string
@@ -431,7 +429,6 @@ export type Database = {
           position?: string | null
           subscribed?: boolean | null
           subscription_end?: string | null
-          subscription_tier?: string | null
           trial_end?: string | null
           updated_at?: string
           user_id?: string
@@ -497,7 +494,6 @@ export type Database = {
           owner_id: string
           plan_type: string
           stripe_customer_id: string | null
-          subscription_tier: string | null
           updated_at: string
         }
         Insert: {
@@ -513,7 +509,6 @@ export type Database = {
           owner_id: string
           plan_type?: string
           stripe_customer_id?: string | null
-          subscription_tier?: string | null
           updated_at?: string
         }
         Update: {
@@ -529,7 +524,6 @@ export type Database = {
           owner_id?: string
           plan_type?: string
           stripe_customer_id?: string | null
-          subscription_tier?: string | null
           updated_at?: string
         }
         Relationships: []

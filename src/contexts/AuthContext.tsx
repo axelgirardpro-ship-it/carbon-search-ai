@@ -28,7 +28,6 @@ interface AuthContextType {
   userRole: UserRole | null;
   subscriptionStatus: {
     subscribed: boolean;
-    subscription_tier: string | null;
     plan_type: string;
     trial_active: boolean;
   };
@@ -63,7 +62,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState({
     subscribed: false,
-    subscription_tier: null,
     plan_type: 'freemium',
     trial_active: false,
   });
@@ -134,19 +132,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       if (error) throw error;
       
-      // Get workspace details directly from workspaces table
-      const { data: workspaceDetails } = await supabase
-        .from('workspaces')
-        .select('plan_type, subscription_tier')
-        .eq('owner_id', session.user.id)
-        .single();
-      
       const planType = workspacePlan || 'freemium';
       const isSubscribed = planType !== 'freemium';
       
       setSubscriptionStatus({
         subscribed: isSubscribed,
-        subscription_tier: workspaceDetails?.subscription_tier || null,
         plan_type: planType,
         trial_active: false, // Les trials sont maintenant gérés au niveau workspace si nécessaire
       });
@@ -154,7 +144,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       console.error('Error refreshing subscription:', error);
       setSubscriptionStatus({
         subscribed: false,
-        subscription_tier: null,
         plan_type: 'freemium',
         trial_active: false,
       });
@@ -247,7 +236,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUserRole(null);
       setSubscriptionStatus({
         subscribed: false,
-        subscription_tier: null,
         plan_type: 'freemium',
         trial_active: false,
       });
@@ -379,7 +367,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setUserRole(null);
           setSubscriptionStatus({
             subscribed: false,
-            subscription_tier: null,
             plan_type: 'freemium',
             trial_active: false,
           });

@@ -4,7 +4,6 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface SubscriptionData {
   subscribed: boolean;
-  subscription_tier: string | null;
   subscription_end: string | null;
   plan_type: string;
   trial_active?: boolean;
@@ -123,7 +122,6 @@ export const QuotaSubscriptionProvider = ({ children }: QuotaSubscriptionProvide
       if (data) {
         setSubscription({
           subscribed: data.subscribed || false,
-          subscription_tier: data.subscription_tier || null,
           subscription_end: data.subscription_end || null,
           plan_type: data.plan_type || 'freemium',
           trial_active: data.trial_active || false
