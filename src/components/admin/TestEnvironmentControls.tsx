@@ -8,23 +8,23 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Settings2, RefreshCw, User, Building2, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useGlobalState } from "@/contexts/GlobalStateContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export const TestEnvironmentControls = () => {
-  const { 
-    user, 
-    currentWorkspace, 
-    unifiedUser, 
-    permissions, 
-    refreshGlobalState 
-  } = useGlobalState();
+  const { user } = useAuth();
+  const { userProfile, refreshProfile } = useUser();
+  const { currentWorkspace } = useWorkspace();
+  const permissions = usePermissions();
   const { toast } = useToast();
   const [tempRole, setTempRole] = useState<string>("");
   const [tempPlanType, setTempPlanType] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
-  // Ne pas afficher ce composant si pas supra admin ou supra admin original
-  if (!permissions.isSupraAdmin && !permissions.isOriginalSupraAdmin) {
+  // Ne pas afficher ce composant si pas supra admin
+  if (!permissions.isSupraAdmin) {
     return null;
   }
 
@@ -35,7 +35,7 @@ export const TestEnvironmentControls = () => {
     try {
       // Set original_role if changing from supra_admin for first time
       const updateData: any = { role: tempRole };
-      if (unifiedUser?.role === 'supra_admin') {
+      if (userProfile?.role === 'supra_admin') {
         updateData.original_role = 'supra_admin';
       }
 
@@ -48,7 +48,7 @@ export const TestEnvironmentControls = () => {
       if (error) throw error;
 
       // Rafraîchir l'état global
-      await refreshGlobalState();
+        await refreshProfile();
       
       toast({
         title: "Rôle temporaire modifié",
@@ -80,7 +80,7 @@ export const TestEnvironmentControls = () => {
       if (error) throw error;
 
       // Rafraîchir l'état global
-      await refreshGlobalState();
+        await refreshProfile();
       
       toast({
         title: "Plan du workspace modifié",
@@ -113,7 +113,7 @@ export const TestEnvironmentControls = () => {
       if (error) throw error;
 
       // Rafraîchir l'état global
-      await refreshGlobalState();
+      await refreshProfile();
       
       toast({
         title: "Retour au statut Supra Admin",
@@ -149,12 +149,9 @@ export const TestEnvironmentControls = () => {
           <AlertDescription>
             <strong>Configuration actuelle:</strong>
             <div className="mt-2 space-y-1">
-              <div>Rôle: <Badge variant="outline">{unifiedUser?.role || 'supra_admin'}</Badge></div>
+              <div>Rôle: <Badge variant="outline">{userProfile?.role || 'supra_admin'}</Badge></div>
               <div>Workspace: <Badge variant="outline">{currentWorkspace?.name || 'Aucun'}</Badge></div>
               <div>Plan: <Badge variant="outline">{currentWorkspace?.plan_type || 'N/A'}</Badge></div>
-              {permissions.isOriginalSupraAdmin && unifiedUser?.role !== 'supra_admin' && (
-                <div>Status: <Badge variant="secondary">Supra Admin temporairement en {unifiedUser?.role}</Badge></div>
-              )}
             </div>
           </AlertDescription>
         </Alert>

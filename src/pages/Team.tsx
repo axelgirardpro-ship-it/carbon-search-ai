@@ -9,7 +9,9 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Users, UserPlus, Mail, Trash2, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useGlobalState, usePermissions } from "@/contexts/GlobalStateContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
+import { usePermissions } from "@/hooks/usePermissions";
 import { supabase } from "@/integrations/supabase/client";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 
@@ -35,7 +37,8 @@ interface PendingInvitation {
 }
 
 const Team = () => {
-  const { user, unifiedUser } = useGlobalState();
+  const { user } = useAuth();
+  const { userProfile } = useUser();
   const { canAddUsers } = usePermissions();
   const { toast } = useToast();
   
@@ -50,14 +53,14 @@ const Team = () => {
   const [inviteLoading, setInviteLoading] = useState(false);
 
   const loadTeamData = async () => {
-    if (!unifiedUser?.workspace_id) return;
+    if (!userProfile?.workspace_id) return;
 
     try {
       // Load team members
       const { data: members, error: membersError } = await supabase
         .from('user_roles')
         .select('*')
-        .eq('workspace_id', unifiedUser.workspace_id);
+        .eq('workspace_id', userProfile.workspace_id);
 
       if (membersError) throw membersError;
 
@@ -84,7 +87,7 @@ const Team = () => {
       const { data: invitations, error: invitationsError } = await supabase
         .from('workspace_invitations')
         .select('*')
-        .eq('workspace_id', unifiedUser.workspace_id)
+        .eq('workspace_id', userProfile.workspace_id)
         .eq('status', 'pending');
 
       if (invitationsError) throw invitationsError;
@@ -103,7 +106,7 @@ const Team = () => {
 
   useEffect(() => {
     loadTeamData();
-  }, [unifiedUser]);
+  }, [userProfile]);
 
   const handleInviteUser = async () => {
     if (!inviteForm.email || !inviteForm.role) {
@@ -196,7 +199,7 @@ const Team = () => {
     }
   };
 
-  if (!unifiedUser) {
+  if (!userProfile) {
     return (
       <div className="min-h-screen bg-background">
         <UnifiedNavbar />

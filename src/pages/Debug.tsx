@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useGlobalState } from "@/contexts/GlobalStateContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Debug() {
-  const { user } = useGlobalState();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [debugInfo, setDebugInfo] = useState<any>({});
   const [loading, setLoading] = useState(false);

@@ -1,29 +1,24 @@
 import { useEffect } from 'react';
-import { useGlobalState } from '@/contexts/GlobalStateContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@/contexts/UserContext';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
+import { usePermissions } from '@/hooks/usePermissions';
 
 export const useGlobalStateDebug = (componentName: string) => {
-  const {
-    user,
-    unifiedUser,
-    currentWorkspace,
-    permissions,
-    quotas,
-    authLoading,
-    userLoading,
-    workspaceLoading,
-    quotaLoading,
-  } = useGlobalState();
+  const { user, loading: authLoading } = useAuth();
+  const { userProfile, loading: userLoading } = useUser();
+  const { currentWorkspace, loading: workspaceLoading } = useWorkspace();
+  const permissions = usePermissions();
 
   useEffect(() => {
     const debugInfo = {
       component: componentName,
       timestamp: new Date().toISOString(),
       user: user ? { id: user.id, email: user.email } : null,
-      unifiedUser: unifiedUser ? {
-        role: unifiedUser.role,
-        original_role: unifiedUser.original_role,
-        workspace_id: unifiedUser.workspace_id,
-        plan_type: unifiedUser.plan_type,
+      userProfile: userProfile ? {
+        role: userProfile.role,
+        workspace_id: userProfile.workspace_id,
+        plan_type: userProfile.plan_type,
       } : null,
       currentWorkspace: currentWorkspace ? {
         id: currentWorkspace.id,
@@ -32,21 +27,16 @@ export const useGlobalStateDebug = (componentName: string) => {
       } : null,
       permissions: {
         isSupraAdmin: permissions.isSupraAdmin,
-        isOriginalSupraAdmin: permissions.isOriginalSupraAdmin,
-        canExportData: permissions.canExportData,
-        canAccessFavorites: permissions.canAccessFavorites,
-      },
-      quotas: {
-        canSearch: quotas.canSearch,
-        canExport: quotas.canExport,
-        searchesUsed: quotas.searchesUsed,
-        searchesLimit: quotas.searchesLimit,
+        canImportData: permissions.canImportData,
+        canExport: permissions.canExport,
+        canManageUsers: permissions.canManageUsers,
+        role: permissions.role,
+        planType: permissions.planType,
       },
       loadingStates: {
         authLoading,
         userLoading,
         workspaceLoading,
-        quotaLoading,
       },
     };
 
@@ -54,30 +44,25 @@ export const useGlobalStateDebug = (componentName: string) => {
   }, [
     componentName,
     user?.id,
-    unifiedUser?.role,
-    unifiedUser?.original_role,
+    userProfile?.role,
     currentWorkspace?.id,
     currentWorkspace?.plan_type,
     permissions.isSupraAdmin,
-    permissions.isOriginalSupraAdmin,
     authLoading,
     userLoading,
     workspaceLoading,
-    quotaLoading,
   ]);
 
   return {
     debugState: {
       user,
-      unifiedUser,
+      userProfile,
       currentWorkspace,
       permissions,
-      quotas,
       loadingStates: {
         authLoading,
         userLoading,
         workspaceLoading,
-        quotaLoading,
       },
     },
   };

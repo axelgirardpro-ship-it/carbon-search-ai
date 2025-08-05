@@ -7,7 +7,10 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
 import { TestEnvironmentControls } from "@/components/admin/TestEnvironmentControls";
 import { useToast } from "@/hooks/use-toast";
-import { useGlobalState, usePermissions } from "@/contexts/GlobalStateContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { usePermissions } from "@/hooks/usePermissions";
 import { 
   User, 
   LogOut, 
@@ -21,11 +24,9 @@ import {
 } from "lucide-react";
 
 const SimplifiedSettings = () => {
-  const { 
-    signOut, 
-    currentWorkspace, 
-    unifiedUser 
-  } = useGlobalState();
+  const { user, signOut } = useAuth();
+  const { userProfile } = useUser();
+  const { currentWorkspace } = useWorkspace();
   const permissions = usePermissions();
   
   const { toast } = useToast();
@@ -74,13 +75,13 @@ const SimplifiedSettings = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium text-muted-foreground">Email</label>
-                <p className="text-sm">{unifiedUser?.email || 'Non renseigné'}</p>
+                <p className="text-sm">{user?.email || 'Non renseigné'}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-muted-foreground">Nom complet</label>
                 <p className="text-sm">
-                  {unifiedUser?.first_name && unifiedUser?.last_name 
-                    ? `${unifiedUser.first_name} ${unifiedUser.last_name}`
+                  {userProfile?.first_name && userProfile?.last_name 
+                    ? `${userProfile.first_name} ${userProfile.last_name}`
                     : 'Non renseigné'
                   }
                 </p>
@@ -88,16 +89,16 @@ const SimplifiedSettings = () => {
               <div>
                 <label className="text-sm font-medium text-muted-foreground">Rôle</label>
                 <div className="mt-1">
-                  <Badge variant={permissions.getRoleLabel() === 'Supra Administrateur' ? 'default' : 'secondary'}>
-                    {permissions.getRoleLabel()}
+                  <Badge variant={permissions.role === 'supra_admin' ? 'default' : 'secondary'}>
+                    {permissions.role}
                   </Badge>
                 </div>
               </div>
               <div>
                 <label className="text-sm font-medium text-muted-foreground">Plan du workspace</label>
                 <div className="mt-1">
-                  <Badge variant={permissions.getPlanLabel() === 'Premium' ? 'default' : 'secondary'}>
-                    {permissions.getPlanLabel()}
+                  <Badge variant={permissions.planType === 'premium' ? 'default' : 'secondary'}>
+                    {permissions.planType}
                   </Badge>
                 </div>
               </div>
@@ -131,7 +132,7 @@ const SimplifiedSettings = () => {
         </Card>
 
         {/* Section Admin - visible seulement pour les supra admins */}
-        {permissions.isOriginalSupraAdmin && (
+        {permissions.isSupraAdmin && (
           <Card className="border-primary/20">
             <CardHeader>
               <CardTitle className="flex items-center text-primary">
@@ -201,7 +202,7 @@ const SimplifiedSettings = () => {
         </Card>
 
         {/* Note de sécurité pour les supra admins */}
-        {permissions.isOriginalSupraAdmin && (
+        {permissions.isSupraAdmin && (
           <Card className="border-orange-200 bg-orange-50">
             <CardContent className="pt-6">
               <div className="flex items-start space-x-3">

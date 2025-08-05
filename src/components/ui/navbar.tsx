@@ -1,7 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { User, Settings, Heart, Upload, LogOut, Shield } from "lucide-react";
-import { useGlobalState, usePermissions } from "@/contexts/GlobalStateContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { usePermissions } from "@/hooks/usePermissions";
 import { UpgradeButton } from "@/components/ui/UpgradeButton";
 import {
   DropdownMenu,
@@ -15,7 +16,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useGlobalState();
+  const { user, signOut } = useAuth();
   const { isSupraAdmin } = usePermissions();
 
   const handleSignOut = async () => {

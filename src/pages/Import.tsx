@@ -9,7 +9,9 @@ import { Progress } from "@/components/ui/progress";
 import { Upload, Download, FileText, Check, AlertCircle, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useGlobalState, usePermissions } from "@/contexts/GlobalStateContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { usePermissions } from "@/hooks/usePermissions";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 
 const Import = () => {
@@ -21,7 +23,8 @@ const Import = () => {
   const [importStatus, setImportStatus] = useState<"idle" | "uploading" | "processing" | "success" | "error">("idle");
   const [importResults, setImportResults] = useState<{ success: number; errors: string[] } | null>(null);
   const { toast } = useToast();
-  const { user, currentWorkspace } = useGlobalState();
+  const { user } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const { canImportData } = usePermissions();
 
   const downloadTemplate = () => {

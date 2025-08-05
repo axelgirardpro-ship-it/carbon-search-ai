@@ -1,7 +1,9 @@
-import { useGlobalState } from "@/contexts/GlobalStateContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 
 export const useEmissionFactorAccess = () => {
-  const { user, currentWorkspace } = useGlobalState();
+  const { user } = useAuth();
+  const { currentWorkspace } = useWorkspace();
 
   const hasAccess = (source: string) => {
     if (!user) return false;

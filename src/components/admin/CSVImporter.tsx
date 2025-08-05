@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Upload, File, CheckCircle, XCircle, AlertTriangle, Download, FileDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { usePermissions } from "@/contexts/GlobalStateContext";
+import { usePermissions } from "@/hooks/usePermissions";
 
 interface ImportResult {
   importId: string;
@@ -28,9 +28,9 @@ export const CSVImporter = () => {
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<ImportResult | null>(null);
   const { toast } = useToast();
-  const { canImportData, userRole, getRoleLabel } = usePermissions();
+  const { canImportData, role } = usePermissions();
 
-  console.log('CSVImporter - User role:', userRole?.role, 'Can import:', canImportData);
+  console.log('CSVImporter - User role:', role, 'Can import:', canImportData);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -250,7 +250,7 @@ export const CSVImporter = () => {
                 <div className="font-medium">Accès restreint</div>
                 <div>Vous n'avez pas les permissions nécessaires pour importer des données.</div>
                 <div className="text-sm text-muted-foreground">
-                  Votre rôle actuel : <span className="font-medium">{getRoleLabel()}</span>
+                  Votre rôle actuel : <span className="font-medium">{role}</span>
                 </div>
                 <div className="text-sm text-muted-foreground">
                   Rôles autorisés : Administrateur, Gestionnaire, Supra Administrateur
