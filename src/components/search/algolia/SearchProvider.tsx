@@ -12,7 +12,7 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   return (
     <InstantSearch 
       searchClient={searchClient} 
-      indexName="emissions_factors"
+      indexName="emission_factors"
       future={{
         persistHierarchicalRootCount: true,
         preserveSharedStateOnUnmount: true,
