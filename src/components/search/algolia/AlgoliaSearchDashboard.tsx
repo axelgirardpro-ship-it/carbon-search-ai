@@ -1,31 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SearchProvider } from './SearchProvider';
 import { SearchBox } from './SearchBox';
 import { SearchResults } from './SearchResults';
 import { SearchFilters } from './SearchFilters';
 import { SearchStats } from './SearchStats';
-import { AutoComplete } from './AutoComplete';
-import { useSearchHistory } from '@/hooks/useSearchHistory';
 import { UnifiedNavbar } from '@/components/ui/UnifiedNavbar';
 import { QuotaWidget } from '@/components/ui/QuotaWidget';
 
 const AlgoliaSearchContent: React.FC = () => {
-  const [showAutoComplete, setShowAutoComplete] = useState(false);
-  const { getRecentSearches } = useSearchHistory();
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
-
-  React.useEffect(() => {
-    const loadRecentSearches = async () => {
-      const recent = await getRecentSearches();
-      setRecentSearches(recent);
-    };
-    loadRecentSearches();
-  }, [getRecentSearches]);
-
-  const handleSuggestionClick = (suggestion: string) => {
-    setShowAutoComplete(false);
-    // The SearchBox will handle the search automatically through Algolia
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -41,16 +23,8 @@ const AlgoliaSearchContent: React.FC = () => {
             Recherchez parmi plus de 55 000 facteurs d'émission provenant de sources officielles
           </p>
           
-          <div className="max-w-2xl mx-auto relative">
-            <SearchBox 
-              onFocus={() => setShowAutoComplete(true)}
-              onBlur={() => setTimeout(() => setShowAutoComplete(false), 200)}
-            />
-            <AutoComplete
-              visible={showAutoComplete}
-              onSuggestionClick={handleSuggestionClick}
-              recentSearches={recentSearches}
-            />
+          <div className="max-w-2xl mx-auto">
+            <SearchBox />
           </div>
 
           <div className="mt-6">
