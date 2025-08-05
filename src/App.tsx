@@ -86,8 +86,6 @@ const App = () => (
                   <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
                   <Route path="/import" element={<ProtectedRoute><Import /></ProtectedRoute>} />
                   <Route path="/settings" element={<ProtectedRoute><SimplifiedSettings /></ProtectedRoute>} />
-                  {/* Redirections for old routes */}
-                  <Route path="/team" element={<Navigate to="/settings" replace />} />
                   <Route path="/debug" element={<ProtectedRoute><Debug /></ProtectedRoute>} />
                   <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
                   <Route path="*" element={<NotFound />} />
