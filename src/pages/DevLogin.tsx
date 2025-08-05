@@ -40,7 +40,7 @@ const DevLogin = () => {
           title: "Connexion réussie",
           description: "Connexion administrateur activée",
         });
-        navigate("/dashboard");
+        navigate("/search");
       }
     } catch (error) {
       setError("Une erreur inattendue s'est produite");

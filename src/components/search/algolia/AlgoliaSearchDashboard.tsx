@@ -6,8 +6,10 @@ import { SearchFilters } from './SearchFilters';
 import { SearchStats } from './SearchStats';
 import { UnifiedNavbar } from '@/components/ui/UnifiedNavbar';
 import { QuotaWidget } from '@/components/ui/QuotaWidget';
+import { useQuotas } from '@/hooks/useQuotas';
 
 const AlgoliaSearchContent: React.FC = () => {
+  const { quotaData, isLoading } = useQuotas();
 
   return (
     <div className="min-h-screen bg-background">
@@ -28,7 +30,7 @@ const AlgoliaSearchContent: React.FC = () => {
           </div>
 
           <div className="mt-6">
-            <QuotaWidget quotaData={{}} isLoading={false} />
+            <QuotaWidget quotaData={quotaData} isLoading={isLoading} />
           </div>
         </section>
 

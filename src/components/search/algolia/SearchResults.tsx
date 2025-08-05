@@ -13,6 +13,7 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { useQuotaContext } from './SearchProvider';
 
 interface AlgoliaHit {
   objectID: string;
@@ -219,29 +220,12 @@ export const SearchResults: React.FC = () => {
   const { hits } = useHits<AlgoliaHit>();
   const [expandedRows, setExpandedRows] = React.useState<Set<string>>(new Set());
   const [selectedItems, setSelectedItems] = React.useState<Set<string>>(new Set());
-  const [quotaData, setQuotaData] = React.useState<any>(null);
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { hasAccess } = useEmissionFactorAccess();
   const { canExport } = usePermissions();
   const { toast } = useToast();
   const { user } = useAuth();
-
-  // Charger les quotas utilisateur
-  React.useEffect(() => {
-    const fetchQuotas = async () => {
-      if (!user) return;
-      
-      const { data } = await supabase
-        .from('search_quotas')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-        
-      setQuotaData(data);
-    };
-    
-    fetchQuotas();
-  }, [user]);
+  const { quotaData, canExport: canExportQuota, incrementExport } = useQuotaContext();
 
   const toggleRowExpansion = (id: string) => {
     const newExpanded = new Set(expandedRows);
@@ -278,21 +262,8 @@ export const SearchResults: React.FC = () => {
     }
   };
 
-  const incrementExport = async () => {
-    if (!user || !quotaData) return;
-    
-    const { error } = await supabase
-      .from('search_quotas')
-      .update({ exports_used: quotaData.exports_used + 1 })
-      .eq('user_id', user.id);
-    
-    if (error) throw error;
-    
-    setQuotaData(prev => prev ? { ...prev, exports_used: prev.exports_used + 1 } : null);
-  };
-
   const handleExport = async () => {
-    if (!canExport || !quotaData) {
+    if (!canExport || !canExportQuota) {
       toast({
         title: "Export non autorisé",
         description: "Limite d'exports atteinte. Veuillez upgrader votre abonnement.",
@@ -305,15 +276,6 @@ export const SearchResults: React.FC = () => {
       toast({
         title: "Aucune sélection",
         description: "Veuillez sélectionner au moins un facteur d'émission.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (quotaData.exports_used >= quotaData.exports_limit) {
-      toast({
-        title: "Quota dépassé",
-        description: "Vous avez atteint votre limite d'exports mensuelle.",
         variant: "destructive",
       });
       return;

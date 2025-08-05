@@ -18,7 +18,7 @@ export const UnifiedNavbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link to={user ? "/dashboard" : "/"} className="text-2xl font-bold homepage-text">
+            <Link to={user ? "/search" : "/"} className="text-2xl font-bold homepage-text">
               SAMI
             </Link>
           </div>
@@ -26,9 +26,9 @@ export const UnifiedNavbar = () => {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
-                <Link to="/dashboard">
+                <Link to="/search">
                   <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
-                    Dashboard
+                    Recherche
                   </Button>
                 </Link>
                 <Link to="/favorites">

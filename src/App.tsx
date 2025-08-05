@@ -11,7 +11,7 @@ import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
+
 import { AlgoliaSearchDashboard } from "@/components/search/algolia/AlgoliaSearchDashboard";
 import Favorites from "./pages/Favorites";
 import Import from "./pages/Import";
@@ -61,7 +61,7 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   }
   
   if (user) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/search" replace />;
   }
   
   return <>{children}</>;
@@ -82,12 +82,12 @@ const App = () => (
                   <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
                   <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
                   <Route path="/dev" element={<PublicRoute><DevLogin /></PublicRoute>} />
-                  <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                   <Route path="/search" element={<ProtectedRoute><AlgoliaSearchDashboard /></ProtectedRoute>} />
                   <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
                   <Route path="/import" element={<ProtectedRoute><Import /></ProtectedRoute>} />
                   <Route path="/settings" element={<ProtectedRoute><SimplifiedSettings /></ProtectedRoute>} />
                   {/* Redirections for old routes */}
+                  <Route path="/dashboard" element={<Navigate to="/search" replace />} />
                   <Route path="/profile" element={<Navigate to="/settings" replace />} />
                   <Route path="/team" element={<Navigate to="/settings" replace />} />
                   <Route path="/debug" element={<ProtectedRoute><Debug /></ProtectedRoute>} />

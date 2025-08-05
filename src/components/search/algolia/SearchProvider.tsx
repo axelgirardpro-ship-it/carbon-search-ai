@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import { InstantSearch } from 'react-instantsearch';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
+import { useQuotas } from '@/hooks/useQuotas';
+import { toast } from 'sonner';
 
 // Client Algolia avec nettoyage exhaustif des paramètres
 const rawSearchClient = algoliasearch('6BGAS85TYS', 'e06b7614aaff866708fbd2872de90d37');
@@ -60,19 +62,59 @@ const searchClient = {
   }
 };
 
+// Context pour partager les quotas
+const QuotaContext = createContext<ReturnType<typeof useQuotas> | null>(null);
+
+export const useQuotaContext = () => {
+  const context = useContext(QuotaContext);
+  if (!context) {
+    throw new Error('useQuotaContext must be used within SearchProvider');
+  }
+  return context;
+};
+
 interface SearchProviderProps {
   children: React.ReactNode;
 }
 
 export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   console.log('🔧 SearchProvider with exhaustive cleaning mounting...');
+  const quotaHook = useQuotas();
+  
+  // Wrapper pour intercepter les recherches et décrémenter les quotas
+  const quotaAwareSearchClient = {
+    ...searchClient,
+    search: async (requests: any[]) => {
+      // Vérifier si l'utilisateur peut effectuer une recherche
+      if (!quotaHook.canSearch) {
+        toast.error("Limite de recherche atteinte. Passez à un plan payant pour continuer.");
+        return { results: [] };
+      }
+      
+      try {
+        const result = await searchClient.search(requests);
+        
+        // Incrémenter le quota seulement si la recherche a des résultats
+        if (result.results && result.results.length > 0 && 'hits' in result.results[0] && result.results[0].hits.length > 0) {
+          await quotaHook.incrementSearch();
+        }
+        
+        return result;
+      } catch (error) {
+        console.error('Search error:', error);
+        throw error;
+      }
+    }
+  };
   
   return (
-    <InstantSearch 
-      searchClient={searchClient as any} 
-      indexName="emission_factors"
-    >
-      {children}
-    </InstantSearch>
+    <QuotaContext.Provider value={quotaHook}>
+      <InstantSearch 
+        searchClient={quotaAwareSearchClient as any} 
+        indexName="emission_factors"
+      >
+        {children}
+      </InstantSearch>
+    </QuotaContext.Provider>
   );
 };

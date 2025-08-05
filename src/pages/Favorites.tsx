@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
 import { ResultsTable } from "@/components/search/ResultsTable";
 import { Button } from "@/components/ui/button";
@@ -204,12 +205,11 @@ const Favorites = () => {
             <p className="text-muted-foreground mb-6">
               Ajoutez des facteurs d'émissions à vos favoris depuis la page de recherche
             </p>
-            <a 
-              href="/dashboard" 
-              className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
-            >
-              Commencer une recherche
-            </a>
+            <Button asChild>
+              <Link to="/search">
+                Commencer une recherche
+              </Link>
+            </Button>
           </div>
         )}
       </div>
