@@ -30,7 +30,7 @@ export const useUnifiedUser = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchUnifiedUser = async () => {
-    if (!user || !currentWorkspace) {
+    if (!user) {
       setUnifiedUser(null);
       setLoading(false);
       return;
@@ -39,7 +39,50 @@ export const useUnifiedUser = () => {
     try {
       setLoading(true);
       
-      // Récupérer les données utilisateur depuis la table users pour ce workspace
+      // D'abord vérifier s'il y a un rôle global supra_admin
+      const { data: globalRoleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .is('workspace_id', null)
+        .eq('role', 'supra_admin')
+        .single();
+
+      // Si c'est un supra_admin, créer une structure avec des valeurs par défaut
+      if (globalRoleData?.role === 'supra_admin') {
+        const unifiedData: UnifiedUser = {
+          id: user.id,
+          user_id: user.id,
+          workspace_id: currentWorkspace?.id || '',
+          first_name: '',
+          last_name: '',
+          company: 'Global Admin',
+          position: 'Supra Administrateur',
+          phone: '',
+          email: user.email || '',
+          plan_type: 'premium',
+          subscribed: true,
+          trial_end: undefined,
+          subscription_end: undefined,
+          role: 'supra_admin',
+          assigned_by: undefined,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+
+        setUnifiedUser(unifiedData);
+        setLoading(false);
+        return;
+      }
+
+      // Si pas de workspace courant et pas de supra_admin, pas de données
+      if (!currentWorkspace) {
+        setUnifiedUser(null);
+        setLoading(false);
+        return;
+      }
+
+      // Logique normale pour les rôles workspace-spécifiques
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('*')
