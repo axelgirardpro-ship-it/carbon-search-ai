@@ -74,10 +74,10 @@ export const useQuotas = () => {
   }, [loadQuotaData]);
 
   const canSearch = quotaData ? 
-    quotaData.plan_type === 'premium' || quotaData.searches_used < quotaData.searches_limit 
+    quotaData.plan_type === 'premium' || quotaData.plan_type === 'standard' || quotaData.searches_used < quotaData.searches_limit 
     : false;
   const canExport = quotaData ? 
-    quotaData.plan_type === 'premium' || quotaData.exports_used < quotaData.exports_limit 
+    quotaData.plan_type === 'premium' || quotaData.plan_type === 'standard' || quotaData.exports_used < quotaData.exports_limit 
     : false;
 
   const incrementSearch = useCallback(async () => {
