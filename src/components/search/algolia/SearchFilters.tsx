@@ -87,7 +87,7 @@ export const SearchFilters: React.FC = () => {
   };
 
   return (
-    <Card className="bg-filter-bg">
+    <Card className="bg-card border border-border">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">FILTRER PAR :</CardTitle>
