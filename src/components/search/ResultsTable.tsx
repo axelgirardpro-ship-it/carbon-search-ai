@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { PremiumBlur } from "@/components/ui/PremiumBlur";
+import { useEmissionFactorAccess } from "@/hooks/useEmissionFactorAccess";
 import {
   Table,
   TableBody,
@@ -42,6 +44,7 @@ export const ResultsTable = ({
   onExport,
   isLoading = false
 }: ResultsTableProps) => {
+  const { shouldBlurPremiumContent, getSourceLabel } = useEmissionFactorAccess();
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   
@@ -240,27 +243,49 @@ export const ResultsTable = ({
                     />
                   </TableCell>
                   <TableCell className="font-medium max-w-xs">
-                    <div className="flex items-center gap-2">
-                      <div className="truncate">{item.nom}</div>
-                      {(item as any).source_type === 'private' && (
-                        <Badge variant="secondary" className="text-xs">Import</Badge>
-                      )}
-                    </div>
-                    {item.description && (
-                      <div className="text-xs text-muted-foreground truncate">
-                        {item.description}
+                    <PremiumBlur 
+                      isBlurred={shouldBlurPremiumContent(item.source, (item as any).isPremiumSource)}
+                      showUpgradeButton={false}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="truncate">{item.nom}</div>
+                        {(() => {
+                          const label = getSourceLabel(
+                            !!(item as any).workspace_id, 
+                            item.source, 
+                            (item as any).isPremiumSource
+                          );
+                          return label ? (
+                            <Badge variant={label.variant} className="text-xs">
+                              {label.label}
+                            </Badge>
+                          ) : null;
+                        })()}
                       </div>
-                    )}
+                      {item.description && (
+                        <div className="text-xs text-muted-foreground truncate">
+                          {item.description}
+                        </div>
+                      )}
+                    </PremiumBlur>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="font-mono">
-                      {item.fe}
-                    </Badge>
+                    <PremiumBlur isBlurred={shouldBlurPremiumContent(item.source, (item as any).isPremiumSource)}>
+                      <Badge variant="outline" className="font-mono">
+                        {item.fe}
+                      </Badge>
+                    </PremiumBlur>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{item.uniteActivite}</Badge>
+                    <PremiumBlur isBlurred={shouldBlurPremiumContent(item.source, (item as any).isPremiumSource)}>
+                      <Badge variant="secondary">{item.uniteActivite}</Badge>
+                    </PremiumBlur>
                   </TableCell>
-                  <TableCell>{item.source}</TableCell>
+                  <TableCell>
+                    <PremiumBlur isBlurred={shouldBlurPremiumContent(item.source, (item as any).isPremiumSource)}>
+                      {item.source}
+                    </PremiumBlur>
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-1">
                       <span>{item.localisation}</span>

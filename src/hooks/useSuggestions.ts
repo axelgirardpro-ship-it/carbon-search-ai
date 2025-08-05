@@ -19,7 +19,6 @@ export const useSuggestions = (searchQuery: string) => {
         .from('emission_factors')
         .select('"Nom"')
         .or(`"Nom".ilike.%${query}%,"Description".ilike.%${query}%,"Secteur".ilike.%${query}%`)
-        .or(`workspace_id.eq.${currentWorkspace.id},is_public.eq.true`)
         .limit(3);
 
       if (error) throw error;

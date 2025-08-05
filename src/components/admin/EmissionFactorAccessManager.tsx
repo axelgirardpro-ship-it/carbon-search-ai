@@ -40,51 +40,33 @@ export const EmissionFactorAccessManager = () => {
     }
 
     try {
-      console.log('🔄 EmissionFactorAccessManager: Fetching source data...');
+      console.log('🔄 EmissionFactorAccessManager: Fetching from fe_sources...');
       setLoading(true);
       setLastFetchTime(now);
       
-      const result: any = await (supabase as any).from('emission_factors').select('"Source", plan_tier').order('"Source"');
-      const { data, error } = result;
+      const { data: sources, error } = await supabase
+        .from('fe_sources')
+        .select('*')
+        .eq('is_global', true)
+        .order('source_name');
 
       if (error) {
         console.error('❌ Database error:', error);
         throw error;
       }
 
-      // Process data
-      const sourceMap = new Map<string, SourceAccessData>();
-      
-      data?.forEach(item => {
-        if (!sourceMap.has(item.Source)) {
-          sourceMap.set(item.Source, {
-            source: item.Source,
-            current_tier: 'standard',
-            standard_count: 0,
-            premium_count: 0,
-            total_count: 0
-          });
-        }
-        
-        const sourceInfo = sourceMap.get(item.Source)!;
-        sourceInfo.total_count++;
-        
-        if (item.plan_tier === 'premium') {
-          sourceInfo.premium_count++;
-        } else {
-          sourceInfo.standard_count++;
-        }
-      });
+      // Transform to SourceAccessData format
+      const finalData: SourceAccessData[] = sources?.map(source => ({
+        source: source.source_name,
+        current_tier: source.access_level as 'standard' | 'premium',
+        standard_count: source.access_level === 'standard' ? 1 : 0,
+        premium_count: source.access_level === 'premium' ? 1 : 0,
+        total_count: 1
+      })) || [];
 
-      // Determine tier based on majority
-      sourceMap.forEach(sourceInfo => {
-        sourceInfo.current_tier = sourceInfo.premium_count > sourceInfo.standard_count ? 'premium' : 'standard';
-      });
-
-      const finalData = Array.from(sourceMap.values());
       setSourceData(finalData);
       
-      console.log('✅ Source data updated:', finalData.length, 'sources');
+      console.log('✅ Source data updated:', finalData.length, 'global sources');
       
     } catch (error) {
       console.error('💥 Error fetching source data:', error);
@@ -108,8 +90,15 @@ export const EmissionFactorAccessManager = () => {
     try {
       console.log(`🚀 Starting update for source: ${source} to tier: ${newTier}`);
       
-      // Simple direct update to avoid type issues
-      console.log(`✅ Successfully updated records for source ${source}`);
+      // Update the fe_sources table
+      const { error } = await supabase
+        .from('fe_sources')
+        .update({ access_level: newTier })
+        .eq('source_name', source);
+
+      if (error) throw error;
+
+      console.log(`✅ Successfully updated source ${source} to ${newTier}`);
 
       // Mark as successful
       setUpdateStates(prev => ({
