@@ -52,7 +52,7 @@ const AlgoliaSearchContent: React.FC = () => {
   );
 };
 
-export const AlgoliaSearchDashboard: React.FC = () => {
+export const SearchDashboard: React.FC = () => {
   return (
     <SearchProvider>
       <AlgoliaSearchContent />
