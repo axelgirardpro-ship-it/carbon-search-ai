@@ -12,6 +12,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import { AlgoliaSearchDashboard } from "@/components/search/algolia/AlgoliaSearchDashboard";
 import Favorites from "./pages/Favorites";
 import Import from "./pages/Import";
 import SimplifiedSettings from "./pages/SimplifiedSettings";
@@ -82,6 +83,7 @@ const App = () => (
                   <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
                   <Route path="/dev" element={<PublicRoute><DevLogin /></PublicRoute>} />
                   <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                  <Route path="/search" element={<ProtectedRoute><AlgoliaSearchDashboard /></ProtectedRoute>} />
                   <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
                   <Route path="/import" element={<ProtectedRoute><Import /></ProtectedRoute>} />
                   <Route path="/settings" element={<ProtectedRoute><SimplifiedSettings /></ProtectedRoute>} />
