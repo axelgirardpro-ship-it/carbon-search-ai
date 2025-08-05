@@ -137,13 +137,6 @@ export type Database = {
             foreignKeyName: "datasets_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
-            referencedRelation: "workspace_plans"
-            referencedColumns: ["workspace_id"]
-          },
-          {
-            foreignKeyName: "datasets_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
             referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
@@ -217,13 +210,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "datasets"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "emission_factors_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspace_plans"
-            referencedColumns: ["workspace_id"]
           },
           {
             foreignKeyName: "emission_factors_workspace_id_fkey"
@@ -456,13 +442,6 @@ export type Database = {
             foreignKeyName: "fk_workspace"
             columns: ["workspace_id"]
             isOneToOne: false
-            referencedRelation: "workspace_plans"
-            referencedColumns: ["workspace_id"]
-          },
-          {
-            foreignKeyName: "fk_workspace"
-            columns: ["workspace_id"]
-            isOneToOne: false
             referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
@@ -557,39 +536,7 @@ export type Database = {
       }
     }
     Views: {
-      workspace_plans: {
-        Row: {
-          owner_id: string | null
-          plan_type: string | null
-          subscribed: boolean | null
-          subscription_end: string | null
-          subscription_tier: string | null
-          trial_end: string | null
-          workspace_id: string | null
-          workspace_name: string | null
-        }
-        Insert: {
-          owner_id?: string | null
-          plan_type?: string | null
-          subscribed?: never
-          subscription_end?: never
-          subscription_tier?: string | null
-          trial_end?: never
-          workspace_id?: string | null
-          workspace_name?: string | null
-        }
-        Update: {
-          owner_id?: string | null
-          plan_type?: string | null
-          subscribed?: never
-          subscription_end?: never
-          subscription_tier?: string | null
-          trial_end?: never
-          workspace_id?: string | null
-          workspace_name?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       cleanup_expired_sessions: {
