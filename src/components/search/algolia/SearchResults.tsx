@@ -442,7 +442,7 @@ export const SearchResults: React.FC = () => {
                         <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">
                           <h3 
-                            className="text-lg font-semibold text-foreground leading-tight cursor-pointer hover:text-orange-500 font-montserrat"
+                            className="text-lg font-semibold text-indigo-950 leading-tight cursor-pointer hover:text-orange-500 font-montserrat"
                             onClick={() => toggleRowExpansion(hit.objectID)}
                             dangerouslySetInnerHTML={getHighlightedText(hit, 'Nom')}
                           />

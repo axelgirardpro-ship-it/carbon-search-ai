@@ -79,7 +79,7 @@ export const QuotaWidget = ({ quotaData, isLoading }: QuotaWidgetProps) => {
     const isPremium = planType === 'premium';
     
     return (
-      <Card className={`border-primary/20 ${isPremium ? 'bg-gradient-to-r from-primary/5 to-primary/10' : 'bg-gradient-to-r from-blue-500/5 to-blue-600/10'}`}>
+      <Card className={`bg-white border border-violet-200 ${isPremium ? 'border-primary/20' : 'border-blue-500/20'}`}>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <Badge className={isPremium ? "bg-primary text-primary-foreground" : "bg-blue-600 text-white"}>
@@ -112,7 +112,7 @@ export const QuotaWidget = ({ quotaData, isLoading }: QuotaWidgetProps) => {
   }
 
   return (
-    <Card className={isAtLimit ? "border-destructive/50" : isNearLimit ? "border-yellow-500/50" : ""}>
+    <Card className={`bg-white border border-violet-200 ${isAtLimit ? "border-destructive/50" : isNearLimit ? "border-yellow-500/50" : ""}`}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">

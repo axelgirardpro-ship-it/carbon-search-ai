@@ -46,8 +46,8 @@
     --shadow-soft: 0 4px 12px -2px hsl(220 15% 0% / 0.08);
     
     /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-smooth: all 0.3s ease-in-out;
+    --transition-bounce: all 0.4s ease-in-out;
 
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
