@@ -29,6 +29,7 @@ import { CSVImporter } from "@/components/admin/CSVImporter";
 import { CreateSupraAdmin } from "@/components/admin/CreateSupraAdmin";
 import { SessionsTable } from "@/components/admin/SessionsTable";
 import { ExportsMonitoringTable } from "@/components/admin/ExportsMonitoringTable";
+import { TestEnvironmentControls } from "@/components/admin/TestEnvironmentControls";
 
 const Admin = () => {
   const { user, userRole } = useAuth();
@@ -225,6 +226,9 @@ const Admin = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Test Environment Controls */}
+        <TestEnvironmentControls />
 
         {/* Admin Components */}
         <div className="space-y-6">
