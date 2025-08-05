@@ -2,38 +2,59 @@ import React from 'react';
 import { InstantSearch } from 'react-instantsearch';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 
-// Client Algolia avec nettoyage des paramètres
+// Client Algolia avec nettoyage exhaustif des paramètres
 const rawSearchClient = algoliasearch('6BGAS85TYS', 'e06b7614aaff866708fbd2872de90d37');
 
-// Wrapper pour nettoyer les paramètres avant envoi
+// Liste des paramètres valides Algolia
+const VALID_ALGOLIA_PARAMS = [
+  'query', 'queryType', 'typoTolerance', 'minWordSizefor1Typo', 'minWordSizefor2Typos',
+  'allowTyposOnNumericTokens', 'ignorePlurals', 'disableTypoToleranceOnAttributes',
+  'attributesToIndex', 'attributesToRetrieve', 'unretrievableAttributes', 'optionalWords',
+  'attributesToHighlight', 'attributesToSnippet', 'highlightPreTag', 'highlightPostTag',
+  'snippetEllipsisText', 'restrictHighlightAndSnippetArrays', 'hitsPerPage', 'page',
+  'offset', 'length', 'minProximity', 'getRankingInfo', 'clickAnalytics', 'analytics',
+  'analyticsTags', 'synonyms', 'replaceSynonymsInHighlight', 'minProximity', 'responseFields',
+  'maxValuesPerFacet', 'sortFacetValuesBy', 'facets', 'maxFacetHits', 'attributesToRetrieve',
+  'facetFilters', 'filters', 'numericFilters', 'tagFilters', 'sumOrFiltersScores',
+  'restrictSearchableAttributes', 'facetingAfterDistinct', 'aroundLatLng', 'aroundLatLngViaIP',
+  'aroundRadius', 'aroundPrecision', 'minimumAroundRadius', 'insideBoundingBox', 'insidePolygon',
+  'naturalLanguages', 'ruleContexts', 'personalizationImpact', 'userToken', 'enablePersonalization',
+  'distinct', 'attributeForDistinct', 'customRanking', 'ranking', 'relevancyStrictness'
+];
+
+// Wrapper pour nettoyer agressivement les paramètres
 const searchClient = {
   ...rawSearchClient,
   search: (requests: any[]) => {
-    console.log('Search requests before cleaning:', requests);
+    console.log('🔍 Original search requests:', requests);
     
-    // Nettoyer les paramètres invalides
-    const cleanedRequests = requests.map(request => {
+    const cleanedRequests = requests.map((request, index) => {
       if (!request.params) {
         return request;
       }
       
-      const cleanedParams = { ...request.params };
+      const originalParams = { ...request.params };
+      const cleanedParams: any = {};
       
-      // Supprimer tous les paramètres qui commencent par "data-"
-      Object.keys(cleanedParams).forEach(key => {
-        if (key.startsWith('data-') || key.includes('lov-name')) {
-          console.log('Removing invalid parameter:', key);
-          delete cleanedParams[key];
+      // Ne garder que les paramètres valides Algolia
+      Object.keys(originalParams).forEach(key => {
+        if (VALID_ALGOLIA_PARAMS.includes(key)) {
+          cleanedParams[key] = originalParams[key];
+        } else {
+          console.log(`❌ Removing invalid parameter from request ${index}:`, key, '=', originalParams[key]);
         }
       });
       
-      return {
+      const cleanedRequest = {
         ...request,
         params: cleanedParams
       };
+      
+      console.log(`✅ Cleaned request ${index}:`, cleanedRequest);
+      return cleanedRequest;
     });
     
-    console.log('Search requests after cleaning:', cleanedRequests);
+    console.log('🚀 Final cleaned requests sent to Algolia:', cleanedRequests);
     
     return rawSearchClient.search(cleanedRequests);
   }
@@ -44,7 +65,7 @@ interface SearchProviderProps {
 }
 
 export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
-  console.log('SearchProvider with cleaned client mounting...');
+  console.log('🔧 SearchProvider with exhaustive cleaning mounting...');
   
   return (
     <InstantSearch 
