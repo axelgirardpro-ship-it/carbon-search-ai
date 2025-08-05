@@ -65,11 +65,34 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
         } else {
           // Use stored item_data for non-UUID favorites
           if (fav.item_data) {
-            nonUuidFavorites.push({
-              ...(fav.item_data as any),
-              id: fav.item_id,
-              isFavorite: true
-            });
+            const storedData = fav.item_data as any;
+            if (storedData["Nom"]) {
+              // Map from database format
+              nonUuidFavorites.push({
+                id: fav.item_id,
+                nom: storedData["Nom"] || '',
+                description: storedData["Description"] || '',
+                fe: Number(storedData["FE"]) || 0,
+                uniteActivite: storedData["Unité donnée d'activité"] || '',
+                source: storedData["Source"] || '',
+                secteur: storedData["Secteur"] || '',
+                sousSecteur: storedData["Sous-secteur"] || '',
+                localisation: storedData["Localisation"] || '',
+                date: Number(storedData["Date"]) || 0,
+                incertitude: storedData["Incertitude"] || '',
+                perimetre: storedData["Périmètre"] || '',
+                contributeur: storedData["Contributeur"] || '',
+                commentaires: storedData["Commentaires"] || '',
+                isFavorite: true
+              });
+            } else {
+              // Already in correct format
+              nonUuidFavorites.push({
+                ...storedData,
+                id: fav.item_id,
+                isFavorite: true
+              });
+            }
           }
         }
       });
@@ -97,24 +120,63 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
           const currentItem = currentData.find(item => item.id === fav.item_id);
           
           if (currentItem) {
-            // Update stored data with current data
+            // Map database columns to TypeScript interface
+            const mappedItem: EmissionFactor = {
+              id: currentItem.id,
+              nom: currentItem["Nom"] || '',
+              description: currentItem["Description"] || '',
+              fe: Number(currentItem["FE"]) || 0,
+              uniteActivite: currentItem["Unité donnée d'activité"] || '',
+              source: currentItem["Source"] || '',
+              secteur: currentItem["Secteur"] || '',
+              sousSecteur: currentItem["Sous-secteur"] || '',
+              localisation: currentItem["Localisation"] || '',
+              date: Number(currentItem["Date"]) || 0,
+              incertitude: currentItem["Incertitude"] || '',
+              perimetre: currentItem["Périmètre"] || '',
+              contributeur: currentItem["Contributeur"] || '',
+              commentaires: currentItem["Commentaires"] || '',
+              isFavorite: true
+            };
+            
+            // Update stored data with current mapped data
             supabase
               .from('favorites')
-              .update({ item_data: currentItem })
+              .update({ item_data: mappedItem as any })
               .eq('user_id', user.id)
               .eq('item_id', fav.item_id);
               
-            return {
-              ...currentItem,
-              isFavorite: true
-            };
+            return mappedItem;
           } else if (fav.item_data) {
-            // Fall back to stored data if current data not found
-            return {
-              ...(fav.item_data as any),
-              id: fav.item_id,
-              isFavorite: true
-            };
+            // Map stored data if it's in database format
+            const storedData = fav.item_data as any;
+            if (storedData["Nom"]) {
+              // Map from database format
+              return {
+                id: fav.item_id,
+                nom: storedData["Nom"] || '',
+                description: storedData["Description"] || '',
+                fe: Number(storedData["FE"]) || 0,
+                uniteActivite: storedData["Unité donnée d'activité"] || '',
+                source: storedData["Source"] || '',
+                secteur: storedData["Secteur"] || '',
+                sousSecteur: storedData["Sous-secteur"] || '',
+                localisation: storedData["Localisation"] || '',
+                date: Number(storedData["Date"]) || 0,
+                incertitude: storedData["Incertitude"] || '',
+                perimetre: storedData["Périmètre"] || '',
+                contributeur: storedData["Contributeur"] || '',
+                commentaires: storedData["Commentaires"] || '',
+                isFavorite: true
+              };
+            } else {
+              // Already in correct format
+              return {
+                ...storedData,
+                id: fav.item_id,
+                isFavorite: true
+              };
+            }
           }
           return null;
         })
