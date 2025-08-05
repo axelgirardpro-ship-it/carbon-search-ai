@@ -156,7 +156,6 @@ export type Database = {
           Localisation: string | null
           Nom: string
           Périmètre: string | null
-          plan_tier: string | null
           Secteur: string
           Source: string
           "Sous-secteur": string | null
@@ -177,7 +176,6 @@ export type Database = {
           Localisation?: string | null
           Nom: string
           Périmètre?: string | null
-          plan_tier?: string | null
           Secteur: string
           Source: string
           "Sous-secteur"?: string | null
@@ -198,7 +196,6 @@ export type Database = {
           Localisation?: string | null
           Nom?: string
           Périmètre?: string | null
-          plan_tier?: string | null
           Secteur?: string
           Source?: string
           "Sous-secteur"?: string | null
