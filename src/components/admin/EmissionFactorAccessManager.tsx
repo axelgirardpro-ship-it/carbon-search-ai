@@ -46,8 +46,8 @@ export const EmissionFactorAccessManager = () => {
       
       const { data, error } = await supabase
         .from('emission_factors')
-        .select('source, plan_tier')
-        .order('source');
+        .select('"Source", plan_tier')
+        .order('"Source"');
 
       if (error) {
         console.error('❌ Database error:', error);
@@ -58,9 +58,9 @@ export const EmissionFactorAccessManager = () => {
       const sourceMap = new Map<string, SourceAccessData>();
       
       data?.forEach(item => {
-        if (!sourceMap.has(item.source)) {
-          sourceMap.set(item.source, {
-            source: item.source,
+        if (!sourceMap.has(item.Source)) {
+          sourceMap.set(item.Source, {
+            source: item.Source,
             current_tier: 'standard',
             standard_count: 0,
             premium_count: 0,
@@ -68,7 +68,7 @@ export const EmissionFactorAccessManager = () => {
           });
         }
         
-        const sourceInfo = sourceMap.get(item.source)!;
+        const sourceInfo = sourceMap.get(item.Source)!;
         sourceInfo.total_count++;
         
         if (item.plan_tier === 'premium') {
@@ -114,7 +114,7 @@ export const EmissionFactorAccessManager = () => {
       const { data: countData, error: countError } = await supabase
         .from('emission_factors')
         .select('id', { count: 'exact' })
-        .eq('source', source);
+        .eq('"Source"', source);
       
       if (countError) {
         console.error('❌ Error counting records:', countError);
@@ -127,8 +127,8 @@ export const EmissionFactorAccessManager = () => {
       const updatePromise = supabase
         .from('emission_factors')
         .update({ plan_tier: newTier })
-        .eq('source', source)
-        .select('id, source, plan_tier');
+        .eq('"Source"', source)
+        .select('id, "Source", plan_tier');
 
       const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error('Update timeout')), 30000)

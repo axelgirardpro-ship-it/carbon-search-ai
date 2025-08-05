@@ -73,23 +73,12 @@ const Dashboard = () => {
         .from('emission_factors')
         .select('*');
 
-      // Search logic: public data + current workspace data
-      if (currentWorkspace) {
-        supabaseQuery = supabaseQuery.or(`is_public.eq.true,workspace_id.eq.${currentWorkspace.id}`);
-      } else {
-        // If no workspace, only show public data
-        supabaseQuery = supabaseQuery.eq('is_public', true);
-      }
-
-      // Apply plan tier filtering based on user subscription
-      const userPlan = subscription?.plan_type || 'freemium';
-      if (userPlan === 'premium') {
-        // Premium users can see both standard and premium content
-        supabaseQuery = supabaseQuery.in('plan_tier', ['standard', 'premium']);
-      } else {
-        // Freemium and standard users can only see standard content
-        supabaseQuery = supabaseQuery.eq('plan_tier', 'standard');
-      }
+      // The new 4-tier access logic is now handled by the updated RLS policy
+      // We don't need to manually filter here anymore as the database policy handles:
+      // Tier 1: Private workspace emission factors
+      // Tier 2: Global public emission factors  
+      // Tier 3: Global premium emission factors (for premium users)
+      // Tier 4: Specifically assigned sources
 
       // Apply search filter if query is provided
       if (query.trim()) {
