@@ -326,25 +326,11 @@ export default function Settings() {
                   )}
                 </div>
                 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <div className="font-medium">Gestion de l'abonnement</div>
-                    <div className="text-sm text-muted-foreground">
-                      Pour gérer votre abonnement, merci de contacter : axelgirard.pro@gmail.com
-                    </div>
+                <div className="p-4 border rounded-lg">
+                  <div className="font-medium">Gestion de l'abonnement</div>
+                  <div className="text-sm text-muted-foreground">
+                    Pour gérer votre abonnement, merci de contacter : axelgirard.pro@gmail.com
                   </div>
-                  <Button 
-                    variant="outline"
-                    onClick={() => {
-                      const email = 'axelgirard.pro@gmail.com';
-                      const subject = 'Gestion abonnement';
-                      const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
-                      window.open(mailtoLink, '_blank');
-                    }}
-                  >
-                    <Mail className="h-4 w-4 mr-2" />
-                    Contacter
-                  </Button>
                 </div>
               </CardContent>
             </Card>
