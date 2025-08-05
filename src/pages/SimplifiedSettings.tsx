@@ -297,6 +297,35 @@ export default function Settings() {
                   </div>
                 </div>
                 
+                {/* Plan du workspace */}
+                <div className="p-4 border rounded-lg bg-gradient-to-r from-primary/5 to-primary/10">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium text-lg">Plan du workspace</div>
+                      <div className="text-sm text-muted-foreground">
+                        {currentWorkspace?.name}
+                      </div>
+                    </div>
+                    <Badge 
+                      className={`${
+                        subscription?.plan_type === 'premium' 
+                          ? 'bg-primary text-primary-foreground' 
+                          : subscription?.plan_type === 'standard'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-600 text-white'
+                      }`}
+                    >
+                      {subscription?.plan_type === 'premium' ? 'Premium' : 
+                       subscription?.plan_type === 'standard' ? 'Standard' : 'Freemium'}
+                    </Badge>
+                  </div>
+                  {subscription?.plan_type === 'premium' && (
+                    <div className="mt-2 text-sm text-primary">
+                      ✨ Accès illimité aux recherches et exports
+                    </div>
+                  )}
+                </div>
+                
                 <div className="flex items-center justify-between p-4 border rounded-lg">
                   <div>
                     <div className="font-medium">Gestion de l'abonnement</div>
