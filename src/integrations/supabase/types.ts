@@ -154,7 +154,7 @@ export type Database = {
           categorie: string
           created_at: string
           dataset_id: string | null
-          date: string
+          date: number
           description: string | null
           fe: number
           id: string
@@ -174,7 +174,7 @@ export type Database = {
           categorie: string
           created_at?: string
           dataset_id?: string | null
-          date: string
+          date: number
           description?: string | null
           fe: number
           id?: string
@@ -194,7 +194,7 @@ export type Database = {
           categorie?: string
           created_at?: string
           dataset_id?: string | null
-          date?: string
+          date?: number
           description?: string | null
           fe?: number
           id?: string
@@ -507,6 +507,84 @@ export type Database = {
         }
         Relationships: []
       }
+      users: {
+        Row: {
+          assigned_by: string | null
+          company: string | null
+          created_at: string
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          phone: string | null
+          plan_type: string | null
+          position: string | null
+          role: string
+          subscribed: boolean | null
+          subscription_end: string | null
+          subscription_tier: string | null
+          trial_end: string | null
+          updated_at: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          company?: string | null
+          created_at?: string
+          email: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          plan_type?: string | null
+          position?: string | null
+          role: string
+          subscribed?: boolean | null
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          trial_end?: string | null
+          updated_at?: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          plan_type?: string | null
+          position?: string | null
+          role?: string
+          subscribed?: boolean | null
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          trial_end?: string | null
+          updated_at?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_workspace"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace_plans"
+            referencedColumns: ["workspace_id"]
+          },
+          {
+            foreignKeyName: "fk_workspace"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workspace_invitations: {
         Row: {
           created_at: string
@@ -646,6 +724,10 @@ export type Database = {
       is_workspace_owner: {
         Args: { workspace_id: string }
         Returns: boolean
+      }
+      migrate_to_unified_users: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
     }
     Enums: {
