@@ -40,7 +40,7 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
   useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
-        let query = supabase.from('emission_factors').select('source, secteur, categorie, unite, localisation, date');
+        let query = supabase.from('emission_factors').select('"Source", "Secteur", "Sous-secteur", "Unité donnée d\'activité", "Localisation", "Date"');
         
         // Apply workspace filtering like in search
         if (currentWorkspace) {
@@ -57,12 +57,12 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
         }
 
         // Extract unique values for each filter
-        const sources = [...new Set(data?.map(item => item.source).filter(Boolean))] as string[];
-        const secteurs = [...new Set(data?.map(item => item.secteur).filter(Boolean))] as string[];
-        const sousSecteurs = [...new Set(data?.map(item => item.categorie).filter(Boolean))] as string[];
-        const unites = [...new Set(data?.map(item => item.unite).filter(Boolean))] as string[];
-        const localisations = [...new Set(data?.map(item => item.localisation).filter(Boolean))] as string[];
-        const dates = [...new Set(data?.map(item => item.date).filter(Boolean))] as (string | number)[];
+        const sources = [...new Set(data?.map(item => item["Source"]).filter(Boolean))] as string[];
+        const secteurs = [...new Set(data?.map(item => item["Secteur"]).filter(Boolean))] as string[];
+        const sousSecteurs = [...new Set(data?.map(item => item["Sous-secteur"]).filter(Boolean))] as string[];
+        const unites = [...new Set(data?.map(item => item["Unité donnée d'activité"]).filter(Boolean))] as string[];
+        const localisations = [...new Set(data?.map(item => item["Localisation"]).filter(Boolean))] as string[];
+        const dates = [...new Set(data?.map(item => item["Date"]).filter(Boolean))] as (string | number)[];
 
         setFilterOptions({
           source: sources.sort(),

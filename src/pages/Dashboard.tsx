@@ -93,27 +93,27 @@ const Dashboard = () => {
 
       // Apply search filter if query is provided
       if (query.trim()) {
-        supabaseQuery = supabaseQuery.or(`nom.ilike.%${query}%,description.ilike.%${query}%`);
+        supabaseQuery = supabaseQuery.or(`"Nom".ilike.%${query}%,"Description".ilike.%${query}%`);
       }
 
       // Apply other filters
       if (filters.source) {
-        supabaseQuery = supabaseQuery.ilike('source', `%${filters.source}%`);
+        supabaseQuery = supabaseQuery.ilike('"Source"', `%${filters.source}%`);
       }
       if (filters.secteur) {
-        supabaseQuery = supabaseQuery.ilike('secteur', `%${filters.secteur}%`);
+        supabaseQuery = supabaseQuery.ilike('"Secteur"', `%${filters.secteur}%`);
       }
       if (filters.sousSecteur) {
-        supabaseQuery = supabaseQuery.ilike('categorie', `%${filters.sousSecteur}%`);
+        supabaseQuery = supabaseQuery.ilike('"Sous-secteur"', `%${filters.sousSecteur}%`);
       }
       if (filters.uniteActivite) {
-        supabaseQuery = supabaseQuery.ilike('unite', `%${filters.uniteActivite}%`);
+        supabaseQuery = supabaseQuery.ilike('"Unité donnée d\'activité"', `%${filters.uniteActivite}%`);
       }
       if (filters.localisation) {
-        supabaseQuery = supabaseQuery.ilike('localisation', `%${filters.localisation}%`);
+        supabaseQuery = supabaseQuery.ilike('"Localisation"', `%${filters.localisation}%`);
       }
       if (filters.anneeRapport) {
-        supabaseQuery = supabaseQuery.ilike('date', `%${filters.anneeRapport}%`);
+        supabaseQuery = supabaseQuery.ilike('"Date"', `%${filters.anneeRapport}%`);
       }
 
       const { data, error } = await supabaseQuery.limit(100);
@@ -127,19 +127,19 @@ const Dashboard = () => {
       // Transform Supabase data to match EmissionFactor interface
       const searchResults: EmissionFactor[] = (data || []).map(item => ({
         id: item.id,
-        nom: item.nom || '',
-        description: item.description || '',
-        fe: Number(item.fe) || 0,
-        uniteActivite: item.unite || '',
-        source: item.source || '',
-        secteur: item.secteur || '',
-        sousSecteur: item.categorie || '',
-        localisation: item.localisation || '',
-        date: Number(item.date) || 0,
-        incertitude: item.incertitude || '',
-        perimetre: '',
-        contributeur: '',
-        commentaires: '',
+        nom: item["Nom"] || '',
+        description: item["Description"] || '',
+        fe: Number(item["FE"]) || 0,
+        uniteActivite: item["Unité donnée d'activité"] || '',
+        source: item["Source"] || '',
+        secteur: item["Secteur"] || '',
+        sousSecteur: item["Sous-secteur"] || '',
+        localisation: item["Localisation"] || '',
+        date: Number(item["Date"]) || 0,
+        incertitude: item["Incertitude"] || '',
+        perimetre: item["Périmètre"] || '',
+        contributeur: item["Contributeur"] || '',
+        commentaires: item["Commentaires"] || '',
         isFavorite: isFavorite(item.id)
       }));
       
