@@ -152,7 +152,7 @@ export type Database = {
           Description: string | null
           FE: number
           id: string
-          Incertitude: number | null
+          Incertitude: string | null
           Localisation: string | null
           Nom: string
           Périmètre: string | null
@@ -172,7 +172,7 @@ export type Database = {
           Description?: string | null
           FE: number
           id?: string
-          Incertitude?: number | null
+          Incertitude?: string | null
           Localisation?: string | null
           Nom: string
           Périmètre?: string | null
@@ -192,7 +192,7 @@ export type Database = {
           Description?: string | null
           FE?: number
           id?: string
-          Incertitude?: number | null
+          Incertitude?: string | null
           Localisation?: string | null
           Nom?: string
           Périmètre?: string | null
