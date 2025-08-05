@@ -53,7 +53,7 @@ const Admin = () => {
       try {
         // Count users
         const { count: userCount } = await supabase
-          .from('profiles')
+          .from('users')
           .select('*', { count: 'exact', head: true });
 
         // Count workspaces

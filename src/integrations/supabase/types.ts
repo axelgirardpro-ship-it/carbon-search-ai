@@ -261,60 +261,6 @@ export type Database = {
         }
         Relationships: []
       }
-      profiles: {
-        Row: {
-          company: string | null
-          created_at: string
-          first_name: string | null
-          id: string
-          last_name: string | null
-          phone: string | null
-          position: string | null
-          updated_at: string
-          user_id: string
-          workspace_id: string
-        }
-        Insert: {
-          company?: string | null
-          created_at?: string
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-          phone?: string | null
-          position?: string | null
-          updated_at?: string
-          user_id: string
-          workspace_id: string
-        }
-        Update: {
-          company?: string | null
-          created_at?: string
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-          phone?: string | null
-          position?: string | null
-          updated_at?: string
-          user_id?: string
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_profiles_workspace"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspace_plans"
-            referencedColumns: ["workspace_id"]
-          },
-          {
-            foreignKeyName: "fk_profiles_workspace"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       search_history: {
         Row: {
           created_at: string
@@ -383,66 +329,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
-      }
-      subscribers: {
-        Row: {
-          created_at: string
-          email: string
-          id: string
-          plan_type: string | null
-          stripe_customer_id: string | null
-          subscribed: boolean
-          subscription_end: string | null
-          subscription_tier: string | null
-          trial_end: string | null
-          updated_at: string
-          user_id: string | null
-          workspace_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          id?: string
-          plan_type?: string | null
-          stripe_customer_id?: string | null
-          subscribed?: boolean
-          subscription_end?: string | null
-          subscription_tier?: string | null
-          trial_end?: string | null
-          updated_at?: string
-          user_id?: string | null
-          workspace_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          id?: string
-          plan_type?: string | null
-          stripe_customer_id?: string | null
-          subscribed?: boolean
-          subscription_end?: string | null
-          subscription_tier?: string | null
-          trial_end?: string | null
-          updated_at?: string
-          user_id?: string | null
-          workspace_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "subscribers_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspace_plans"
-            referencedColumns: ["workspace_id"]
-          },
-          {
-            foreignKeyName: "subscribers_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       user_roles: {
         Row: {
@@ -741,6 +627,26 @@ export type Database = {
           trial_end: string | null
           workspace_id: string | null
           workspace_name: string | null
+        }
+        Insert: {
+          owner_id?: string | null
+          plan_type?: string | null
+          subscribed?: never
+          subscription_end?: never
+          subscription_tier?: string | null
+          trial_end?: never
+          workspace_id?: string | null
+          workspace_name?: string | null
+        }
+        Update: {
+          owner_id?: string | null
+          plan_type?: string | null
+          subscribed?: never
+          subscription_end?: never
+          subscription_tier?: string | null
+          trial_end?: never
+          workspace_id?: string | null
+          workspace_name?: string | null
         }
         Relationships: []
       }

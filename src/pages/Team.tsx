@@ -62,18 +62,19 @@ const Team = () => {
 
       if (membersError) throw membersError;
 
-      // Get profiles for each user
+      // Get user data for each user
       const membersWithProfiles = await Promise.all(
         (members || []).map(async (member) => {
-          const { data: profile } = await supabase
-            .from('profiles')
+          const { data: userData } = await supabase
+            .from('users')
             .select('first_name, last_name')
             .eq('user_id', member.user_id)
+            .eq('workspace_id', member.workspace_id)
             .single();
 
           return {
             ...member,
-            profiles: profile || { first_name: '', last_name: '' }
+            profiles: userData || { first_name: '', last_name: '' }
           };
         })
       );

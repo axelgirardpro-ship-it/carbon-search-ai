@@ -1,38 +1,59 @@
-import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useUnifiedUser } from "./useUnifiedUser";
 
 export const usePermissions = () => {
-  const { userRole } = useAuth();
+  const { currentWorkspace } = useWorkspace();
+  const { unifiedUser } = useUnifiedUser();
 
+  // Permissions basées sur le RÔLE (indépendamment du plan)
   const canAddUsers = () => {
-    return userRole?.role === 'admin' || userRole?.role === 'supra_admin';
+    return unifiedUser?.role === 'admin' || unifiedUser?.role === 'supra_admin';
   };
 
   const canImportData = () => {
-    return userRole?.role === 'admin' || userRole?.role === 'gestionnaire' || userRole?.role === 'supra_admin';
+    return unifiedUser?.role === 'admin' || unifiedUser?.role === 'gestionnaire' || unifiedUser?.role === 'supra_admin';
   };
 
-  const canExportData = () => {
-    return userRole?.role === 'admin' || userRole?.role === 'gestionnaire';
+  const canExportFE = () => {
+    return unifiedUser?.role === 'admin' || unifiedUser?.role === 'gestionnaire';
   };
 
   const canViewAllData = () => {
-    return userRole?.role === 'admin' || userRole?.role === 'gestionnaire';
+    return unifiedUser?.role === 'admin' || unifiedUser?.role === 'gestionnaire';
   };
 
   const canManageWorkspace = () => {
-    return userRole?.role === 'admin';
+    return unifiedUser?.role === 'admin';
   };
 
   const canDeleteData = () => {
-    return userRole?.role === 'admin';
+    return unifiedUser?.role === 'admin';
   };
 
   const isSupraAdmin = () => {
-    return userRole?.role === 'supra_admin';
+    return unifiedUser?.role === 'supra_admin';
+  };
+
+  // Permissions basées sur le PLAN du workspace
+  const canAccessFavorites = () => {
+    return currentWorkspace?.plan_type === 'premium';
+  };
+
+  const canExportFromDashboard = () => {
+    return currentWorkspace?.plan_type === 'premium';
+  };
+
+  const hasSearchLimit = () => {
+    return currentWorkspace?.plan_type === 'freemium';
+  };
+
+  const canExportData = () => {
+    // Combinaison : rôle permet + plan permet
+    return canExportFE() && canExportFromDashboard();
   };
 
   const getRoleLabel = () => {
-    switch (userRole?.role as any) {
+    switch (unifiedUser?.role as any) {
       case 'supra_admin':
         return 'Supra Administrateur';
       case 'admin':
@@ -46,15 +67,41 @@ export const usePermissions = () => {
     }
   };
 
+  const getPlanLabel = () => {
+    switch (currentWorkspace?.plan_type) {
+      case 'premium':
+        return 'Premium';
+      case 'standard':
+        return 'Standard';
+      case 'freemium':
+        return 'Freemium';
+      default:
+        return 'Freemium';
+    }
+  };
+
   return {
+    // Permissions par rôle
     canAddUsers,
     canImportData,
-    canExportData,
+    canExportFE,
     canViewAllData,
     canManageWorkspace,
     canDeleteData,
     isSupraAdmin,
+    
+    // Permissions par plan
+    canAccessFavorites,
+    canExportFromDashboard,
+    hasSearchLimit,
+    
+    // Permissions combinées
+    canExportData,
+    
+    // Labels et données
     getRoleLabel,
-    userRole,
+    getPlanLabel,
+    userRole: unifiedUser,
+    workspacePlan: currentWorkspace,
   };
 };

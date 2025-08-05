@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useQuotaSubscription } from "@/contexts/QuotaSubscriptionContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -24,6 +25,7 @@ interface WorkspaceUser {
 
 export default function Settings() {
   const { user, userRole } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const { searchesUsed, searchesLimit, subscription } = useQuotaSubscription();
   const { favorites } = useFavorites();
   const { getRoleLabel, canAddUsers } = usePermissions();
@@ -54,13 +56,14 @@ export default function Settings() {
   }, [user]);
 
   const fetchProfile = async () => {
-    if (!user) return;
+    if (!user || !currentWorkspace) return;
     
     try {
       const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
+        .from('users')
+        .select('first_name, last_name')
         .eq('user_id', user.id)
+        .eq('workspace_id', currentWorkspace.id)
         .single();
 
       if (error && error.code !== 'PGRST116') {
@@ -216,18 +219,18 @@ export default function Settings() {
   };
 
   const handleSave = async () => {
-    if (!user) return;
+    if (!user || !currentWorkspace) return;
 
     try {
       const { error } = await supabase
-        .from('profiles')
-        .upsert({
-          user_id: user.id,
+        .from('users')
+        .update({
           first_name: profile.first_name,
           last_name: profile.last_name,
-          workspace_id: userRole?.workspace_id || '',
           updated_at: new Date().toISOString(),
-        });
+        })
+        .eq('user_id', user.id)
+        .eq('workspace_id', currentWorkspace.id);
 
       if (error) throw error;
 

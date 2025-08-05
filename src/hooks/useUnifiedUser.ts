@@ -1,4 +1,5 @@
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 
@@ -25,11 +26,12 @@ interface UnifiedUser {
 
 export const useUnifiedUser = () => {
   const { user, session } = useAuth();
+  const { currentWorkspace } = useWorkspace();
   const [unifiedUser, setUnifiedUser] = useState<UnifiedUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchUnifiedUser = async () => {
-    if (!user) {
+    if (!user || !currentWorkspace) {
       setUnifiedUser(null);
       setLoading(false);
       return;
@@ -37,18 +39,44 @@ export const useUnifiedUser = () => {
 
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      
+      // Récupérer les données utilisateur depuis la table users pour ce workspace
+      const { data: userData, error: userError } = await supabase
         .from('users')
         .select('*')
         .eq('user_id', user.id)
+        .eq('workspace_id', currentWorkspace.id)
         .single();
 
-      if (error) {
-        console.error('Error fetching unified user:', error);
+      if (userError) {
+        console.error('Error fetching user data:', userError);
         setUnifiedUser(null);
-      } else {
-        setUnifiedUser(data);
+        setLoading(false);
+        return;
       }
+
+      // Récupérer le rôle depuis user_roles
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('workspace_id', currentWorkspace.id)
+        .single();
+
+      if (roleError) {
+        console.error('Error fetching user role:', roleError);
+        setUnifiedUser(null);
+        setLoading(false);
+        return;
+      }
+
+      // Combiner les données
+      const unifiedData: UnifiedUser = {
+        ...userData,
+        role: roleData.role
+      };
+
+      setUnifiedUser(unifiedData);
     } catch (error) {
       console.error('Error in fetchUnifiedUser:', error);
       setUnifiedUser(null);
@@ -74,8 +102,13 @@ export const useUnifiedUser = () => {
         return { error };
       }
 
-      setUnifiedUser(data);
-      return { data, error: null };
+      // Mettre à jour avec le rôle existant
+      const updatedData: UnifiedUser = {
+        ...data,
+        role: unifiedUser.role
+      };
+      setUnifiedUser(updatedData);
+      return { data: updatedData, error: null };
     } catch (error) {
       console.error('Error in updateUnifiedUser:', error);
       return { error };
@@ -84,7 +117,7 @@ export const useUnifiedUser = () => {
 
   useEffect(() => {
     fetchUnifiedUser();
-  }, [user, session]);
+  }, [user, session, currentWorkspace]);
 
   return {
     unifiedUser,
