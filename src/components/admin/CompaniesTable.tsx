@@ -3,8 +3,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Users, Calendar, Crown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Building2, Users, Calendar, Crown, Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 interface Company {
   id: string;
@@ -24,6 +27,8 @@ interface Company {
 export const CompaniesTable = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingPlan, setEditingPlan] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchCompanies();
@@ -33,10 +38,10 @@ export const CompaniesTable = () => {
     try {
       setLoading(true);
       
-      // Use edge function to get paid workspaces
-      console.log('CompaniesTable: Calling edge function with planFilter: paid');
+      // Get all workspaces for admin management
+      console.log('CompaniesTable: Calling edge function for all workspaces');
       const { data, error } = await supabase.functions.invoke('get-admin-workspaces', {
-        body: { planFilter: 'paid' }
+        body: { planFilter: 'all' }
       });
 
       console.log('CompaniesTable: Edge function response:', { data, error });
@@ -51,6 +56,33 @@ export const CompaniesTable = () => {
       console.error('Error fetching companies:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const updateWorkspacePlan = async (workspaceId: string, newPlan: string) => {
+    try {
+      const { error } = await supabase
+        .from('workspaces')
+        .update({ plan_type: newPlan })
+        .eq('id', workspaceId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Plan mis à jour",
+        description: `Le plan a été changé pour ${newPlan}.`,
+      });
+
+      // Refresh the companies list
+      fetchCompanies();
+      setEditingPlan(null);
+    } catch (error) {
+      console.error('Error updating workspace plan:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de mettre à jour le plan.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -93,15 +125,16 @@ export const CompaniesTable = () => {
       </CardHeader>
       <CardContent>
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Entreprise</TableHead>
-              <TableHead>Propriétaire</TableHead>
-              <TableHead>Plan</TableHead>
-              <TableHead>Utilisateurs</TableHead>
-              <TableHead>Créée le</TableHead>
-            </TableRow>
-          </TableHeader>
+           <TableHeader>
+             <TableRow>
+               <TableHead>Entreprise</TableHead>
+               <TableHead>Propriétaire</TableHead>
+               <TableHead>Plan</TableHead>
+               <TableHead>Utilisateurs</TableHead>
+               <TableHead>Créée le</TableHead>
+               <TableHead>Actions</TableHead>
+             </TableRow>
+           </TableHeader>
           <TableBody>
              {companies.map((company) => (
               <TableRow key={company.id}>
@@ -131,13 +164,48 @@ export const CompaniesTable = () => {
                     {company.user_count}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    {new Date(company.created_at).toLocaleDateString('fr-FR')}
-                  </div>
-                </TableCell>
-              </TableRow>
+                 <TableCell>
+                   <div className="flex items-center gap-2">
+                     <Calendar className="h-4 w-4 text-muted-foreground" />
+                     {new Date(company.created_at).toLocaleDateString('fr-FR')}
+                   </div>
+                 </TableCell>
+                 <TableCell>
+                   {editingPlan === company.id ? (
+                     <div className="flex items-center gap-2">
+                       <Select
+                         value={company.plan_type}
+                         onValueChange={(value) => updateWorkspacePlan(company.id, value)}
+                       >
+                         <SelectTrigger className="w-32">
+                           <SelectValue />
+                         </SelectTrigger>
+                         <SelectContent>
+                           <SelectItem value="freemium">Freemium</SelectItem>
+                           <SelectItem value="standard">Standard</SelectItem>
+                           <SelectItem value="premium">Premium</SelectItem>
+                         </SelectContent>
+                       </Select>
+                       <Button
+                         variant="outline"
+                         size="sm"
+                         onClick={() => setEditingPlan(null)}
+                       >
+                         Annuler
+                       </Button>
+                     </div>
+                   ) : (
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       onClick={() => setEditingPlan(company.id)}
+                     >
+                       <Edit className="h-4 w-4 mr-2" />
+                       Modifier plan
+                     </Button>
+                   )}
+                 </TableCell>
+               </TableRow>
             ))}
             {companies.length === 0 && (
               <TableRow>

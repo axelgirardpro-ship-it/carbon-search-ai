@@ -58,23 +58,30 @@ serve(async (req) => {
     }
 
     // Define plan types based on filter
-    let planTypes: string[];
-    if (planFilter === 'freemium') {
-      planTypes = ['freemium'];
-      console.log('Filtering for freemium plans');
-    } else {
-      planTypes = ['standard', 'premium']; // paid plans
-      console.log('Filtering for paid plans:', planTypes);
-    }
-
-    console.log('Final planTypes filter:', planTypes);
-
-    // Get workspaces based on plan filter
-    const { data: workspaces, error: workspacesError } = await supabase
+    let workspacesQuery = supabase
       .from('workspaces')
       .select('*')
-      .in('plan_type', planTypes)
-      .order('created_at', { ascending: false })
+      .order('created_at', { ascending: false });
+
+    if (planFilter === 'freemium') {
+      workspacesQuery = workspacesQuery.eq('plan_type', 'freemium');
+      console.log('Filtering for freemium plans');
+    } else if (planFilter === 'paid') {
+      workspacesQuery = workspacesQuery.in('plan_type', ['standard', 'premium']);
+      console.log('Filtering for paid plans');
+    } else if (planFilter === 'all') {
+      console.log('Getting all workspaces');
+      // No filter for 'all'
+    } else {
+      // Default to paid plans for invalid filter
+      workspacesQuery = workspacesQuery.in('plan_type', ['standard', 'premium']);
+      console.log('Invalid filter, defaulting to paid plans');
+    }
+
+    console.log('Final filter applied:', planFilter);
+
+    // Get workspaces based on plan filter
+    const { data: workspaces, error: workspacesError } = await workspacesQuery;
 
     console.log('Found workspaces:', workspaces?.length, 'workspaces');
     console.log('Workspace plans:', workspaces?.map(w => `${w.name}: ${w.plan_type}`));

@@ -10,7 +10,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Globe, Unlink } from "lucide-react";
+import { Users, Globe, Unlink, Mail, UserPlus, Trash2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+
+interface WorkspaceUser {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  role: string;
+}
 
 export default function Settings() {
   const { user, userRole } = useAuth();
@@ -23,20 +33,24 @@ export default function Settings() {
   const [profile, setProfile] = useState({
     first_name: "",
     last_name: "",
-    billing_company: "",
-    billing_address: "",
-    billing_postal_code: "",
-    billing_country: "",
-    billing_siren: "",
   });
   const [isLoading, setIsLoading] = useState(true);
   const [googleLinked, setGoogleLinked] = useState(false);
   const [loadingSSO, setLoadingSSO] = useState(false);
 
+  // Workspace users states
+  const [workspaceUsers, setWorkspaceUsers] = useState<WorkspaceUser[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState("lecteur");
+  const [loadingInvite, setLoadingInvite] = useState(false);
 
   useEffect(() => {
     fetchProfile();
     checkGoogleLinked();
+    if (canAddUsers()) {
+      fetchWorkspaceUsers();
+    }
   }, [user]);
 
   const fetchProfile = async () => {
@@ -58,17 +72,69 @@ export default function Settings() {
         setProfile({
           first_name: data.first_name || "",
           last_name: data.last_name || "",
-          billing_company: data.billing_company || "",
-          billing_address: data.billing_address || "",
-          billing_postal_code: data.billing_postal_code || "",
-          billing_country: data.billing_country || "",
-          billing_siren: data.billing_siren || "",
         });
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchWorkspaceUsers = async () => {
+    if (!userRole?.workspace_id) return;
+    
+    try {
+      setLoadingUsers(true);
+      const { data, error } = await supabase.functions.invoke('get-admin-contacts', {
+        body: { workspace_id: userRole.workspace_id }
+      });
+
+      if (error) throw error;
+      setWorkspaceUsers(data || []);
+    } catch (error) {
+      console.error('Error fetching workspace users:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les utilisateurs du workspace.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
+
+  const handleInviteUser = async () => {
+    if (!inviteEmail || !userRole?.workspace_id) return;
+    
+    try {
+      setLoadingInvite(true);
+      const { error } = await supabase.functions.invoke('send-invitation', {
+        body: {
+          email: inviteEmail,
+          workspace_id: userRole.workspace_id,
+          role: inviteRole
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Invitation envoyée",
+        description: `Une invitation a été envoyée à ${inviteEmail}.`,
+      });
+      
+      setInviteEmail("");
+      fetchWorkspaceUsers();
+    } catch (error) {
+      console.error('Error sending invitation:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'envoyer l'invitation.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingInvite(false);
     }
   };
 
@@ -123,15 +189,12 @@ export default function Settings() {
     try {
       setLoadingSSO(true);
       
-      // Get user identities
       const { data, error: identitiesError } = await supabase.auth.getUserIdentities();
       if (identitiesError) throw identitiesError;
       
-      // Find Google identity
       const googleIdentity = data?.identities?.find(identity => identity.provider === 'google');
       if (!googleIdentity) throw new Error('Google identity not found');
       
-      // Unlink the identity
       const { error } = await supabase.auth.unlinkIdentity(googleIdentity);
       if (error) throw error;
       
@@ -162,11 +225,6 @@ export default function Settings() {
           user_id: user.id,
           first_name: profile.first_name,
           last_name: profile.last_name,
-          billing_company: profile.billing_company,
-          billing_address: profile.billing_address,
-          billing_postal_code: profile.billing_postal_code,
-          billing_country: profile.billing_country,
-          billing_siren: profile.billing_siren,
           workspace_id: userRole?.workspace_id || '',
           updated_at: new Date().toISOString(),
         });
@@ -187,47 +245,18 @@ export default function Settings() {
     }
   };
 
-  const handleUpgrade = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { priceId: 'price_1QVTt1GdERdg8kRFLNq6gJQd' }
-      });
-
-      if (error) throw error;
-      if (data?.url) {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Error creating checkout:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de créer la session de paiement.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleManageSubscription = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke('customer-portal');
-      if (error) throw error;
-      if (data?.url) {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Error opening customer portal:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible d'ouvrir le portail client.",
-        variant: "destructive",
-      });
-    }
-  };
-
   const handleInputChange = (field: string, value: string) => {
     setProfile(prev => ({ ...prev, [field]: value }));
   };
 
+  const getRoleBadgeVariant = (role: string) => {
+    switch (role) {
+      case 'admin': return 'default';
+      case 'gestionnaire': return 'secondary';
+      case 'lecteur': return 'outline';
+      default: return 'outline';
+    }
+  };
 
   if (isLoading) {
     return <div>Chargement...</div>;
@@ -242,245 +271,221 @@ export default function Settings() {
           <h1 className="text-3xl font-bold mb-8">Paramètres</h1>
           
           <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Statut du compte
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="text-2xl font-bold">{favorites.length}</div>
+                    <div className="text-sm text-muted-foreground">Favoris</div>
+                  </div>
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="text-2xl font-bold">{searchesUsed} / {searchesLimit}</div>
+                    <div className="text-sm text-muted-foreground">Recherches mensuelles</div>
+                  </div>
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="text-2xl font-bold">{getRoleLabel()}</div>
+                    <div className="text-sm text-muted-foreground">Rôle</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <div className="font-medium">Gestion de l'abonnement</div>
+                    <div className="text-sm text-muted-foreground">
+                      Pour gérer votre abonnement, merci de contacter : axelgirard.pro@gmail.com
+                    </div>
+                  </div>
+                  <Button 
+                    variant="outline"
+                    onClick={() => {
+                      const email = 'axelgirard.pro@gmail.com';
+                      const subject = 'Gestion abonnement';
+                      const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+                      window.open(mailtoLink, '_blank');
+                    }}
+                  >
+                    <Mail className="h-4 w-4 mr-2" />
+                    Contacter
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Informations personnelles</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="first_name">Prénom</Label>
+                    <Input
+                      id="first_name"
+                      value={profile.first_name}
+                      onChange={(e) => handleInputChange('first_name', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="last_name">Nom</Label>
+                    <Input
+                      id="last_name"
+                      value={profile.last_name}
+                      onChange={(e) => handleInputChange('last_name', e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input id="email" value={user?.email || ""} disabled />
+                </div>
+              </CardContent>
+            </Card>
+
+            {canAddUsers() && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Users className="h-5 w-5" />
-                    Statut du compte
+                    Utilisateurs & Comptes
                   </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="text-center p-4 border rounded-lg">
-                      <div className="text-2xl font-bold">{favorites.length}</div>
-                      <div className="text-sm text-muted-foreground">Favoris</div>
-                    </div>
-                    <div className="text-center p-4 border rounded-lg">
-                      <div className="text-2xl font-bold">{searchesUsed} / {searchesLimit}</div>
-                      <div className="text-sm text-muted-foreground">Recherches mensuelles</div>
-                    </div>
-                    <div className="text-center p-4 border rounded-lg">
-                      <div className="text-2xl font-bold">{getRoleLabel()}</div>
-                      <div className="text-sm text-muted-foreground">Rôle</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div>
-                      <div className="font-medium">Plan d'abonnement</div>
-                      <div className="text-sm text-muted-foreground">
-                        {subscription?.subscription_tier?.toLowerCase() === 'premium' ? "Plan Premium" :
-                         subscription?.subscription_tier?.toLowerCase() === 'standard' ? "Plan Standard" : 
-                         "Plan Freemium"}
-                      </div>
-                    </div>
-                    {/* Plan Freemium */}
-                    {(!subscription?.subscribed || subscription?.subscription_tier?.toLowerCase() === 'freemium') && (
-                      <Button 
-                        onClick={() => {
-                          const email = 'axelgirard.pro@gmail.com';
-                          const subject = 'demande de plan payant';
-                          const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
-                          
-                          // Créer un lien temporaire et le cliquer
-                          const link = document.createElement('a');
-                          link.href = mailtoLink;
-                          link.target = '_blank';
-                          link.rel = 'noopener noreferrer';
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                          
-                          // Toast pour confirmer l'action
-                          toast({
-                            title: "Email en cours d'ouverture",
-                            description: `Destinataire: ${email}`,
-                          });
-                        }}
-                      >
-                        Passer sur un plan payant
-                      </Button>
-                    )}
-                    {/* Plan Standard */}
-                    {subscription?.subscription_tier?.toLowerCase() === 'standard' && (
-                      <Button 
-                        onClick={() => {
-                          const email = 'axelgirard.pro@gmail.com';
-                          const subject = 'demande de plan premium';
-                          const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
-                          
-                          const link = document.createElement('a');
-                          link.href = mailtoLink;
-                          link.target = '_blank';
-                          link.rel = 'noopener noreferrer';
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                          
-                          toast({
-                            title: "Email en cours d'ouverture",
-                            description: `Destinataire: ${email}`,
-                          });
-                        }}
-                      >
-                        Passer un plan premium
-                      </Button>
-                    )}
-                    {/* Plan Premium */}
-                    {subscription?.subscription_tier?.toLowerCase() === 'premium' && (
-                      <Button 
-                        variant="outline" 
-                        onClick={() => {
-                          const email = 'axelgirard.pro@gmail.com';
-                          const subject = 'gestion abonnement';
-                          const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
-                          
-                          const link = document.createElement('a');
-                          link.href = mailtoLink;
-                          link.target = '_blank';
-                          link.rel = 'noopener noreferrer';
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                          
-                          toast({
-                            title: "Email en cours d'ouverture",
-                            description: `Destinataire: ${email}`,
-                          });
-                        }}
-                      >
-                        Gérer mon abonnement
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Informations personnelles</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="first_name">Prénom</Label>
-                      <Input
-                        id="first_name"
-                        value={profile.first_name}
-                        onChange={(e) => handleInputChange('first_name', e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="last_name">Nom</Label>
-                      <Input
-                        id="last_name"
-                        value={profile.last_name}
-                        onChange={(e) => handleInputChange('last_name', e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" value={user?.email || ""} disabled />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Informations de facturation</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="billing_company">Entreprise</Label>
-                    <Input
-                      id="billing_company"
-                      value={profile.billing_company}
-                      onChange={(e) => handleInputChange('billing_company', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="billing_address">Adresse</Label>
-                    <Input
-                      id="billing_address"
-                      value={profile.billing_address}
-                      onChange={(e) => handleInputChange('billing_address', e.target.value)}
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="billing_postal_code">Code postal</Label>
-                      <Input
-                        id="billing_postal_code"
-                        value={profile.billing_postal_code}
-                        onChange={(e) => handleInputChange('billing_postal_code', e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="billing_country">Pays</Label>
-                      <Input
-                        id="billing_country"
-                        value={profile.billing_country}
-                        onChange={(e) => handleInputChange('billing_country', e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="billing_siren">Numéro SIREN</Label>
-                    <Input
-                      id="billing_siren"
-                      value={profile.billing_siren}
-                      onChange={(e) => handleInputChange('billing_siren', e.target.value)}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Liaison de comptes SSO</CardTitle>
                   <CardDescription>
-                    Liez votre compte à des services d'authentification externe
+                    Gérez les utilisateurs de votre workspace
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <Globe className="h-5 w-5" />
-                      <div>
-                        <div className="font-medium">Google</div>
-                        <div className="text-sm text-muted-foreground">
-                          {googleLinked ? "Compte lié" : "Connexion avec Google"}
-                        </div>
-                      </div>
+                  {/* Invite new user */}
+                  <div className="flex items-center gap-4 p-4 border rounded-lg">
+                    <div className="flex-1">
+                      <Input
+                        placeholder="Email de l'utilisateur à inviter"
+                        value={inviteEmail}
+                        onChange={(e) => setInviteEmail(e.target.value)}
+                      />
                     </div>
-                    {googleLinked ? (
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={handleUnlinkGoogle}
-                        disabled={loadingSSO}
-                      >
-                        <Unlink className="h-4 w-4 mr-2" />
-                        Délier
-                      </Button>
+                    <select 
+                      value={inviteRole}
+                      onChange={(e) => setInviteRole(e.target.value)}
+                      className="px-3 py-2 border rounded-md"
+                    >
+                      <option value="lecteur">Lecteur</option>
+                      <option value="gestionnaire">Gestionnaire</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                    <Button 
+                      onClick={handleInviteUser}
+                      disabled={!inviteEmail || loadingInvite}
+                    >
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Inviter
+                    </Button>
+                  </div>
+
+                  {/* Users list */}
+                  <div className="space-y-2">
+                    <h4 className="font-medium">Utilisateurs actuels</h4>
+                    {loadingUsers ? (
+                      <div className="text-center py-4">Chargement...</div>
+                    ) : workspaceUsers.length === 0 ? (
+                      <div className="text-center py-4 text-muted-foreground">Aucun utilisateur trouvé</div>
                     ) : (
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={handleLinkGoogle}
-                        disabled={loadingSSO}
-                      >
-                        Lier le compte
-                      </Button>
+                      workspaceUsers.map((workspaceUser) => (
+                        <div key={workspaceUser.id} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div>
+                              <div className="font-medium">
+                                {workspaceUser.first_name} {workspaceUser.last_name}
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {workspaceUser.email}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant={getRoleBadgeVariant(workspaceUser.role)}>
+                              {workspaceUser.role === 'admin' ? 'Administrateur' :
+                               workspaceUser.role === 'gestionnaire' ? 'Gestionnaire' : 'Lecteur'}
+                            </Badge>
+                            {workspaceUser.email !== user?.email && (
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="outline" size="sm">
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Supprimer l'utilisateur</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Êtes-vous sûr de vouloir supprimer {workspaceUser.first_name} {workspaceUser.last_name} du workspace ?
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                    <AlertDialogAction>Supprimer</AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            )}
+                          </div>
+                        </div>
+                      ))
                     )}
                   </div>
                 </CardContent>
               </Card>
+            )}
 
-              <div className="flex justify-end">
-                <Button onClick={handleSave}>Sauvegarder les modifications</Button>
-              </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Liaison de comptes SSO</CardTitle>
+                <CardDescription>
+                  Liez votre compte à des services d'authentification externe
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <Globe className="h-5 w-5" />
+                    <div>
+                      <div className="font-medium">Google</div>
+                      <div className="text-sm text-muted-foreground">
+                        {googleLinked ? "Compte lié" : "Connexion avec Google"}
+                      </div>
+                    </div>
+                  </div>
+                  {googleLinked ? (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleUnlinkGoogle}
+                      disabled={loadingSSO}
+                    >
+                      <Unlink className="h-4 w-4 mr-2" />
+                      Délier
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleLinkGoogle}
+                      disabled={loadingSSO}
+                    >
+                      Lier le compte
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="flex justify-end">
+              <Button onClick={handleSave}>Sauvegarder les modifications</Button>
+            </div>
           </div>
         </div>
       </div>

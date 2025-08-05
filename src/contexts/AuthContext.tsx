@@ -128,17 +128,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (!session) return;
     
     try {
-      const { data } = await supabase.functions.invoke('check-subscription');
-      if (data) {
-        setSubscriptionStatus({
-          subscribed: data.subscribed || false,
-          subscription_tier: data.subscription_tier || null,
-          plan_type: data.plan_type || 'freemium',
-          trial_active: data.trial_active || false,
-        });
-      }
+      // Get workspace plan instead of user subscription
+      const { data: workspacePlan, error } = await supabase
+        .rpc('get_user_workspace_plan', { user_uuid: session.user.id });
+      
+      if (error) throw error;
+      
+      // Get additional subscription details from workspace_plans view
+      const { data: workspaceDetails } = await supabase
+        .from('workspace_plans')
+        .select('*')
+        .eq('owner_id', session.user.id)
+        .single();
+      
+      setSubscriptionStatus({
+        subscribed: workspaceDetails?.subscribed || false,
+        subscription_tier: workspaceDetails?.subscription_tier || null,
+        plan_type: workspacePlan || 'freemium',
+        trial_active: workspaceDetails?.trial_end ? new Date(workspaceDetails.trial_end) > new Date() : false,
+      });
     } catch (error) {
       console.error('Error refreshing subscription:', error);
+      setSubscriptionStatus({
+        subscribed: false,
+        subscription_tier: null,
+        plan_type: 'freemium',
+        trial_active: false,
+      });
     }
   };
 
