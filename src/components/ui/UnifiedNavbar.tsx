@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useGlobalState, usePermissions } from "@/contexts/GlobalStateContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useSupraAdmin } from "@/hooks/useSupraAdmin";
 
 export const UnifiedNavbar = () => {
-  const { user, signOut } = useGlobalState();
-  const { canImportData } = usePermissions();
+  const { user, signOut } = useAuth();
+  const { isSupraAdmin } = useSupraAdmin();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -35,7 +36,7 @@ export const UnifiedNavbar = () => {
                     Favoris
                   </Button>
                 </Link>
-                {canImportData && (
+                {isSupraAdmin && (
                   <Link to="/import">
                     <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
                       Import

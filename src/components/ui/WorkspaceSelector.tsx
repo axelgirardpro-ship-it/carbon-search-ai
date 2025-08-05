@@ -20,11 +20,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Building2, Plus, ChevronDown } from "lucide-react";
-import { useGlobalState } from "@/contexts/GlobalStateContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useToast } from "@/hooks/use-toast";
 
 export const WorkspaceSelector = () => {
-  const { currentWorkspace, workspaces, switchWorkspace, createWorkspace, workspaceLoading } = useGlobalState();
+  const { currentWorkspace, workspaces, switchWorkspace, createWorkspace, loading } = useWorkspace();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newWorkspaceName, setNewWorkspaceName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
@@ -65,7 +65,7 @@ export const WorkspaceSelector = () => {
     }
   };
 
-  if (workspaceLoading) {
+  if (loading) {
     return (
       <div className="flex items-center space-x-2 text-sm">
         <Building2 className="w-4 h-4" />

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, AlertCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useGlobalState } from "@/contexts/GlobalStateContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { SSOButton } from "@/components/ui/SSOButton";
 import { SSOProvider, useSSO } from "@/components/ui/SSOProvider";
 
@@ -20,7 +20,7 @@ const SignupForm = () => {
   const [company, setCompany] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const { signUp, signInWithGoogle } = useGlobalState();
+  const { signUp, signInWithGoogle } = useAuth();
   const { ssoState, setProviderLoading, setLastError } = useSSO();
 
   const handleEmailSignup = async (e: React.FormEvent) => {

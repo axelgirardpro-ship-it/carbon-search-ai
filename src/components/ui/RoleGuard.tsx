@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
-import { usePermissions } from "@/contexts/GlobalStateContext";
+import { usePermissions } from "@/hooks/usePermissions";
 
 interface RoleGuardProps {
   children: ReactNode;
   allowedRoles?: ('admin' | 'gestionnaire' | 'lecteur' | 'supra_admin')[];
-  requirePermission?: 'canAddUsers' | 'canImportData' | 'canExportData' | 'canViewAllData' | 'canManageWorkspace' | 'canDeleteData';
+  requirePermission?: 'canManageUsers' | 'canImportData' | 'canExport' | 'canAddUsers' | 'canManageWorkspace' | 'canDeleteData';
   fallback?: ReactNode;
 }
 
@@ -15,11 +15,11 @@ export const RoleGuard = ({
   fallback = null 
 }: RoleGuardProps) => {
   const permissions = usePermissions();
-  const { userRole } = permissions;
+  const { role } = permissions;
 
   // Check by role
   if (allowedRoles) {
-    if (!userRole || !allowedRoles.includes(userRole.role as any)) {
+    if (!role || !allowedRoles.includes(role as any)) {
       return <>{fallback}</>;
     }
   }

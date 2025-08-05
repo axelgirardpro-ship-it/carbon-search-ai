@@ -5,15 +5,14 @@ import { Button } from "@/components/ui/button";
 import { EmissionFactor } from "@/types/emission-factor";
 import { Heart } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
-import { usePermissions, useQuotaSubscription } from "@/contexts/GlobalStateContext";
+import { usePermissions } from "@/hooks/usePermissions";
 import { useToast } from "@/hooks/use-toast";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 import { FavoritesFilterPanel, FavoritesFilters } from "@/components/search/FavoritesFilterPanel";
 
 const Favorites = () => {
   const { favorites, loading, removeFromFavorites, addToFavorites } = useFavorites();
-  const { canExportData } = usePermissions();
-  const { incrementExport, canExport } = useQuotaSubscription();
+  const { canExport } = usePermissions();
   const { toast } = useToast();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [filters, setFilters] = useState<FavoritesFilters>({
@@ -120,7 +119,6 @@ const Favorites = () => {
     }
 
     try {
-      await incrementExport();
       
       const selectedFavorites = filteredFavorites.filter(f => selectedItems.includes(f.id));
       const csvContent = [
@@ -179,7 +177,7 @@ const Favorites = () => {
               availableDates={availableDates}
             />
             <div className="mb-4">
-              <RoleGuard requirePermission="canExportData">
+              <RoleGuard requirePermission="canExport">
                 <Button 
                   onClick={handleExport}
                   disabled={selectedItems.length === 0}
