@@ -93,24 +93,24 @@ const Dashboard = () => {
 
       // Apply search filter if query is provided
       if (query.trim()) {
-        supabaseQuery = supabaseQuery.or(`nom.ilike.%${query}%,description.ilike.%${query}%`);
+        supabaseQuery = supabaseQuery.or(`Nom.ilike.%${query}%,Description.ilike.%${query}%`);
       }
 
       // Apply other filters
       if (filters.source) {
-        supabaseQuery = supabaseQuery.ilike('source', `%${filters.source}%`);
+        supabaseQuery = supabaseQuery.ilike('Source', `%${filters.source}%`);
       }
       if (filters.secteur) {
-        supabaseQuery = supabaseQuery.ilike('secteur', `%${filters.secteur}%`);
+        supabaseQuery = supabaseQuery.ilike('Secteur', `%${filters.secteur}%`);
       }
       if (filters.categorie) {
-        supabaseQuery = supabaseQuery.ilike('categorie', `%${filters.categorie}%`);
+        supabaseQuery = supabaseQuery.ilike('Sous-secteur', `%${filters.categorie}%`);
       }
       if (filters.localisation) {
-        supabaseQuery = supabaseQuery.ilike('localisation', `%${filters.localisation}%`);
+        supabaseQuery = supabaseQuery.ilike('Localisation', `%${filters.localisation}%`);
       }
       if (filters.anneeRapport) {
-        supabaseQuery = supabaseQuery.ilike('date', `%${filters.anneeRapport}%`);
+        supabaseQuery = supabaseQuery.ilike('Date', `%${filters.anneeRapport}%`);
       }
 
       const { data, error } = await supabaseQuery.limit(100);

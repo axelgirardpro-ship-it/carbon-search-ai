@@ -40,7 +40,7 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
   useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
-        let query = supabase.from('emission_factors').select('source, secteur, categorie, unite, localisation, date');
+        let query = supabase.from('emission_factors').select('Source, Secteur, "Sous-secteur", "Unité donnée d\'activité", Localisation, Date');
         
         // Apply workspace filtering like in search
         if (currentWorkspace) {
@@ -57,12 +57,12 @@ export const FilterPanel = ({ filters, onFilterChange, onResetFilters }: FilterP
         }
 
         // Extract unique values for each filter
-        const sources = [...new Set(data?.map(item => item.source).filter(Boolean))];
-        const secteurs = [...new Set(data?.map(item => item.secteur).filter(Boolean))];
-        const categories = [...new Set(data?.map(item => item.categorie).filter(Boolean))];
-        const unites = [...new Set(data?.map(item => item.unite).filter(Boolean))];
-        const localisations = [...new Set(data?.map(item => item.localisation).filter(Boolean))];
-        const dates = [...new Set(data?.map(item => item.date).filter(Boolean))];
+        const sources = [...new Set((data as any)?.map((item: any) => item.Source).filter(Boolean))] as string[];
+        const secteurs = [...new Set((data as any)?.map((item: any) => item.Secteur).filter(Boolean))] as string[];
+        const categories = [...new Set((data as any)?.map((item: any) => item['Sous-secteur']).filter(Boolean))] as string[];
+        const unites = [...new Set((data as any)?.map((item: any) => item['Unité donnée d\'activité']).filter(Boolean))] as string[];
+        const localisations = [...new Set((data as any)?.map((item: any) => item.Localisation).filter(Boolean))] as string[];
+        const dates = [...new Set((data as any)?.map((item: any) => item.Date).filter(Boolean))] as string[];
 
         setFilterOptions({
           source: sources.sort(),
