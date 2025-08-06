@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHits, useHitsPerPage, usePagination, useSortBy, useSearchBox } from 'react-instantsearch';
+import { useHits, useHitsPerPage, usePagination, useSearchBox } from 'react-instantsearch';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -61,32 +61,35 @@ const HitsPerPageComponent: React.FC = () => {
   );
 };
 
-const SortByComponent: React.FC = () => {
-  const { options, refine, currentRefinement } = useSortBy({
-    items: [
-      { label: 'Pertinence', value: 'emission_factors' },
-      { label: 'FE croissant', value: 'emission_factors_fe_asc' },
-      { label: 'FE décroissant', value: 'emission_factors_fe_desc' },
-      { label: 'Plus récent', value: 'emission_factors_date_desc' },
-      { label: 'Plus ancien', value: 'emission_factors_date_asc' },
-      { label: 'Nom A-Z', value: 'emission_factors_nom_asc' },
-      { label: 'Nom Z-A', value: 'emission_factors_nom_desc' },
-      { label: 'Source A-Z', value: 'emission_factors_source_asc' },
-    ],
-  });
+interface SortByComponentProps {
+  onSortChange: (sortKey: string) => void;
+  currentSort: string;
+}
+
+const SortByComponent: React.FC<SortByComponentProps> = ({ onSortChange, currentSort }) => {
+  const sortOptions = [
+    { label: 'Pertinence', value: 'relevance' },
+    { label: 'FE croissant', value: 'fe_asc' },
+    { label: 'FE décroissant', value: 'fe_desc' },
+    { label: 'Plus récent', value: 'date_desc' },
+    { label: 'Plus ancien', value: 'date_asc' },
+    { label: 'Nom A-Z', value: 'nom_asc' },
+    { label: 'Nom Z-A', value: 'nom_desc' },
+    { label: 'Source A-Z', value: 'source_asc' },
+  ];
 
   return (
     <div className="flex items-center gap-2">
       <span className="text-sm text-indigo-950 font-montserrat">Trier par:</span>
       <Select 
-        value={currentRefinement || 'emission_factors'} 
-        onValueChange={(value) => refine(value)}
+        value={currentSort} 
+        onValueChange={onSortChange}
       >
         <SelectTrigger className="w-auto min-w-[140px]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {options.map((option) => (
+          {sortOptions.map((option) => (
             <SelectItem key={option.value} value={option.value}>
               {option.label}
             </SelectItem>
@@ -217,15 +220,51 @@ const StateResults: React.FC = () => {
 };
 
 export const SearchResults: React.FC = () => {
-  const { hits } = useHits<AlgoliaHit>();
+  const { hits: originalHits } = useHits<AlgoliaHit>();
   const [expandedRows, setExpandedRows] = React.useState<Set<string>>(new Set());
   const [selectedItems, setSelectedItems] = React.useState<Set<string>>(new Set());
+  const [currentSort, setCurrentSort] = React.useState<string>('relevance');
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { hasAccess, shouldBlurPremiumContent, canUseFavorites } = useEmissionFactorAccess();
   const { canExport } = usePermissions();
   const { toast } = useToast();
   const { user } = useAuth();
   const { quotaData, canExport: canExportQuota, incrementExport } = useQuotaContext();
+
+  // Function to sort hits based on current sort option
+  const sortHits = React.useCallback((hits: AlgoliaHit[], sortKey: string): AlgoliaHit[] => {
+    if (sortKey === 'relevance') return hits; // Keep Algolia's relevance order
+    
+    return [...hits].sort((a, b) => {
+      switch (sortKey) {
+        case 'fe_asc':
+          return (a.FE || 0) - (b.FE || 0);
+        case 'fe_desc':
+          return (b.FE || 0) - (a.FE || 0);
+        case 'date_desc':
+          return (b.Date || 0) - (a.Date || 0);
+        case 'date_asc':
+          return (a.Date || 0) - (b.Date || 0);
+        case 'nom_asc':
+          return (a.Nom || '').localeCompare(b.Nom || '', 'fr', { numeric: true, sensitivity: 'base' });
+        case 'nom_desc':
+          return (b.Nom || '').localeCompare(a.Nom || '', 'fr', { numeric: true, sensitivity: 'base' });
+        case 'source_asc':
+          return (a.Source || '').localeCompare(b.Source || '', 'fr', { numeric: true, sensitivity: 'base' });
+        default:
+          return 0;
+      }
+    });
+  }, []);
+
+  // Apply sorting to hits
+  const hits = React.useMemo(() => {
+    return sortHits(originalHits, currentSort);
+  }, [originalHits, currentSort, sortHits]);
+
+  const handleSortChange = (sortKey: string) => {
+    setCurrentSort(sortKey);
+  };
 
   const toggleRowExpansion = (id: string) => {
     const newExpanded = new Set(expandedRows);
@@ -415,7 +454,7 @@ export const SearchResults: React.FC = () => {
                 {hits.length} résultat{hits.length > 1 ? 's' : ''} trouvé{hits.length > 1 ? 's' : ''}
               </div>
             <div className="flex flex-col sm:flex-row gap-4">
-              <SortByComponent />
+              <SortByComponent onSortChange={handleSortChange} currentSort={currentSort} />
               <HitsPerPageComponent />
             </div>
           </div>
