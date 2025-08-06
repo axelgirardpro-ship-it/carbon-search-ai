@@ -25,7 +25,7 @@ const AlgoliaSearchContent: React.FC = () => {
               <SearchBox />
             </div>
 
-            <div className="mt-6">
+            <div className="mt-8 max-w-lg mx-auto">
               <QuotaWidget quotaData={quotaData} isLoading={isLoading} />
             </div>
           </div>
