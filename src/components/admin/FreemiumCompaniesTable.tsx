@@ -3,8 +3,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Users, Calendar, UserCheck } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Building2, Users, Calendar, UserCheck, Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 interface FreemiumCompany {
   id: string;
@@ -24,6 +27,8 @@ interface FreemiumCompany {
 export const FreemiumCompaniesTable = () => {
   const [companies, setCompanies] = useState<FreemiumCompany[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchFreemiumCompanies();
@@ -51,6 +56,38 @@ export const FreemiumCompaniesTable = () => {
       console.error('Error fetching freemium companies:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePlanChange = async (workspaceId: string, newPlan: string) => {
+    setUpdating(workspaceId);
+    try {
+      const { data, error } = await supabase.functions.invoke('update-user-plan-role', {
+        body: { 
+          action: 'update_workspace_plan', 
+          workspaceId, 
+          newPlan 
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Plan mis à jour",
+        description: `Plan changé vers ${newPlan}. ${data.updatedUsers} utilisateur(s) mis à jour.`,
+      });
+
+      // Recharger les données
+      await fetchFreemiumCompanies();
+    } catch (error) {
+      console.error('Error updating plan:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la mise à jour du plan",
+      });
+    } finally {
+      setUpdating(null);
     }
   };
 
@@ -91,6 +128,7 @@ export const FreemiumCompaniesTable = () => {
               <TableHead>Plan</TableHead>
               <TableHead>Utilisateurs</TableHead>
               <TableHead>Créée le</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -128,11 +166,32 @@ export const FreemiumCompaniesTable = () => {
                     {new Date(company.created_at).toLocaleDateString('fr-FR')}
                   </div>
                 </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Select 
+                      value={company.subscription_status?.plan_type || company.plan_type}
+                      onValueChange={(newPlan) => handlePlanChange(company.id, newPlan)}
+                      disabled={updating === company.id}
+                    >
+                      <SelectTrigger className="w-28">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="freemium">Freemium</SelectItem>
+                        <SelectItem value="standard">Standard</SelectItem>
+                        <SelectItem value="premium">Premium</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {updating === company.id && (
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                    )}
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
             {companies.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                <TableCell colSpan={6} className="text-center text-muted-foreground">
                   Aucune entreprise freemium trouvée
                 </TableCell>
               </TableRow>

@@ -4,8 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, Mail, Shield, Building2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { User, Mail, Shield, Building2, Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 interface Contact {
   id: string;
@@ -30,6 +32,8 @@ export const ContactsTable = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string>("all");
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchCompanies();
@@ -112,6 +116,71 @@ export const ContactsTable = () => {
     }
   };
 
+  const handlePlanChange = async (contact: Contact, newPlan: string) => {
+    setUpdating(`plan-${contact.workspace_id}`);
+    try {
+      const { data, error } = await supabase.functions.invoke('update-user-plan-role', {
+        body: { 
+          action: 'update_workspace_plan', 
+          workspaceId: contact.workspace_id, 
+          newPlan 
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Plan du workspace mis à jour",
+        description: `Plan changé vers ${newPlan}. ${data.updatedUsers} utilisateur(s) mis à jour.`,
+      });
+
+      // Recharger les données
+      await fetchContacts();
+    } catch (error) {
+      console.error('Error updating workspace plan:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la mise à jour du plan",
+      });
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  const handleRoleChange = async (contact: Contact, newRole: string) => {
+    setUpdating(`role-${contact.user_id}`);
+    try {
+      const { data, error } = await supabase.functions.invoke('update-user-plan-role', {
+        body: { 
+          action: 'update_user_role', 
+          userId: contact.user_id,
+          workspaceId: contact.workspace_id,
+          newRole 
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Rôle mis à jour",
+        description: `Rôle changé vers ${newRole}`,
+      });
+
+      // Recharger les données
+      await fetchContacts();
+    } catch (error) {
+      console.error('Error updating user role:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la mise à jour du rôle",
+      });
+    } finally {
+      setUpdating(null);
+    }
+  };
+
   if (loading) {
     return (
       <Card>
@@ -167,6 +236,7 @@ export const ContactsTable = () => {
               <TableHead>Plan</TableHead>
               <TableHead>Rôle</TableHead>
               <TableHead>Ajouté le</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -209,11 +279,48 @@ export const ContactsTable = () => {
                 <TableCell>
                   {new Date(contact.created_at).toLocaleDateString('fr-FR')}
                 </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Select 
+                      value={contact.company_plan || 'freemium'}
+                      onValueChange={(newPlan) => handlePlanChange(contact, newPlan)}
+                      disabled={updating === `plan-${contact.workspace_id}`}
+                    >
+                      <SelectTrigger className="w-24">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="freemium">Freemium</SelectItem>
+                        <SelectItem value="standard">Standard</SelectItem>
+                        <SelectItem value="premium">Premium</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    <Select 
+                      value={contact.role}
+                      onValueChange={(newRole) => handleRoleChange(contact, newRole)}
+                      disabled={updating === `role-${contact.user_id}`}
+                    >
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="admin">Administrateur</SelectItem>
+                        <SelectItem value="gestionnaire">Gestionnaire</SelectItem>
+                        <SelectItem value="lecteur">Lecteur</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    {(updating === `plan-${contact.workspace_id}` || updating === `role-${contact.user_id}`) && (
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                    )}
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
             {contacts.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground">
+                <TableCell colSpan={7} className="text-center text-muted-foreground">
                   Aucun contact trouvé
                 </TableCell>
               </TableRow>
