@@ -25,6 +25,7 @@ import { ContactsTable } from "@/components/admin/ContactsTable";
 import { EmissionFactorAccessManager } from "@/components/admin/EmissionFactorAccessManager";
 import { SourceWorkspaceAssignments } from "@/components/admin/SourceWorkspaceAssignments";
 import { CreateSupraAdmin } from "@/components/admin/CreateSupraAdmin";
+import { OrphanUsersCleanup } from "@/components/admin/OrphanUsersCleanup";
 
 const Admin = () => {
   const { user } = useAuth();
@@ -236,7 +237,10 @@ const Admin = () => {
           {/* Supra Admin Creation */}
           <div>
             <h2 className="text-2xl font-bold mb-4">Gestion des Comptes Admin</h2>
-            <CreateSupraAdmin />
+            <div className="grid gap-6 lg:grid-cols-2">
+              <CreateSupraAdmin />
+              <OrphanUsersCleanup />
+            </div>
           </div>
         </div>
 
