@@ -268,8 +268,31 @@ export const SearchFilters: React.FC = () => {
 
         <FERangeInput />
         <RefinementList
+          attribute="Unité donnée d'activité"
+          title="Unité"
+          searchable
+          limit={500}
+        />
+        <RefinementList
+          attribute="Périmètre"
+          title="Périmètre"
+          searchable
+          limit={500}
+        />
+        <RefinementList
           attribute="Source"
           title="Source"
+          searchable
+          limit={500}
+        />
+        <RefinementList
+          attribute="Date"
+          title="Date"
+          limit={500}
+        />
+        <RefinementList
+          attribute="Localisation"
+          title="Localisation"
           searchable
           limit={500}
         />
@@ -283,29 +306,6 @@ export const SearchFilters: React.FC = () => {
           attribute="Sous-secteur"
           title="Sous-secteur"
           searchable
-          limit={500}
-        />
-        <RefinementList
-          attribute="Unité donnée d'activité"
-          title="Unité"
-          searchable
-          limit={500}
-        />
-        <RefinementList
-          attribute="Localisation"
-          title="Localisation"
-          searchable
-          limit={500}
-        />
-        <RefinementList
-          attribute="Périmètre"
-          title="Périmètre"
-          searchable
-          limit={500}
-        />
-        <RefinementList
-          attribute="Date"
-          title="Date"
           limit={500}
         />
       </CardContent>
