@@ -5,12 +5,8 @@ import { SearchResults } from './SearchResults';
 import { SearchFilters } from './SearchFilters';
 import { SearchStats } from './SearchStats';
 import { UnifiedNavbar } from '@/components/ui/UnifiedNavbar';
-import { QuotaWidget } from '@/components/ui/QuotaWidget';
-import { useQuotas } from '@/hooks/useQuotas';
 
 const AlgoliaSearchContent: React.FC = () => {
-  const { quotaData, isLoading } = useQuotas();
-
   return (
     <div className="min-h-screen bg-background">
       <UnifiedNavbar />
@@ -18,18 +14,10 @@ const AlgoliaSearchContent: React.FC = () => {
       {/* Hero Section */}
       <section className="py-20 px-4" style={{backgroundColor: '#d7caf5'}}>
         <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center space-y-8">
-            
+          <div className="flex justify-center">
             {/* SearchBox - très large */}
             <div className="w-full max-w-6xl">
               <SearchBox />
-            </div>
-
-            {/* QuotaWidget - centré et moins imposant */}
-            <div className="flex justify-center">
-              <div className="max-w-sm">
-                <QuotaWidget quotaData={quotaData} isLoading={isLoading} />
-              </div>
             </div>
           </div>
         </div>

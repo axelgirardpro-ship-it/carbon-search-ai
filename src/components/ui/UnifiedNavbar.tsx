@@ -3,12 +3,15 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSupraAdmin } from "@/hooks/useSupraAdmin";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useQuotas } from "@/hooks/useQuotas";
+import { QuotaWidget } from "@/components/ui/QuotaWidget";
 import { Lock } from "lucide-react";
 
 export const UnifiedNavbar = () => {
   const { user, signOut } = useAuth();
   const { isSupraAdmin } = useSupraAdmin();
   const { canUseFavorites } = usePermissions();
+  const { quotaData, isLoading } = useQuotas();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -29,6 +32,9 @@ export const UnifiedNavbar = () => {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
+                <div className="hidden md:block">
+                  <QuotaWidget quotaData={quotaData} isLoading={isLoading} />
+                </div>
                 <Link to="/search">
                   <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
                     Recherche
