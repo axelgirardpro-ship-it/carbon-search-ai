@@ -48,9 +48,12 @@ serve(async (req) => {
       )
     }
 
-    const { action, workspaceId, userId, newPlan, newRole }: UpdateRequest = await req.json()
+    const requestBody = await req.json()
+    console.log('Request body:', JSON.stringify(requestBody))
+    const { action, workspaceId, userId, newPlan, newRole }: UpdateRequest = requestBody
 
     if (action === 'update_workspace_plan' && workspaceId && newPlan) {
+      console.log(`Updating workspace plan: ${workspaceId} to ${newPlan}`)
       // Update workspace plan
       const { error: workspaceError } = await supabaseClient
         .from('workspaces')
@@ -166,8 +169,9 @@ serve(async (req) => {
       )
     }
 
+    console.log('Invalid action or missing parameters:', { action, workspaceId, userId, newPlan, newRole })
     return new Response(
-      JSON.stringify({ error: 'Action invalide ou paramètres manquants' }),
+      JSON.stringify({ error: 'Action invalide ou paramètres manquants', receivedParams: { action, workspaceId, userId, newPlan, newRole } }),
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
 
