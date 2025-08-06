@@ -54,7 +54,7 @@ export const SearchBox: React.FC = () => {
       <div className="relative">
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
-            <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-indigo-950/60 h-5 w-5" />
+            <Search className="absolute left-8 top-1/2 transform -translate-y-1/2 text-indigo-950/60 h-6 w-6" />
             <Input
               type="text"
               value={query}
@@ -69,33 +69,33 @@ export const SearchBox: React.FC = () => {
                 }
               }}
               placeholder="Rechercher des facteurs d'émission..."
-              className="flex-1 bg-white border-white/20 text-indigo-950 placeholder:text-indigo-950/60 font-montserrat h-16 text-xl pl-16 pr-16 rounded-lg"
+              className="flex-1 bg-white border-white/20 text-indigo-950 placeholder:text-indigo-950/60 font-montserrat h-20 text-2xl pl-20 pr-20 rounded-xl"
             />
             {query && (
               <button 
                 onClick={handleClear} 
-                className="absolute right-6 top-1/2 transform -translate-y-1/2 text-indigo-950/60 hover:text-indigo-950"
+                className="absolute right-8 top-1/2 transform -translate-y-1/2 text-indigo-950/60 hover:text-indigo-950"
               >
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6" />
               </button>
             )}
           </div>
           <Button 
             onClick={handleSearch}
-            className="bg-slate-950 hover:bg-slate-800 text-white font-montserrat h-16 px-8 text-lg rounded-lg"
+            className="bg-slate-950 hover:bg-slate-800 text-white font-montserrat h-20 px-10 text-xl rounded-xl"
           >
             Rechercher
           </Button>
         </div>
 
         {showSuggestions && (suggestions.length > 0 || recentSearches.length > 0) && (
-          <div className="absolute top-full left-0 right-[140px] bg-white border border-white/20 rounded-lg shadow-lg z-50 mt-1">
+          <div className="absolute top-full left-0 right-[180px] bg-white border border-white/20 rounded-xl shadow-xl z-50 mt-2">
             {suggestions.length > 0 && (
               <>
                 <div className="p-3 text-sm text-indigo-950/70 border-b border-white/20 bg-white font-montserrat">
                   Suggestions
                 </div>
-                <div className="max-h-32 overflow-y-auto bg-white">
+                <div className="max-h-40 overflow-y-auto bg-white">
                   {suggestions.map((suggestion, index) => (
                     <button 
                       key={`suggestion-${index}`} 

@@ -19,13 +19,13 @@ export const useSuggestions = (searchQuery: string) => {
         .from('emission_factors')
         .select('"Nom"')
         .or(`"Nom".ilike.%${query}%,"Description".ilike.%${query}%,"Secteur".ilike.%${query}%`)
-        .limit(3);
+        .limit(5);
 
       if (error) throw error;
 
       // Get unique suggestions
       const uniqueNames = [...new Set(data?.map(item => item["Nom"]) || [])];
-      return uniqueNames.slice(0, 3);
+      return uniqueNames.slice(0, 5);
     } catch (error) {
       console.error('Error fetching suggestions:', error);
       return [];
@@ -48,7 +48,7 @@ export const useSuggestions = (searchQuery: string) => {
 
       // Get unique search queries (last 5)
       const uniqueSearches = [...new Set(data?.map(item => item.search_query) || [])];
-      return uniqueSearches.slice(0, 5);
+      return uniqueSearches.slice(0, 3);
     } catch (error) {
       console.error('Error fetching recent searches:', error);
       return [];

@@ -48,7 +48,7 @@ export const useSearchHistory = () => {
 
       // Return unique search queries (last 5)
       const uniqueSearches = [...new Set(data?.map(item => item.search_query) || [])];
-      return uniqueSearches.slice(0, 5);
+      return uniqueSearches.slice(0, 3);
     } catch (error) {
       console.error('Error fetching recent searches:', error);
       return [];
