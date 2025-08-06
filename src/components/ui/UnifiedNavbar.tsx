@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useSupraAdmin } from "@/hooks/useSupraAdmin";
 import { usePermissions } from "@/hooks/usePermissions";
 import { useQuotas } from "@/hooks/useQuotas";
-import { QuotaWidget } from "@/components/ui/QuotaWidget";
+import { NavbarQuotaWidget } from "@/components/ui/NavbarQuotaWidget";
 import { Lock } from "lucide-react";
 
 export const UnifiedNavbar = () => {
@@ -33,7 +33,7 @@ export const UnifiedNavbar = () => {
             {user ? (
               <>
                 <div className="hidden md:block">
-                  <QuotaWidget quotaData={quotaData} isLoading={isLoading} />
+                  <NavbarQuotaWidget quotaData={quotaData} isLoading={isLoading} />
                 </div>
                 <Link to="/search">
                   <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
