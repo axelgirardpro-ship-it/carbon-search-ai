@@ -557,28 +557,26 @@ export const SearchResults: React.FC = () => {
                                  </PremiumBlur>
                                </div>
                              )}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                <span className="text-sm font-medium text-indigo-950">Secteur</span>
-                                <p className="text-sm mt-1" dangerouslySetInnerHTML={getHighlightedText(hit, 'Secteur')} />
-                              </div>
-                              {hit.Incertitude && (
-                                <div>
-                                  <span className="text-sm font-medium text-indigo-950">Incertitude</span>
-                                  <PremiumBlur isBlurred={shouldBlur}>
-                                    <p className="text-sm mt-1">{hit.Incertitude}</p>
-                                  </PremiumBlur>
-                                </div>
-                              )}
-                               {hit.Contributeur && (
-                                 <div>
-                                   <span className="text-sm font-medium text-indigo-950">Contributeur</span>
-                                   <PremiumBlur isBlurred={shouldBlur}>
-                                     <p className="text-sm mt-1 text-break-words">{hit.Contributeur}</p>
-                                   </PremiumBlur>
-                                 </div>
-                               )}
-                            </div>
+                             <div>
+                               <span className="text-sm font-medium text-indigo-950">Secteur</span>
+                               <p className="text-sm mt-1" dangerouslySetInnerHTML={getHighlightedText(hit, 'Secteur')} />
+                             </div>
+                             {hit.Incertitude && (
+                               <div>
+                                 <span className="text-sm font-medium text-indigo-950">Incertitude</span>
+                                 <PremiumBlur isBlurred={shouldBlur}>
+                                   <p className="text-sm mt-1">{hit.Incertitude}</p>
+                                 </PremiumBlur>
+                               </div>
+                             )}
+                             {hit.Contributeur && (
+                               <div>
+                                 <span className="text-sm font-medium text-indigo-950">Contributeur</span>
+                                 <PremiumBlur isBlurred={shouldBlur}>
+                                   <p className="text-sm mt-1 text-break-words">{hit.Contributeur}</p>
+                                 </PremiumBlur>
+                               </div>
+                             )}
                              {hit.Commentaires && (
                                <div>
                                  <span className="text-sm font-medium text-indigo-950">Commentaires</span>
