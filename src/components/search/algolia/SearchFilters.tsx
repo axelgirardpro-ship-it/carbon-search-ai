@@ -168,7 +168,7 @@ const FERangeInput: React.FC = () => {
   return (
     <Collapsible defaultOpen>
       <CollapsibleTrigger asChild>
-        <Button variant="ghost" className="w-full justify-between p-0 h-auto text-indigo-950 hover:bg-white hover:text-indigo-950">
+        <Button variant="ghost" className="w-full justify-between p-0 h-auto text-indigo-950 bg-transparent hover:bg-transparent">
           <h3 className="font-medium font-montserrat text-indigo-950">Facteur d'émission (FE)</h3>
           <Filter className="h-4 w-4 text-indigo-950" />
         </Button>
@@ -222,7 +222,21 @@ export const SearchFilters: React.FC = () => {
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <RecentDataToggle />
+        <Collapsible defaultOpen>
+          <CollapsibleTrigger asChild>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-between p-0 h-auto text-indigo-950 bg-transparent hover:bg-transparent"
+            >
+              <h3 className="font-medium font-montserrat text-indigo-950">Données récentes</h3>
+              <Filter className="h-4 w-4 text-indigo-950" />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-4 mt-4">
+            <RecentDataToggle />
+          </CollapsibleContent>
+        </Collapsible>
+
         <FERangeInput />
         <RefinementList
           attribute="Source"

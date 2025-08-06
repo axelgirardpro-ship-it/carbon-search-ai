@@ -5,7 +5,9 @@ import { useQuotas } from '@/hooks/useQuotas';
 import { toast } from 'sonner';
 
 // Client Algolia avec nettoyage exhaustif des paramètres
-const rawSearchClient = algoliasearch('6BGAS85TYS', 'e06b7614aaff866708fbd2872de90d37');
+const ALGOLIA_APPLICATION_ID = import.meta.env.VITE_ALGOLIA_APPLICATION_ID || '6BGAS85TYS';
+const ALGOLIA_SEARCH_API_KEY = import.meta.env.VITE_ALGOLIA_SEARCH_API_KEY || 'e06b7614aaff866708fbd2872de90d37';
+const rawSearchClient = algoliasearch(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_API_KEY);
 
 // Liste des paramètres valides Algolia
 const VALID_ALGOLIA_PARAMS = [
