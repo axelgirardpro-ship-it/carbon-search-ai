@@ -89,7 +89,7 @@ export const SearchBox: React.FC = () => {
         </div>
 
         {showSuggestions && (suggestions.length > 0 || recentSearches.length > 0) && (
-          <div className="absolute top-full left-0 right-[180px] bg-white border border-white/20 rounded-xl shadow-xl z-50 mt-2">
+          <div className="absolute top-full left-0 right-[200px] bg-white border border-white/20 rounded-xl shadow-xl z-50 mt-2">
             {suggestions.length > 0 && (
               <>
                 <div className="p-3 text-sm text-indigo-950/70 border-b border-white/20 bg-white font-montserrat">

@@ -17,16 +17,19 @@ const AlgoliaSearchContent: React.FC = () => {
       
       {/* Hero Section */}
       <section className="py-20 px-4" style={{backgroundColor: '#d7caf5'}}>
-        <div className="container mx-auto">
-          <div className="text-center space-y-6">
-          
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center space-y-8">
             
-            <div className="max-w-2xl mx-auto">
+            {/* SearchBox - très large */}
+            <div className="w-full max-w-6xl">
               <SearchBox />
             </div>
 
-            <div className="mt-8 max-w-lg mx-auto">
-              <QuotaWidget quotaData={quotaData} isLoading={isLoading} />
+            {/* QuotaWidget - centré et moins imposant */}
+            <div className="flex justify-center">
+              <div className="max-w-sm">
+                <QuotaWidget quotaData={quotaData} isLoading={isLoading} />
+              </div>
             </div>
           </div>
         </div>
