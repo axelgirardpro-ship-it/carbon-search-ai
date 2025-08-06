@@ -57,6 +57,8 @@ const RefinementList: React.FC<RefinementListProps> = ({
     );
   }, [sortedItems, allItems, searchQuery]);
 
+  console.log(`RefinementList ${title} - items:`, items.length, items);
+  
   if (items.length === 0) return null;
 
   return (
