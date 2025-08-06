@@ -19,7 +19,7 @@ export const useSearchHistory = () => {
         .from('search_history')
         .insert({
           user_id: user.id,
-          workspace_id: currentWorkspace?.id || null,
+          workspace_id: currentWorkspace?.id,
           search_query: searchQuery,
           search_filters: filters,
           results_count: resultsCount

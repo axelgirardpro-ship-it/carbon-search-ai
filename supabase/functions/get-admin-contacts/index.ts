@@ -93,9 +93,9 @@ serve(async (req) => {
         // Get user details from auth.users
         const { data: authUser, error: authUserError } = await supabase.auth.admin.getUserById(userRole.user_id);
         
-        // Get profile data
-        const { data: profileData } = await supabase
-          .from('profiles')
+        // Get profile data from users table
+        const { data: userData } = await supabase
+          .from('users')
           .select('first_name, last_name')
           .eq('user_id', userRole.user_id)
           .single();
@@ -105,8 +105,8 @@ serve(async (req) => {
         return {
           ...userRole,
           email: authUser?.user?.email || 'Unknown',
-          first_name: profileData?.first_name || '',
-          last_name: profileData?.last_name || '',
+          first_name: userData?.first_name || '',
+          last_name: userData?.last_name || '',
           company_name: workspace?.name || 'Unknown',
           company_plan: workspace?.plan_type || 'freemium'
         };

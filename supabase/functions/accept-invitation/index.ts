@@ -141,21 +141,8 @@ serve(async (req) => {
       logStep("Warning: Could not mark invitation as accepted", { error: updateInviteError.message });
     }
 
-    // If new user, also create profile
-    if (!existingUser && userData) {
-      const { error: profileError } = await supabaseClient
-        .from('profiles')
-        .upsert({
-          user_id: userId,
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-          company: invitation.companies.name
-        });
-
-      if (profileError) {
-        logStep("Warning: Could not create profile", { error: profileError.message });
-      }
-    }
+    // Profile data is now automatically handled by handle_new_user trigger
+    // No need to manually create profile anymore
 
     return new Response(JSON.stringify({ 
       success: true,

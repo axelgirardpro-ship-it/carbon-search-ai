@@ -33,15 +33,10 @@ export const TestEnvironmentControls = () => {
 
     setLoading(true);
     try {
-      // Set original_role if changing from supra_admin for first time
-      const updateData: any = { role: tempRole };
-      if (userProfile?.role === 'supra_admin') {
-        updateData.original_role = 'supra_admin';
-      }
-
+      // Temporairement changer le rôle (plus besoin de original_role)
       const { error } = await supabase
         .from('user_roles')
-        .update(updateData)
+        .update({ role: tempRole })
         .eq('user_id', user.id)
         .eq('workspace_id', currentWorkspace.id);
 
@@ -103,10 +98,10 @@ export const TestEnvironmentControls = () => {
 
     setLoading(true);
     try {
-      // Reset to supra_admin role and clear original_role
+      // Reset to admin role (supra admin via is_supra_admin flag)
       const { error } = await supabase
         .from('user_roles')
-        .update({ role: 'supra_admin', original_role: null })
+        .update({ role: 'admin' })
         .eq('user_id', user.id)
         .eq('workspace_id', currentWorkspace.id);
 

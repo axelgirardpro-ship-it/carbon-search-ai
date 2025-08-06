@@ -376,7 +376,6 @@ export type Database = {
           created_at: string
           id: string
           is_supra_admin: boolean | null
-          original_role: string | null
           role: string
           updated_at: string
           user_id: string
@@ -387,7 +386,6 @@ export type Database = {
           created_at?: string
           id?: string
           is_supra_admin?: boolean | null
-          original_role?: string | null
           role: string
           updated_at?: string
           user_id: string
@@ -398,7 +396,6 @@ export type Database = {
           created_at?: string
           id?: string
           is_supra_admin?: boolean | null
-          original_role?: string | null
           role?: string
           updated_at?: string
           user_id?: string
@@ -618,10 +615,6 @@ export type Database = {
         Args: { company_id: string }
         Returns: boolean
       }
-      is_original_supra_admin: {
-        Args: { user_uuid?: string }
-        Returns: boolean
-      }
       is_supra_admin: {
         Args: { user_uuid?: string }
         Returns: boolean
@@ -629,10 +622,6 @@ export type Database = {
       is_workspace_owner: {
         Args: { workspace_id: string }
         Returns: boolean
-      }
-      migrate_to_unified_users: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
       }
       sync_user_quotas_with_plans: {
         Args: Record<PropertyKey, never>
