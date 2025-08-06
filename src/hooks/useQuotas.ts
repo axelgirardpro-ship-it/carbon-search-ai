@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-
-export type PlanType = 'freemium' | 'standard' | 'premium';
+import { useQuotaSync, type PlanType } from "@/hooks/useQuotaSync";
 
 interface QuotaData {
   user_id: string;
@@ -18,6 +17,9 @@ export const useQuotas = () => {
   const [quotaData, setQuotaData] = useState<QuotaData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Synchroniser les quotas avec le plan utilisateur
+  const { syncUserQuotas } = useQuotaSync();
 
   const loadQuotaData = useCallback(async () => {
     if (!user) {
@@ -27,6 +29,9 @@ export const useQuotas = () => {
     
     setIsLoading(true);
     setError(null);
+    
+    // Synchroniser d'abord les quotas
+    await syncUserQuotas();
     
     try {
       const { data, error } = await supabase
@@ -69,7 +74,7 @@ export const useQuotas = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [user]);
+  }, [user, syncUserQuotas]);
 
   useEffect(() => {
     loadQuotaData();

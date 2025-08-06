@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, Crown, Zap, AlertCircle, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { PlanType } from '@/hooks/useQuotas';
+import { PlanType } from '@/hooks/useQuotaSync';
 
 interface QuotaData {
   plan_type: PlanType;
