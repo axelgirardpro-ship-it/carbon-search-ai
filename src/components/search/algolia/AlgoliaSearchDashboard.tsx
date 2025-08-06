@@ -19,11 +19,6 @@ const AlgoliaSearchContent: React.FC = () => {
       <section className="py-20 px-4" style={{backgroundColor: '#d7caf5'}}>
         <div className="container mx-auto">
           <div className="text-center space-y-6">
-            <h1 className="font-montserrat font-bold text-4xl md:text-5xl leading-tight text-indigo-950">
-              Le moteur de recherche<br />
-              de FE le plus puissant<br />
-              du marché
-            </h1>
           
             
             <div className="max-w-2xl mx-auto">
