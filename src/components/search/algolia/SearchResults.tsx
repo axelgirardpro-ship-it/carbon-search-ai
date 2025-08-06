@@ -549,14 +549,14 @@ export const SearchResults: React.FC = () => {
 
                         {isExpanded && (
                           <div className="mt-4 pt-4 border-t space-y-3">
-                            {hit.Description && (
-                              <div>
-                                <span className="text-sm font-medium text-indigo-950">Description</span>
-                                <PremiumBlur isBlurred={shouldBlur}>
-                                  <p className="text-sm mt-1" dangerouslySetInnerHTML={getHighlightedText(hit, 'Description')} />
-                                </PremiumBlur>
-                              </div>
-                            )}
+                             {hit.Description && (
+                               <div>
+                                 <span className="text-sm font-medium text-indigo-950">Description</span>
+                                 <PremiumBlur isBlurred={shouldBlur}>
+                                   <p className="text-sm mt-1 break-words overflow-wrap-anywhere" dangerouslySetInnerHTML={getHighlightedText(hit, 'Description')} />
+                                 </PremiumBlur>
+                               </div>
+                             )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div>
                                 <span className="text-sm font-medium text-indigo-950">Secteur</span>
@@ -570,23 +570,23 @@ export const SearchResults: React.FC = () => {
                                   </PremiumBlur>
                                 </div>
                               )}
-                              {hit.Contributeur && (
-                                <div>
-                                  <span className="text-sm font-medium text-indigo-950">Contributeur</span>
-                                  <PremiumBlur isBlurred={shouldBlur}>
-                                    <p className="text-sm mt-1">{hit.Contributeur}</p>
-                                  </PremiumBlur>
-                                </div>
-                              )}
+                               {hit.Contributeur && (
+                                 <div>
+                                   <span className="text-sm font-medium text-indigo-950">Contributeur</span>
+                                   <PremiumBlur isBlurred={shouldBlur}>
+                                     <p className="text-sm mt-1 break-words overflow-wrap-anywhere">{hit.Contributeur}</p>
+                                   </PremiumBlur>
+                                 </div>
+                               )}
                             </div>
-                            {hit.Commentaires && (
-                              <div>
-                                <span className="text-sm font-medium text-indigo-950">Commentaires</span>
-                                <PremiumBlur isBlurred={shouldBlur}>
-                                  <p className="text-sm mt-1">{hit.Commentaires}</p>
-                                </PremiumBlur>
-                              </div>
-                            )}
+                             {hit.Commentaires && (
+                               <div>
+                                 <span className="text-sm font-medium text-indigo-950">Commentaires</span>
+                                 <PremiumBlur isBlurred={shouldBlur}>
+                                   <p className="text-sm mt-1 break-words overflow-wrap-anywhere">{hit.Commentaires}</p>
+                                 </PremiumBlur>
+                               </div>
+                             )}
                           </div>
                         )}
                         </div>
