@@ -21,7 +21,7 @@ export const SearchBox: React.FC = () => {
             refine(e.target.value);
           }}
           placeholder="Rechercher des facteurs d'émission..."
-          className="flex-1 bg-white border-white/20 text-indigo-950 placeholder:text-indigo-950/60 font-montserrat"
+          className="flex-1 bg-white border-white/20 text-indigo-950 placeholder:text-indigo-950/60 font-montserrat h-12 text-lg px-4"
         />
         <Button className="bg-slate-950 hover:bg-slate-800 text-white font-montserrat">
           Rechercher
