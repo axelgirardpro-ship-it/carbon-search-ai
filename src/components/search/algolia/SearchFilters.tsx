@@ -59,7 +59,8 @@ const RefinementList: React.FC<RefinementListProps> = ({
 
   console.log(`RefinementList ${title} - items:`, items.length, items);
   
-  if (items.length === 0) return null;
+  // Temporairement forcer l'affichage pour "Périmètre" pour debug
+  if (items.length === 0 && attribute !== 'Périmètre') return null;
 
   return (
     <Collapsible defaultOpen>
