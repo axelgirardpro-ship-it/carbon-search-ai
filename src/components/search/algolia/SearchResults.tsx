@@ -553,7 +553,7 @@ export const SearchResults: React.FC = () => {
                                <div>
                                  <span className="text-sm font-medium text-indigo-950">Description</span>
                                  <PremiumBlur isBlurred={shouldBlur}>
-                                   <p className="text-sm mt-1 break-words overflow-wrap-anywhere" dangerouslySetInnerHTML={getHighlightedText(hit, 'Description')} />
+                                   <p className="text-sm mt-1 text-break-words" dangerouslySetInnerHTML={getHighlightedText(hit, 'Description')} />
                                  </PremiumBlur>
                                </div>
                              )}
@@ -574,7 +574,7 @@ export const SearchResults: React.FC = () => {
                                  <div>
                                    <span className="text-sm font-medium text-indigo-950">Contributeur</span>
                                    <PremiumBlur isBlurred={shouldBlur}>
-                                     <p className="text-sm mt-1 break-words overflow-wrap-anywhere">{hit.Contributeur}</p>
+                                     <p className="text-sm mt-1 text-break-words">{hit.Contributeur}</p>
                                    </PremiumBlur>
                                  </div>
                                )}
@@ -583,7 +583,7 @@ export const SearchResults: React.FC = () => {
                                <div>
                                  <span className="text-sm font-medium text-indigo-950">Commentaires</span>
                                  <PremiumBlur isBlurred={shouldBlur}>
-                                   <p className="text-sm mt-1 break-words overflow-wrap-anywhere">{hit.Commentaires}</p>
+                                   <p className="text-sm mt-1 text-break-words">{hit.Commentaires}</p>
                                  </PremiumBlur>
                                </div>
                              )}

@@ -144,11 +144,24 @@
     transition: var(--transition-bounce);
   }
   
+  
   .glass-effect {
     @apply bg-white/10 backdrop-blur-sm border border-white/20;
   }
   
   .card-hover {
     @apply transition-smooth hover:shadow-elegant hover:-translate-y-1;
+  }
+  
+  .text-break-all {
+    word-break: break-all;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  .text-break-words {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    hyphens: auto;
   }
 }
