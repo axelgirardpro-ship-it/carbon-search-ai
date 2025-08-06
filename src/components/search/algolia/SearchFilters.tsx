@@ -298,6 +298,12 @@ export const SearchFilters: React.FC = () => {
           limit={500}
         />
         <RefinementList
+          attribute="Périmètre"
+          title="Périmètre"
+          searchable
+          limit={500}
+        />
+        <RefinementList
           attribute="Date"
           title="Date"
           limit={500}
