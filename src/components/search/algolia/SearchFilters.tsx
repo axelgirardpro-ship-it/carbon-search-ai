@@ -35,15 +35,27 @@ const RefinementList: React.FC<RefinementListProps> = ({
     }
   }, [items, searchQuery]);
 
+  // Trier les dates par ordre décroissant si c'est l'attribut Date
+  const sortedItems = React.useMemo(() => {
+    if (attribute === 'Date') {
+      return [...items].sort((a, b) => {
+        const dateA = parseInt(a.label);
+        const dateB = parseInt(b.label);
+        return dateB - dateA; // Ordre décroissant
+      });
+    }
+    return items;
+  }, [items, attribute]);
+
   // Filtrer côté client si nécessaire
   const filteredItems = React.useMemo(() => {
-    if (!searchQuery) return items;
+    if (!searchQuery) return sortedItems;
     
     // Si searchForItems ne fonctionne pas, filtrer côté client
     return allItems.filter(item => 
       item.label.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [items, allItems, searchQuery]);
+  }, [sortedItems, allItems, searchQuery]);
 
   if (items.length === 0) return null;
 
@@ -259,36 +271,36 @@ export const SearchFilters: React.FC = () => {
           attribute="Source"
           title="Source"
           searchable
-          limit={100}
+          limit={500}
         />
         <RefinementList
           attribute="Secteur"
           title="Secteur"
           searchable
-          limit={100}
+          limit={500}
         />
         <RefinementList
           attribute="Sous-secteur"
           title="Sous-secteur"
           searchable
-          limit={100}
+          limit={500}
         />
         <RefinementList
           attribute="Unité donnée d'activité"
           title="Unité"
           searchable
-          limit={100}
+          limit={500}
         />
         <RefinementList
           attribute="Localisation"
           title="Localisation"
           searchable
-          limit={200}
+          limit={500}
         />
         <RefinementList
           attribute="Date"
           title="Date"
-          limit={50}
+          limit={500}
         />
       </CardContent>
     </Card>
