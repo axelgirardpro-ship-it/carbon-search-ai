@@ -96,6 +96,11 @@ export const useQuotas = () => {
   const incrementSearch = useCallback(async () => {
     if (!user || !quotaData) return;
     
+    // Ne pas incrémenter si les recherches sont illimitées (Premium)
+    if (quotaData.searches_limit === null) {
+      return;
+    }
+    
     const { error } = await supabase
       .from('search_quotas')
       .update({ searches_used: quotaData.searches_used + 1 })
@@ -110,6 +115,11 @@ export const useQuotas = () => {
   
   const incrementExport = useCallback(async () => {
     if (!user || !quotaData) return;
+    
+    // Ne pas incrémenter si les exports sont illimités (Premium)
+    if (quotaData.exports_limit === null) {
+      return;
+    }
     
     const { error } = await supabase
       .from('search_quotas')
