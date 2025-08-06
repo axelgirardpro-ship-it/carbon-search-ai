@@ -148,8 +148,16 @@ const FERangeInput: React.FC = () => {
     attribute: 'FE'
   });
 
-  const [min, setMin] = React.useState(start?.[0]?.toString() || '');
-  const [max, setMax] = React.useState(start?.[1]?.toString() || '');
+  const [min, setMin] = React.useState('');
+  const [max, setMax] = React.useState('');
+
+  // Synchroniser avec les valeurs du range
+  React.useEffect(() => {
+    if (start) {
+      setMin(start[0] !== undefined ? start[0].toString() : '');
+      setMax(start[1] !== undefined ? start[1].toString() : '');
+    }
+  }, [start]);
 
   const handleSubmit = () => {
     const minValue = min === '' ? undefined : parseFloat(min);
@@ -163,7 +171,7 @@ const FERangeInput: React.FC = () => {
     refine([undefined, undefined]);
   };
 
-  if (!canRefine) return null;
+  console.log('FERangeInput - canRefine:', canRefine, 'range:', range, 'start:', start);
 
   return (
     <Collapsible defaultOpen>
@@ -174,9 +182,11 @@ const FERangeInput: React.FC = () => {
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-3 mt-2">
-        <div className="text-xs text-muted-foreground">
-          Plage: {range?.min?.toLocaleString()} à {range?.max?.toLocaleString()}
-        </div>
+        {range && (
+          <div className="text-xs text-muted-foreground">
+            Plage: {range.min?.toLocaleString()} à {range.max?.toLocaleString()}
+          </div>
+        )}
         <div className="grid grid-cols-2 gap-2">
           <div>
             <label className="text-xs text-muted-foreground">Min</label>
@@ -185,7 +195,7 @@ const FERangeInput: React.FC = () => {
               placeholder="Min"
               value={min}
               onChange={(e) => setMin(e.target.value)}
-              onBlur={handleSubmit}
+              onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
             />
           </div>
           <div>
@@ -195,7 +205,7 @@ const FERangeInput: React.FC = () => {
               placeholder="Max"
               value={max}
               onChange={(e) => setMax(e.target.value)}
-              onBlur={handleSubmit}
+              onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
             />
           </div>
         </div>
