@@ -247,11 +247,7 @@ export const SearchFilters: React.FC = () => {
           </CollapsibleContent>
         </Collapsible>
 
-        <RefinementList
-          attribute="FE"
-          title="Facteur d'émission (FE)"
-          limit={15}
-        />
+        <FERangeInput />
         <RefinementList
           attribute="Source"
           title="Source"
