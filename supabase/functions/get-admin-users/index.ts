@@ -38,15 +38,11 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Check if user is supra admin
-    const { data: globalRole, error: roleError } = await supabaseAdmin
-      .from('global_user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .eq('role', 'supra_admin')
-      .single();
+    // Check if user is supra admin using the new structure
+    const { data: isSupraAdmin, error: roleError } = await supabaseAdmin
+      .rpc('is_supra_admin', { user_uuid: user.id });
 
-    if (roleError || !globalRole) {
+    if (roleError || !isSupraAdmin) {
       console.error('Role check failed:', roleError);
       return new Response(
         JSON.stringify({ error: 'Insufficient permissions' }),

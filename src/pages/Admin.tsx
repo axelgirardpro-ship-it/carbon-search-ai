@@ -22,14 +22,9 @@ import { useToast } from "@/hooks/use-toast";
 import { CompaniesTable } from "@/components/admin/CompaniesTable";
 import { FreemiumCompaniesTable } from "@/components/admin/FreemiumCompaniesTable";
 import { ContactsTable } from "@/components/admin/ContactsTable";
-import { SearchHistoryTable } from "@/components/admin/SearchHistoryTable";
 import { EmissionFactorAccessManager } from "@/components/admin/EmissionFactorAccessManager";
 import { SourceWorkspaceAssignments } from "@/components/admin/SourceWorkspaceAssignments";
-import { CSVImporter } from "@/components/admin/CSVImporter";
 import { CreateSupraAdmin } from "@/components/admin/CreateSupraAdmin";
-import { SessionsTable } from "@/components/admin/SessionsTable";
-import { ExportsMonitoringTable } from "@/components/admin/ExportsMonitoringTable";
-import { TestEnvironmentControls } from "@/components/admin/TestEnvironmentControls";
 
 const Admin = () => {
   const { user } = useAuth();
@@ -41,7 +36,6 @@ const Admin = () => {
     totalSearches: 0,
     activeFavorites: 0,
     totalExports: 0,
-    activeSessions: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -76,12 +70,6 @@ const Admin = () => {
         // Count total exports
         const { data: quotas } = await supabase.from('search_quotas').select('exports_used');
         const totalExports = quotas?.reduce((sum, quota) => sum + (quota.exports_used || 0), 0) || 0;
-        
-        // Count active sessions
-        const { count: sessionsCount } = await supabase
-          .from('user_sessions')
-          .select('*', { count: 'exact', head: true })
-          .gt('expires_at', new Date().toISOString());
 
         setStats({
           totalUsers: userCount || 0,
@@ -89,7 +77,6 @@ const Admin = () => {
           totalSearches: searchCount || 0,
           activeFavorites: favoritesCount || 0,
           totalExports: totalExports,
-          activeSessions: sessionsCount || 0,
         });
       } catch (error) {
         console.error('Error loading admin stats:', error);
@@ -161,8 +148,7 @@ const Admin = () => {
           </div>
         </div>
 
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Utilisateurs</CardTitle>
@@ -228,22 +214,8 @@ const Admin = () => {
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Sessions actives</CardTitle>
-              <Shield className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.activeSessions}</div>
-              <p className="text-xs text-muted-foreground">
-                Max 2/utilisateur
-              </p>
-            </CardContent>
-          </Card>
         </div>
 
-        {/* Test Environment Controls */}
-        <TestEnvironmentControls />
 
         {/* Admin Components */}
         <div className="space-y-6">
@@ -258,13 +230,8 @@ const Admin = () => {
           
           <ContactsTable />
           
-          
-          <ExportsMonitoringTable />
-          <SessionsTable />
-          
           <EmissionFactorAccessManager />
           <SourceWorkspaceAssignments />
-          <CSVImporter />
           
           {/* Supra Admin Creation */}
           <div>

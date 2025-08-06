@@ -44,16 +44,11 @@ serve(async (req) => {
       )
     }
 
-    // Check if the current user is a supra admin
-    const { data: currentUserRole, error: roleError } = await supabaseAdmin
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .eq('role', 'supra_admin')
-      .is('workspace_id', null)
-      .single()
+    // Check if the current user is a supra admin using the new structure
+    const { data: isSupraAdmin, error: roleError } = await supabaseAdmin
+      .rpc('is_supra_admin', { user_uuid: user.id });
 
-    if (roleError || !currentUserRole) {
+    if (roleError || !isSupraAdmin) {
       return new Response(
         JSON.stringify({ error: 'Access denied. Only supra admins can create other supra admins.' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -116,15 +111,60 @@ serve(async (req) => {
         throw new Error(`Failed to create user: ${createError?.message || 'Unknown error'}`)
       }
 
-      // Assign supra_admin role directly (no profile/workspace needed for supra admin)
+      // Get or create a Global Administration workspace
+      let globalWorkspaceId;
+      const { data: globalWorkspace, error: workspaceError } = await supabaseAdmin
+        .from('workspaces')
+        .select('id')
+        .eq('name', 'Global Administration')
+        .single();
+
+      if (workspaceError || !globalWorkspace) {
+        // Create Global Administration workspace if it doesn't exist
+        const { data: newWorkspace, error: createWorkspaceError } = await supabaseAdmin
+          .from('workspaces')
+          .insert({
+            name: 'Global Administration',
+            owner_id: newUser.user.id,
+            plan_type: 'premium'
+          })
+          .select('id')
+          .single();
+
+        if (createWorkspaceError || !newWorkspace) {
+          throw new Error(`Failed to create Global Administration workspace: ${createWorkspaceError?.message}`);
+        }
+        globalWorkspaceId = newWorkspace.id;
+      } else {
+        globalWorkspaceId = globalWorkspace.id;
+      }
+
+      // Create user record
+      const { error: userRecordError } = await supabaseAdmin
+        .from('users')
+        .insert({
+          user_id: newUser.user.id,
+          workspace_id: globalWorkspaceId,
+          email: email,
+          plan_type: 'premium',
+          subscribed: true,
+          assigned_by: user.id
+        });
+
+      if (userRecordError) {
+        throw new Error(`Failed to create user record: ${userRecordError.message}`);
+      }
+
+      // Assign admin role with supra_admin flag
       const { error: roleAssignError } = await supabaseAdmin
         .from('user_roles')
         .insert({
           user_id: newUser.user.id,
-          role: 'supra_admin',
-          workspace_id: null,
-          assigned_by: user.id
-        })
+          role: 'admin',
+          workspace_id: globalWorkspaceId,
+          assigned_by: user.id,
+          is_supra_admin: true
+        });
 
       console.log('Role assignment result:', { success: !roleAssignError, error: roleAssignError?.message })
 

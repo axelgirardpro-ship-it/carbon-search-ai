@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
-import { TestEnvironmentControls } from "@/components/admin/TestEnvironmentControls";
+
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUser } from "@/contexts/UserContext";
@@ -154,10 +154,6 @@ const SimplifiedSettings = () => {
                   Panneau d'administration
                 </Button>
               </div>
-              
-              {/* Contrôles d'environnement de test */}
-              <Separator className="my-6" />
-              <TestEnvironmentControls />
             </CardContent>
           </Card>
         )}
