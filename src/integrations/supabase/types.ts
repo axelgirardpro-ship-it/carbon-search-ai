@@ -375,6 +375,7 @@ export type Database = {
           assigned_by: string | null
           created_at: string
           id: string
+          is_supra_admin: boolean | null
           original_role: string | null
           role: string
           updated_at: string
@@ -385,6 +386,7 @@ export type Database = {
           assigned_by?: string | null
           created_at?: string
           id?: string
+          is_supra_admin?: boolean | null
           original_role?: string | null
           role: string
           updated_at?: string
@@ -395,6 +397,7 @@ export type Database = {
           assigned_by?: string | null
           created_at?: string
           id?: string
+          is_supra_admin?: boolean | null
           original_role?: string | null
           role?: string
           updated_at?: string

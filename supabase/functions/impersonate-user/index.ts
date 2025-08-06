@@ -61,18 +61,23 @@ serve(async (req) => {
       throw new Error('Target user not found');
     }
 
-    // Create a new session for the target user
-    // Note: This is a simplified approach. In production, you might want to use
-    // custom JWT tokens or a more sophisticated session management system
-    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
+    // Get user from auth.users table to create session
+    const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(targetUserId);
+    
+    if (authError || !authUser.user) {
+      throw new Error('Target user not found in auth system');
+    }
+
+    // Create an access token for the target user
+    const { data: tokenData, error: tokenError } = await supabase.auth.admin.generateLink({
       type: 'magiclink',
-      email: targetUserData.email,
+      email: authUser.user.email!,
       options: {
-        redirectTo: window?.location?.origin || 'http://localhost:3000'
+        redirectTo: `${req.headers.get('origin') || 'http://localhost:3000'}/search`
       }
     });
 
-    if (sessionError) {
+    if (tokenError || !tokenData) {
       throw new Error('Failed to generate session for target user');
     }
 
@@ -92,7 +97,8 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        session: sessionData,
+        access_token: tokenData.properties?.access_token,
+        refresh_token: tokenData.properties?.refresh_token,
         target_user: targetUserData
       }),
       { 

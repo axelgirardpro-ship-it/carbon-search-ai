@@ -66,9 +66,12 @@ export const useImpersonation = () => {
       setState(impersonationState);
       sessionStorage.setItem('impersonation_data', JSON.stringify(impersonationState));
 
-      // Set the new session with the impersonated user's token
-      if (data.session) {
-        await supabase.auth.setSession(data.session);
+      // Set the new session with the impersonated user's tokens
+      if (data.access_token && data.refresh_token) {
+        await supabase.auth.setSession({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token
+        });
       }
 
       return true;
@@ -92,8 +95,11 @@ export const useImpersonation = () => {
       if (error) throw error;
 
       // Restore original session
-      if (data.session) {
-        await supabase.auth.setSession(data.session);
+      if (data.access_token && data.refresh_token) {
+        await supabase.auth.setSession({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token
+        });
       }
 
       setState({

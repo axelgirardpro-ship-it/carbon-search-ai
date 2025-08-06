@@ -20,11 +20,8 @@ interface Workspace {
 
 interface WorkspaceContextType {
   currentWorkspace: Workspace | null;
-  workspaces: Workspace[];
   loading: boolean;
-  switchWorkspace: (workspaceId: string) => Promise<void>;
-  createWorkspace: (name: string) => Promise<Workspace | null>;
-  refreshWorkspaces: () => Promise<void>;
+  refreshWorkspace: () => Promise<void>;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefined);
@@ -45,41 +42,31 @@ export const WorkspaceProvider = ({ children }: WorkspaceProviderProps) => {
   const { user } = useAuth();
   const { userProfile } = useUser();
   const [currentWorkspace, setCurrentWorkspace] = useState<Workspace | null>(null);
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchWorkspaces = async () => {
-    if (!user) {
-      setWorkspaces([]);
+  const fetchWorkspace = async () => {
+    if (!user || !userProfile?.workspace_id) {
       setCurrentWorkspace(null);
       setLoading(false);
       return;
     }
 
     try {
+      // Pour les utilisateurs normaux, récupérer uniquement leur workspace
       const { data, error } = await supabase
         .from('workspaces')
         .select('*')
-        .order('created_at', { ascending: false });
+        .eq('id', userProfile.workspace_id)
+        .single();
 
       if (error) {
-        console.error('Error fetching workspaces:', error);
-        setWorkspaces([]);
+        console.error('Error fetching workspace:', error);
         setCurrentWorkspace(null);
       } else {
-        setWorkspaces(data || []);
-        
-        // Set current workspace based on user profile or first available
-        if (data?.length > 0) {
-          const userWorkspace = userProfile?.workspace_id 
-            ? data.find(w => w.id === userProfile.workspace_id)
-            : null;
-          setCurrentWorkspace(userWorkspace || data[0]);
-        }
+        setCurrentWorkspace(data);
       }
     } catch (error) {
-      console.error('Error in fetchWorkspaces:', error);
-      setWorkspaces([]);
+      console.error('Error in fetchWorkspace:', error);
       setCurrentWorkspace(null);
     }
 
@@ -87,57 +74,19 @@ export const WorkspaceProvider = ({ children }: WorkspaceProviderProps) => {
   };
 
   useEffect(() => {
-    fetchWorkspaces();
+    fetchWorkspace();
   }, [user, userProfile]);
 
-  const switchWorkspace = async (workspaceId: string) => {
-    const workspace = workspaces.find(w => w.id === workspaceId);
-    if (workspace) {
-      setCurrentWorkspace(workspace);
-    }
-  };
-
-  const createWorkspace = async (name: string): Promise<Workspace | null> => {
-    if (!user) return null;
-
-    try {
-      const { data, error } = await supabase
-        .from('workspaces')
-        .insert([{
-          name,
-          owner_id: user.id,
-          plan_type: 'freemium'
-        }])
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error creating workspace:', error);
-        return null;
-      }
-
-      setWorkspaces(prev => [data, ...prev]);
-      setCurrentWorkspace(data);
-      return data;
-    } catch (error) {
-      console.error('Error in createWorkspace:', error);
-      return null;
-    }
-  };
-
-  const refreshWorkspaces = async () => {
+  const refreshWorkspace = async () => {
     setLoading(true);
-    await fetchWorkspaces();
+    await fetchWorkspace();
   };
 
   return (
     <WorkspaceContext.Provider value={{
       currentWorkspace,
-      workspaces,
       loading,
-      switchWorkspace,
-      createWorkspace,
-      refreshWorkspaces,
+      refreshWorkspace,
     }}>
       {children}
     </WorkspaceContext.Provider>

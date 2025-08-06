@@ -26,27 +26,23 @@ serve(async (req) => {
 
     console.log(`Stopping impersonation, returning to original user ${originalUserId}`);
 
-    // Get the original user's data
-    const { data: originalUserData, error: originalError } = await supabase
-      .from('users')
-      .select('user_id, email')
-      .eq('user_id', originalUserId)
-      .single();
-
-    if (originalError || !originalUserData) {
-      throw new Error('Original user not found');
+    // Get the original user's data from auth.users
+    const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(originalUserId);
+    
+    if (authError || !authUser.user) {
+      throw new Error('Original user not found in auth system');
     }
 
     // Generate a new session for the original user
-    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
+    const { data: tokenData, error: tokenError } = await supabase.auth.admin.generateLink({
       type: 'magiclink',
-      email: originalUserData.email,
+      email: authUser.user.email!,
       options: {
-        redirectTo: window?.location?.origin || 'http://localhost:3000'
+        redirectTo: `${req.headers.get('origin') || 'http://localhost:3000'}/admin`
       }
     });
 
-    if (sessionError) {
+    if (tokenError || !tokenData) {
       throw new Error('Failed to generate session for original user');
     }
 
@@ -64,8 +60,9 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        session: sessionData,
-        original_user: originalUserData
+        access_token: tokenData.properties?.access_token,
+        refresh_token: tokenData.properties?.refresh_token,
+        original_user: { id: originalUserId, email: authUser.user.email }
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
