@@ -89,6 +89,12 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   const quotaAwareSearchClient = {
     ...searchClient,
     search: async (requests: any[]) => {
+      // Ne pas bloquer si les données sont encore en cours de chargement
+      if (quotaHook.isLoading) {
+        const result = await searchClient.search(requests);
+        return result;
+      }
+      
       // Vérifier si l'utilisateur peut effectuer une recherche
       if (!quotaHook.canSearch) {
         toast.error("Limite de recherche atteinte. Passez à un plan payant pour continuer.");
