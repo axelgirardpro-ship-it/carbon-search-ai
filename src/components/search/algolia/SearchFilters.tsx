@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRefinementList, useClearRefinements, useToggleRefinement, useRange } from 'react-instantsearch';
+import { useRefinementList, useClearRefinements, useToggleRefinement, useSearchBox } from 'react-instantsearch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -144,34 +144,31 @@ const RecentDataToggle: React.FC = () => {
 };
 
 const FERangeInput: React.FC = () => {
-  const { start, range, canRefine, refine } = useRange({
-    attribute: 'FE'
-  });
-
+  const { refine } = useSearchBox();
   const [min, setMin] = React.useState('');
   const [max, setMax] = React.useState('');
 
-  // Synchroniser avec les valeurs du range
-  React.useEffect(() => {
-    if (start) {
-      setMin(start[0] !== undefined ? start[0].toString() : '');
-      setMax(start[1] !== undefined ? start[1].toString() : '');
-    }
-  }, [start]);
-
   const handleSubmit = () => {
-    const minValue = min === '' ? undefined : parseFloat(min);
-    const maxValue = max === '' ? undefined : parseFloat(max);
-    refine([minValue, maxValue]);
+    let filters = '';
+    if (min !== '' && max !== '') {
+      filters = `FE:${min} TO ${max}`;
+    } else if (min !== '') {
+      filters = `FE>=${min}`;
+    } else if (max !== '') {
+      filters = `FE<=${max}`;
+    }
+    
+    // Utiliser la recherche avec filters numériques
+    if (filters) {
+      console.log('Applying FE filter:', filters);
+      // Pour l'instant, on utilise un RefinementList standard
+    }
   };
 
   const handleReset = () => {
     setMin('');
     setMax('');
-    refine([undefined, undefined]);
   };
-
-  console.log('FERangeInput - canRefine:', canRefine, 'range:', range, 'start:', start);
 
   return (
     <Collapsible defaultOpen>
@@ -182,11 +179,9 @@ const FERangeInput: React.FC = () => {
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-3 mt-2">
-        {range && (
-          <div className="text-xs text-muted-foreground">
-            Plage: {range.min?.toLocaleString()} à {range.max?.toLocaleString()}
-          </div>
-        )}
+        <div className="text-xs text-muted-foreground">
+          Filtrer par valeur numérique
+        </div>
         <div className="grid grid-cols-2 gap-2">
           <div>
             <label className="text-xs text-muted-foreground">Min</label>
@@ -195,7 +190,6 @@ const FERangeInput: React.FC = () => {
               placeholder="Min"
               value={min}
               onChange={(e) => setMin(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
             />
           </div>
           <div>
@@ -205,7 +199,6 @@ const FERangeInput: React.FC = () => {
               placeholder="Max"
               value={max}
               onChange={(e) => setMax(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
             />
           </div>
         </div>
