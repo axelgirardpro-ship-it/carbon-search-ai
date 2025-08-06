@@ -4,13 +4,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useSupraAdmin } from "@/hooks/useSupraAdmin";
 import { usePermissions } from "@/hooks/usePermissions";
 import { useQuotas } from "@/hooks/useQuotas";
+import { useEmissionFactorAccess } from "@/hooks/useEmissionFactorAccess";
 import { NavbarQuotaWidget } from "@/components/ui/NavbarQuotaWidget";
 import { Lock } from "lucide-react";
 
 export const UnifiedNavbar = () => {
   const { user, signOut } = useAuth();
   const { isSupraAdmin } = useSupraAdmin();
-  const { canUseFavorites } = usePermissions();
+  const { canUseFavorites } = useEmissionFactorAccess();
   const { quotaData, isLoading, isAtLimit } = useQuotas();
   const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ export const UnifiedNavbar = () => {
                     Recherche
                   </Button>
                 </Link>
-                {canUseFavorites ? (
+                {canUseFavorites() ? (
                   <Link to="/favorites">
                     <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
                       Favoris

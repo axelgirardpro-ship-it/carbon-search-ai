@@ -67,6 +67,11 @@ export const useEmissionFactorAccess = () => {
     return !isAssignedToWorkspace && !hasPremiumPlan;
   };
 
+  const canUseFavorites = () => {
+    if (!user || !currentWorkspace) return false;
+    return currentWorkspace.plan_type === 'premium';
+  };
+
   const getSourceLabel = (isWorkspaceSpecific: boolean, source: string, isPremiumSource?: boolean) => {
     if (isWorkspaceSpecific) {
       return {
@@ -90,6 +95,7 @@ export const useEmissionFactorAccess = () => {
     hasAccess,
     shouldBlurPremiumContent,
     getSourceLabel,
+    canUseFavorites,
     user,
     currentWorkspace,
     premiumSources,

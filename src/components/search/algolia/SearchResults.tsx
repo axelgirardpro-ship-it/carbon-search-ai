@@ -221,8 +221,7 @@ export const SearchResults: React.FC = () => {
   const [expandedRows, setExpandedRows] = React.useState<Set<string>>(new Set());
   const [selectedItems, setSelectedItems] = React.useState<Set<string>>(new Set());
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
-  const { canUseFavorites } = usePermissions();
-  const { hasAccess, shouldBlurPremiumContent } = useEmissionFactorAccess();
+  const { hasAccess, shouldBlurPremiumContent, canUseFavorites } = useEmissionFactorAccess();
   const { canExport } = usePermissions();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -450,12 +449,12 @@ export const SearchResults: React.FC = () => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => canUseFavorites ? handleFavoriteToggle(hit) : undefined}
-                              disabled={!canUseFavorites}
-                              className={`${isFav ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-foreground'} ${!canUseFavorites ? 'opacity-50 cursor-not-allowed' : ''}`}
-                              title={!canUseFavorites ? "Fonctionnalité disponible uniquement avec le plan Premium" : ""}
+                              onClick={() => canUseFavorites() ? handleFavoriteToggle(hit) : undefined}
+                              disabled={!canUseFavorites()}
+                              className={`${isFav ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-foreground'} ${!canUseFavorites() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              title={!canUseFavorites() ? "Fonctionnalité disponible uniquement avec le plan Premium" : ""}
                             >
-                              {!canUseFavorites ? (
+                              {!canUseFavorites() ? (
                                 <Lock className="h-4 w-4" />
                               ) : (
                                 <Heart className={`h-4 w-4 ${isFav ? 'fill-current' : ''}`} />

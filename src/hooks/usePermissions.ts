@@ -18,9 +18,6 @@ export const usePermissions = () => {
   
   // Can add users (alias for canManageUsers for backward compatibility)
   const canAddUsers = canManageUsers;
-  
-  // Can use favorites: only Premium plan
-  const canUseFavorites = userProfile?.plan_type === 'premium';
 
   return {
     isSupraAdmin,
@@ -28,7 +25,6 @@ export const usePermissions = () => {
     canExport,
     canManageUsers,
     canAddUsers, // Backward compatibility
-    canUseFavorites,
     role: userProfile?.role,
     planType: userProfile?.plan_type
   };
