@@ -259,36 +259,36 @@ export const SearchFilters: React.FC = () => {
           attribute="Source"
           title="Source"
           searchable
-          limit={15}
+          limit={100}
         />
         <RefinementList
           attribute="Secteur"
           title="Secteur"
           searchable
-          limit={15}
+          limit={100}
         />
         <RefinementList
           attribute="Sous-secteur"
           title="Sous-secteur"
           searchable
-          limit={15}
+          limit={100}
         />
         <RefinementList
           attribute="Unité donnée d'activité"
           title="Unité"
           searchable
-          limit={15}
+          limit={100}
         />
         <RefinementList
           attribute="Localisation"
           title="Localisation"
           searchable
-          limit={15}
+          limit={200}
         />
         <RefinementList
           attribute="Date"
           title="Date"
-          limit={10}
+          limit={50}
         />
       </CardContent>
     </Card>
