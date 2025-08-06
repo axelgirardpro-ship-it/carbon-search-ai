@@ -151,11 +151,18 @@ const FERangeInput: React.FC = () => {
   const [min, setMin] = React.useState('');
   const [max, setMax] = React.useState('');
 
-  // Synchroniser avec les valeurs du range
+  // Synchroniser avec les valeurs du range seulement si elles sont valides
   React.useEffect(() => {
-    if (start) {
-      setMin(start[0] !== undefined && start[0] !== -Infinity ? start[0].toString() : '');
-      setMax(start[1] !== undefined && start[1] !== Infinity ? start[1].toString() : '');
+    if (start && Array.isArray(start)) {
+      const startMin = start[0];
+      const startMax = start[1];
+      
+      if (typeof startMin === 'number' && startMin !== -Infinity && !isNaN(startMin)) {
+        setMin(startMin.toString());
+      }
+      if (typeof startMax === 'number' && startMax !== Infinity && !isNaN(startMax)) {
+        setMax(startMax.toString());
+      }
     }
   }, [start]);
 
