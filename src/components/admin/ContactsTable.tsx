@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { User, Mail, Shield, Building2, Edit } from "lucide-react";
+import { User, Mail, Shield, Building2, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 
@@ -33,6 +33,7 @@ export const ContactsTable = () => {
   const [selectedCompany, setSelectedCompany] = useState<string>("all");
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -181,6 +182,37 @@ export const ContactsTable = () => {
     }
   };
 
+  const deleteContact = async (userId: string, contactEmail: string) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer le contact "${contactEmail}" ? Cette action est irréversible et supprimera toutes les données associées.`)) {
+      return;
+    }
+
+    setDeleting(userId);
+    try {
+      const { error } = await supabase.functions.invoke('delete-admin-entities', {
+        body: { type: 'user', id: userId }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Contact supprimé",
+        description: `Le contact "${contactEmail}" a été supprimé avec succès.`,
+      });
+
+      fetchContacts();
+    } catch (error) {
+      console.error('Error deleting contact:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la suppression du contact",
+      });
+    } finally {
+      setDeleting(null);
+    }
+  };
+
   if (loading) {
     return (
       <Card>
@@ -236,7 +268,7 @@ export const ContactsTable = () => {
               <TableHead>Plan</TableHead>
               <TableHead>Rôle</TableHead>
               <TableHead>Ajouté le</TableHead>
-              <TableHead>Actions</TableHead>
+                <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -280,7 +312,7 @@ export const ContactsTable = () => {
                   {new Date(contact.created_at).toLocaleDateString('fr-FR')}
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <Select 
                       value={contact.company_plan || 'freemium'}
                       onValueChange={(newPlan) => handlePlanChange(contact, newPlan)}
@@ -310,6 +342,19 @@ export const ContactsTable = () => {
                         <SelectItem value="lecteur">Lecteur</SelectItem>
                       </SelectContent>
                     </Select>
+                    
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => deleteContact(contact.user_id, contact.email || '')}
+                      disabled={deleting === contact.user_id || updating?.includes(contact.user_id)}
+                    >
+                      {deleting === contact.user_id ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </Button>
                     
                     {(updating === `plan-${contact.workspace_id}` || updating === `role-${contact.user_id}`) && (
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>

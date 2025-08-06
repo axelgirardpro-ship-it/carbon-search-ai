@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Building2, Users, Calendar, UserCheck, Edit } from "lucide-react";
+import { Building2, Users, Calendar, UserCheck, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 
@@ -28,6 +28,7 @@ export const FreemiumCompaniesTable = () => {
   const [companies, setCompanies] = useState<FreemiumCompany[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -88,6 +89,37 @@ export const FreemiumCompaniesTable = () => {
       });
     } finally {
       setUpdating(null);
+    }
+  };
+
+  const deleteWorkspace = async (workspaceId: string, workspaceName: string) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer l'entreprise "${workspaceName}" ? Cette action est irréversible et supprimera tous les utilisateurs et données associés.`)) {
+      return;
+    }
+
+    setDeleting(workspaceId);
+    try {
+      const { error } = await supabase.functions.invoke('delete-admin-entities', {
+        body: { type: 'workspace', id: workspaceId }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Entreprise supprimée",
+        description: `L'entreprise "${workspaceName}" a été supprimée avec succès.`,
+      });
+
+      await fetchFreemiumCompanies();
+    } catch (error) {
+      console.error('Error deleting workspace:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la suppression de l'entreprise",
+      });
+    } finally {
+      setDeleting(null);
     }
   };
 
@@ -182,6 +214,18 @@ export const FreemiumCompaniesTable = () => {
                         <SelectItem value="premium">Premium</SelectItem>
                       </SelectContent>
                     </Select>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => deleteWorkspace(company.id, company.name)}
+                      disabled={updating === company.id || deleting === company.id}
+                    >
+                      {deleting === company.id ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </Button>
                     {updating === company.id && (
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
                     )}

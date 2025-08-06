@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Building2, Users, Calendar, Crown, Edit } from "lucide-react";
+import { Building2, Users, Calendar, Crown, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
@@ -28,6 +28,7 @@ export const CompaniesTable = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingPlan, setEditingPlan] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -87,6 +88,37 @@ export const CompaniesTable = () => {
         description: "Impossible de mettre à jour le plan.",
         variant: "destructive",
       });
+    }
+  };
+
+  const deleteWorkspace = async (workspaceId: string, workspaceName: string) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer l'entreprise "${workspaceName}" ? Cette action est irréversible et supprimera tous les utilisateurs et données associés.`)) {
+      return;
+    }
+
+    setDeleting(workspaceId);
+    try {
+      const { error } = await supabase.functions.invoke('delete-admin-entities', {
+        body: { type: 'workspace', id: workspaceId }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Entreprise supprimée",
+        description: `L'entreprise "${workspaceName}" a été supprimée avec succès.`,
+      });
+
+      fetchCompanies();
+    } catch (error) {
+      console.error('Error deleting workspace:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la suppression de l'entreprise",
+      });
+    } finally {
+      setDeleting(null);
     }
   };
 
@@ -175,39 +207,55 @@ export const CompaniesTable = () => {
                    </div>
                  </TableCell>
                  <TableCell>
-                   {editingPlan === company.id ? (
-                     <div className="flex items-center gap-2">
-                       <Select
-                         value={company.plan_type}
-                         onValueChange={(value) => updateWorkspacePlan(company.id, value)}
-                       >
-                         <SelectTrigger className="w-32">
-                           <SelectValue />
-                         </SelectTrigger>
-                         <SelectContent>
-                           <SelectItem value="freemium">Freemium</SelectItem>
-                           <SelectItem value="standard">Standard</SelectItem>
-                           <SelectItem value="premium">Premium</SelectItem>
-                         </SelectContent>
-                       </Select>
-                       <Button
-                         variant="outline"
-                         size="sm"
-                         onClick={() => setEditingPlan(null)}
-                       >
-                         Annuler
-                       </Button>
-                     </div>
-                   ) : (
-                     <Button
-                       variant="outline"
-                       size="sm"
-                       onClick={() => setEditingPlan(company.id)}
-                     >
-                       <Edit className="h-4 w-4 mr-2" />
-                       Modifier plan
-                     </Button>
-                   )}
+                   <div className="flex items-center gap-2">
+                     {editingPlan === company.id ? (
+                       <>
+                         <Select
+                           value={company.plan_type}
+                           onValueChange={(value) => updateWorkspacePlan(company.id, value)}
+                         >
+                           <SelectTrigger className="w-32">
+                             <SelectValue />
+                           </SelectTrigger>
+                           <SelectContent>
+                             <SelectItem value="freemium">Freemium</SelectItem>
+                             <SelectItem value="standard">Standard</SelectItem>
+                             <SelectItem value="premium">Premium</SelectItem>
+                           </SelectContent>
+                         </Select>
+                         <Button
+                           variant="outline"
+                           size="sm"
+                           onClick={() => setEditingPlan(null)}
+                         >
+                           Annuler
+                         </Button>
+                       </>
+                     ) : (
+                       <>
+                         <Button
+                           variant="outline"
+                           size="sm"
+                           onClick={() => setEditingPlan(company.id)}
+                         >
+                           <Edit className="h-4 w-4 mr-2" />
+                           Modifier
+                         </Button>
+                         <Button
+                           variant="destructive"
+                           size="sm"
+                           onClick={() => deleteWorkspace(company.id, company.name)}
+                           disabled={deleting === company.id}
+                         >
+                           {deleting === company.id ? (
+                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                           ) : (
+                             <Trash2 className="h-4 w-4" />
+                           )}
+                         </Button>
+                       </>
+                     )}
+                   </div>
                  </TableCell>
                </TableRow>
             ))}
