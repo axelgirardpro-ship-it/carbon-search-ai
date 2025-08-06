@@ -478,15 +478,28 @@ export const SearchResults: React.FC = () => {
                             </PremiumBlur>
                           </div>
                           <div>
+                            <span className="text-sm font-medium text-muted-foreground">Unité</span>
+                            <PremiumBlur isBlurred={shouldBlur}>
+                              <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Unité donnée d\'activité')} />
+                            </PremiumBlur>
+                          </div>
+                          <div>
                             <span className="text-sm font-medium text-muted-foreground">Source</span>
                             <PremiumBlur isBlurred={shouldBlur}>
                               <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Source')} />
                             </PremiumBlur>
                           </div>
-                          <div>
-                            <span className="text-sm font-medium text-muted-foreground">Secteur</span>
-                            <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Secteur')} />
-                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                          {hit.Périmètre && (
+                            <div>
+                              <span className="text-sm font-medium text-muted-foreground">Périmètre</span>
+                              <PremiumBlur isBlurred={shouldBlur}>
+                                <p className="text-sm">{hit.Périmètre}</p>
+                              </PremiumBlur>
+                            </div>
+                          )}
                         </div>
 
                         <div className="flex flex-wrap gap-2">
@@ -507,19 +520,9 @@ export const SearchResults: React.FC = () => {
                             )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div>
-                                <span className="text-sm font-medium text-indigo-950">Unité</span>
-                                <PremiumBlur isBlurred={shouldBlur}>
-                                  <p className="text-sm mt-1">{hit['Unité donnée d\'activité']}</p>
-                                </PremiumBlur>
+                                <span className="text-sm font-medium text-indigo-950">Secteur</span>
+                                <p className="text-sm mt-1" dangerouslySetInnerHTML={getHighlightedText(hit, 'Secteur')} />
                               </div>
-                              {hit.Périmètre && (
-                                <div>
-                                  <span className="text-sm font-medium text-indigo-950">Périmètre</span>
-                                  <PremiumBlur isBlurred={shouldBlur}>
-                                    <p className="text-sm mt-1">{hit.Périmètre}</p>
-                                  </PremiumBlur>
-                                </div>
-                              )}
                               {hit.Incertitude && (
                                 <div>
                                   <span className="text-sm font-medium text-indigo-950">Incertitude</span>
