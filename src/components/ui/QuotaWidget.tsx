@@ -60,23 +60,25 @@ export const QuotaWidget = ({ quotaData, isLoading }: QuotaWidgetProps) => {
   }
 
   const searchesUsed = quotaData.searches_used || 0;
-  const searchesLimit = quotaData.searches_limit || 10;
+  const searchesLimit = quotaData.searches_limit;
   const exportsUsed = quotaData.exports_used || 0;
-  const exportsLimit = quotaData.exports_limit || 0;
+  const exportsLimit = quotaData.exports_limit;
   const planType = quotaData.plan_type || 'freemium';
   
-  const canSearch = searchesUsed < searchesLimit;
-  const canExport = exportsUsed < exportsLimit;
+  // Si les limites sont null, c'est illimité (supra admin)
+  const isUnlimited = searchesLimit === null || exportsLimit === null;
+  const canSearch = isUnlimited || searchesUsed < searchesLimit;
+  const canExport = isUnlimited || exportsUsed < exportsLimit;
 
-  const searchProgress = searchesLimit === -1 ? 0 : (searchesUsed / searchesLimit) * 100;
-  const exportProgress = exportsLimit === -1 ? 0 : (exportsUsed / exportsLimit) * 100;
+  const searchProgress = (isUnlimited || searchesLimit === -1) ? 0 : (searchesUsed / searchesLimit) * 100;
+  const exportProgress = (isUnlimited || exportsLimit === -1) ? 0 : (exportsUsed / exportsLimit) * 100;
 
-  const isNearLimit = searchProgress > 80 || exportProgress > 80;
+  const isNearLimit = !isUnlimited && (searchProgress > 80 || exportProgress > 80);
   const isAtLimit = !canSearch || !canExport;
 
-  // Gestion des différents plans (premium, standard, freemium, trial)
-  if (planType === 'premium' || planType === 'standard') {
-    const isPremium = planType === 'premium';
+  // Gestion des supra admins et plans premium avec quotas illimités
+  if (isUnlimited || planType === 'premium' || planType === 'standard') {
+    const isPremium = planType === 'premium' || isUnlimited;
     
     return (
       <Card className={`bg-white border border-violet-200 ${isPremium ? 'border-primary/20' : 'border-blue-500/20'}`}>
@@ -84,10 +86,10 @@ export const QuotaWidget = ({ quotaData, isLoading }: QuotaWidgetProps) => {
           <div className="flex items-center justify-between">
             <Badge className={isPremium ? "bg-primary text-primary-foreground" : "bg-blue-600 text-white"}>
               {isPremium ? <Crown className="w-4 h-4 mr-1" /> : <Zap className="w-4 h-4 mr-1" />}
-              {isPremium ? 'Premium' : 'Standard'}
+              {isUnlimited ? 'Supra Admin' : isPremium ? 'Premium' : 'Standard'}
             </Badge>
             <div className="text-sm text-muted-foreground">
-              {isPremium ? 'Illimité' : 'Plan payant'}
+              {isUnlimited || isPremium ? 'Illimité' : 'Plan payant'}
             </div>
           </div>
         </CardHeader>
@@ -96,13 +98,13 @@ export const QuotaWidget = ({ quotaData, isLoading }: QuotaWidgetProps) => {
             <div className="flex justify-between text-sm">
               <span>Recherches</span>
               <span className="text-primary font-medium">
-                {isPremium ? 'Illimitées ∞' : '1000 / mois'}
+                {isUnlimited || isPremium ? 'Illimitées ∞' : '1000 / mois'}
               </span>
             </div>
             <div className="flex justify-between text-sm">
               <span>Exports</span>
               <span className="text-primary font-medium">
-                {isPremium ? '1000 / mois' : 'Non disponible'}
+                {isUnlimited || isPremium ? 'Illimités ∞' : '1000 / mois'}
               </span>
             </div>
           </div>
@@ -135,10 +137,10 @@ export const QuotaWidget = ({ quotaData, isLoading }: QuotaWidgetProps) => {
           <div className="flex justify-between text-sm">
             <span>Recherches</span>
             <span className={!canSearch ? "text-destructive font-medium" : ""}>
-              {searchesUsed} / {searchesLimit === -1 ? "∞" : searchesLimit}
+              {searchesUsed} / {(isUnlimited || searchesLimit === -1) ? "∞" : searchesLimit}
             </span>
           </div>
-          {searchesLimit !== -1 && (
+          {!isUnlimited && searchesLimit !== -1 && (
             <Progress 
               value={searchProgress} 
               className={`h-2 ${searchProgress > 90 ? "bg-destructive/20" : searchProgress > 80 ? "bg-yellow-500/20" : ""}`}
@@ -150,10 +152,10 @@ export const QuotaWidget = ({ quotaData, isLoading }: QuotaWidgetProps) => {
           <div className="flex justify-between text-sm">
             <span>Exports Excel</span>
             <span className={!canExport ? "text-destructive font-medium" : ""}>
-              {exportsUsed} / {exportsLimit === -1 ? "∞" : exportsLimit}
+              {exportsUsed} / {(isUnlimited || exportsLimit === -1) ? "∞" : exportsLimit}
             </span>
           </div>
-          {exportsLimit !== -1 && (
+          {!isUnlimited && exportsLimit !== -1 && (
             <Progress 
               value={exportProgress} 
               className={`h-2 ${exportProgress > 90 ? "bg-destructive/20" : exportProgress > 80 ? "bg-yellow-500/20" : ""}`}

@@ -10,6 +10,7 @@ import { usePermissions } from "@/hooks/usePermissions";
 import { useToast } from "@/hooks/use-toast";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 import { FavoritesFilterPanel, FavoritesFilters } from "@/components/search/FavoritesFilterPanel";
+import { DebugUserStatus } from "@/components/debug/DebugUserStatus";
 
 const Favorites = () => {
   const { favorites, loading, removeFromFavorites, addToFavorites } = useFavorites();
@@ -170,6 +171,11 @@ const Favorites = () => {
           </div>
         ) : favorites.length > 0 ? (
           <div>
+            {/* Debug temporaire pour diagnostiquer */}
+            <div className="mb-6">
+              <DebugUserStatus />
+            </div>
+            
             <FavoritesFilterPanel
               filters={filters}
               onFiltersChange={setFilters}
@@ -188,7 +194,7 @@ const Favorites = () => {
               </RoleGuard>
             </div>
             <ResultsTable
-              results={filteredFavorites}
+              results={filteredFavorites.map(fav => ({ ...fav, isFavorite: true }))}
               selectedItems={selectedItems}
               onItemSelect={handleItemSelect}
               onSelectAll={handleSelectAll}
