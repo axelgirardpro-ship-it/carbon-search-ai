@@ -114,7 +114,7 @@ const ClearRefinementsWidget: React.FC = () => {
       variant="ghost"
       size="sm"
       onClick={refine}
-      className="text-indigo-950 hover:text-indigo-800 font-montserrat"
+      className="text-indigo-950 hover:text-indigo-800 font-montserrat bg-white hover:bg-white"
     >
       <RotateCcw className="w-4 h-4 mr-1" />
       RÉINITIALISER LES FILTRES
