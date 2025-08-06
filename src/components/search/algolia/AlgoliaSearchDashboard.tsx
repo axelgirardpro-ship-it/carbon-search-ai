@@ -24,10 +24,6 @@ const AlgoliaSearchContent: React.FC = () => {
               de FE le plus puissant<br />
               du marché
             </h1>
-            <p className="font-montserrat text-lg text-indigo-950 max-w-2xl mx-auto">
-              Accédez à plus de 255 000 facteurs d'émissions français et internationaux<br />
-              agrégés et enrichis par nos experts.
-            </p>
           
             
             <div className="max-w-2xl mx-auto">
