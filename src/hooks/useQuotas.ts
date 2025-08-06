@@ -2,11 +2,13 @@ import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
+export type PlanType = 'freemium' | 'standard' | 'premium';
+
 interface QuotaData {
   user_id: string;
-  plan_type: string;
-  searches_limit: number;
-  exports_limit: number;
+  plan_type: PlanType;
+  searches_limit: number | null; // null = unlimited
+  exports_limit: number | null; // null = unlimited
   searches_used: number;
   exports_used: number;
 }
@@ -58,9 +60,9 @@ export const useQuotas = () => {
           return;
         }
         
-        setQuotaData(newQuota);
+        setQuotaData(newQuota as QuotaData);
       } else {
-        setQuotaData(data);
+        setQuotaData(data as QuotaData);
       }
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Unknown error');
@@ -73,11 +75,17 @@ export const useQuotas = () => {
     loadQuotaData();
   }, [loadQuotaData]);
 
+  // Logique simplifiée et cohérente pour les quotas
   const canSearch = quotaData ? 
-    quotaData.plan_type === 'premium' || quotaData.plan_type === 'standard' || quotaData.searches_used < quotaData.searches_limit 
+    quotaData.searches_limit === null || quotaData.searches_used < quotaData.searches_limit 
     : false;
   const canExport = quotaData ? 
-    quotaData.plan_type === 'premium' || quotaData.exports_used < quotaData.exports_limit 
+    quotaData.exports_limit === null || quotaData.exports_used < quotaData.exports_limit 
+    : false;
+  
+  // Un utilisateur est "à la limite" seulement s'il ne peut plus faire d'actions principales
+  const isAtLimit = quotaData ? 
+    !canSearch || (quotaData.plan_type === 'freemium' && quotaData.exports_limit !== null && !canExport)
     : false;
 
   const incrementSearch = useCallback(async () => {
@@ -116,6 +124,7 @@ export const useQuotas = () => {
     error,
     canSearch,
     canExport,
+    isAtLimit,
     incrementSearch,
     incrementExport,
     reloadQuota: loadQuotaData

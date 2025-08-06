@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import { ChevronDown, Crown, Zap, AlertCircle, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { PlanType } from '@/hooks/useQuotas';
 
-interface NavbarQuotaWidgetProps {
-  quotaData: any;
-  isLoading: boolean;
+interface QuotaData {
+  plan_type: PlanType;
+  searches_used: number;
+  searches_limit: number | null;
+  exports_used: number;
+  exports_limit: number | null;
 }
 
-export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData, isLoading }) => {
+interface NavbarQuotaWidgetProps {
+  quotaData: QuotaData | null;
+  isLoading: boolean;
+  isAtLimit?: boolean;
+}
+
+export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData, isLoading, isAtLimit = false }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   if (isLoading) {
@@ -27,18 +37,14 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
     );
   }
 
-  const planType = quotaData.plan_type || 'freemium';
-  const searchesUsed = quotaData.searches_used || 0;
-  const searchesLimit = quotaData.searches_limit || 10;
-  const exportsUsed = quotaData.exports_used || 0;
-  const exportsLimit = quotaData.exports_limit || 0;
+  const planType = quotaData.plan_type;
+  const searchesUsed = quotaData.searches_used;
+  const searchesLimit = quotaData.searches_limit;
+  const exportsUsed = quotaData.exports_used;
+  const exportsLimit = quotaData.exports_limit;
 
-  const canSearch = searchesUsed < searchesLimit || searchesLimit === -1;
-  const canExport = exportsUsed < exportsLimit || exportsLimit === -1;
-  const isAtLimit = !canSearch || !canExport;
-
-  const searchProgress = searchesLimit === -1 ? 0 : (searchesUsed / searchesLimit) * 100;
-  const exportProgress = exportsLimit === -1 ? 0 : (exportsUsed / exportsLimit) * 100;
+  const searchProgress = searchesLimit === null ? 0 : (searchesUsed / searchesLimit) * 100;
+  const exportProgress = exportsLimit === null ? 0 : (exportsUsed / exportsLimit) * 100;
 
   const getPlanIcon = () => {
     if (planType === 'premium') return <Crown className="h-4 w-4" />;
@@ -49,27 +55,24 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
   const getPlanLabel = () => {
     if (planType === 'premium') return 'Premium';
     if (planType === 'standard') return 'Standard';
-    if (planType === 'trial') return 'Essai';
     return 'Freemium';
   };
 
   const getPlanColor = () => {
     if (planType === 'premium') return 'text-yellow-600';
     if (planType === 'standard') return 'text-blue-600';
-    if (planType === 'trial') return 'text-purple-600';
     return isAtLimit ? 'text-red-600' : 'text-gray-600';
   };
 
   const getSearchDisplay = () => {
-    if (planType === 'premium') return 'Illimitées ∞';
-    if (planType === 'standard') return '1000 / mois';
-    return `${searchesUsed} / ${searchesLimit === -1 ? "∞" : searchesLimit}`;
+    if (searchesLimit === null) return 'Illimitées ∞';
+    return `${searchesUsed} / ${searchesLimit}`;
   };
 
   const getExportDisplay = () => {
-    if (planType === 'premium') return '1000 / mois';
-    if (planType === 'standard') return 'Non disponible';
-    return `${exportsUsed} / ${exportsLimit === -1 ? "∞" : exportsLimit}`;
+    if (exportsLimit === null) return 'Illimitées ∞';
+    if (exportsLimit === 0) return 'Non disponible';
+    return `${exportsUsed} / ${exportsLimit}`;
   };
 
   // Pour premium et standard, affichage simplifié
@@ -120,15 +123,15 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-700">Recherches</span>
-                    <span className={`text-sm font-medium ${!canSearch ? 'text-red-600' : 'text-gray-600'}`}>
+                    <span className={`text-sm font-medium ${searchProgress >= 100 ? 'text-red-600' : 'text-gray-600'}`}>
                       {getSearchDisplay()}
                     </span>
                   </div>
-                  {!isPremiumOrStandard && searchesLimit !== -1 && (
+                  {!isPremiumOrStandard && searchesLimit !== null && (
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className={`h-2 rounded-full transition-all ${
-                          !canSearch ? 'bg-red-500' : 
+                          searchProgress >= 100 ? 'bg-red-500' : 
                           searchProgress > 80 ? 'bg-yellow-500' : 'bg-green-500'
                         }`}
                         style={{ width: `${Math.min(searchProgress, 100)}%` }}
@@ -141,15 +144,15 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-700">Exports Excel</span>
-                    <span className={`text-sm font-medium ${!canExport ? 'text-red-600' : 'text-gray-600'}`}>
+                    <span className={`text-sm font-medium ${exportProgress >= 100 ? 'text-red-600' : 'text-gray-600'}`}>
                       {getExportDisplay()}
                     </span>
                   </div>
-                  {!isPremiumOrStandard && exportsLimit !== -1 && exportsLimit > 0 && (
+                  {!isPremiumOrStandard && exportsLimit !== null && exportsLimit > 0 && (
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className={`h-2 rounded-full transition-all ${
-                          !canExport ? 'bg-red-500' : 
+                          exportProgress >= 100 ? 'bg-red-500' : 
                           exportProgress > 80 ? 'bg-yellow-500' : 'bg-green-500'
                         }`}
                         style={{ width: `${Math.min(exportProgress, 100)}%` }}
@@ -159,7 +162,7 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
                 </div>
 
                 {/* Message d'information selon le plan */}
-                {isAtLimit && (planType === 'freemium' || planType === 'trial') && (
+                {isAtLimit && planType === 'freemium' && (
                   <div className="mt-4 p-3 bg-red-50 rounded-md border border-red-200">
                     <p className="text-xs text-red-700 leading-relaxed">
                       Vous avez atteint vos limites mensuelles. Contactez l'administrateur pour augmenter votre plan.
@@ -171,14 +174,6 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
                   <div className="mt-4 p-3 bg-gray-50 rounded-md">
                     <p className="text-xs text-gray-600 leading-relaxed">
                       Contactez votre administrateur pour augmenter vos limites.
-                    </p>
-                  </div>
-                )}
-
-                {planType === 'trial' && (
-                  <div className="mt-4 p-3 bg-purple-50 rounded-md border border-purple-200">
-                    <p className="text-xs text-purple-700 leading-relaxed">
-                      Période d'essai en cours. Contactez votre administrateur pour un plan permanent.
                     </p>
                   </div>
                 )}

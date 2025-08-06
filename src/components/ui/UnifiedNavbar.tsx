@@ -11,7 +11,7 @@ export const UnifiedNavbar = () => {
   const { user, signOut } = useAuth();
   const { isSupraAdmin } = useSupraAdmin();
   const { canUseFavorites } = usePermissions();
-  const { quotaData, isLoading } = useQuotas();
+  const { quotaData, isLoading, isAtLimit } = useQuotas();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -33,7 +33,7 @@ export const UnifiedNavbar = () => {
             {user ? (
               <>
                 <div className="hidden md:block">
-                  <NavbarQuotaWidget quotaData={quotaData} isLoading={isLoading} />
+                  <NavbarQuotaWidget quotaData={quotaData} isLoading={isLoading} isAtLimit={isAtLimit} />
                 </div>
                 <Link to="/search">
                   <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
