@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { PremiumBlur } from "@/components/ui/PremiumBlur";
 import { useEmissionFactorAccess } from "@/hooks/useEmissionFactorAccess";
+import { useSourceLogos } from "@/hooks/useSourceLogos";
 import { useToast } from "@/hooks/use-toast";
 import {
   Table,
@@ -48,6 +49,7 @@ export const ResultsTable = ({
   isLoading = false
 }: ResultsTableProps) => {
   const { shouldBlurPremiumContent, getSourceLabel } = useEmissionFactorAccess();
+  const { getSourceLogo } = useSourceLogos();
   const { toast } = useToast();
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -344,11 +346,24 @@ export const ResultsTable = ({
                       <Badge variant="secondary">{item.uniteActivite}</Badge>
                     </PremiumBlur>
                   </TableCell>
-                  <TableCell>
-                    <PremiumBlur isBlurred={shouldBlurPremiumContent(item.source, (item as any).isPremiumSource)}>
-                      {item.source}
-                    </PremiumBlur>
-                  </TableCell>
+                   <TableCell>
+                     <PremiumBlur isBlurred={shouldBlurPremiumContent(item.source, (item as any).isPremiumSource)}>
+                       <div className="flex items-center gap-2">
+                         {getSourceLogo(item.source) && (
+                           <img 
+                             src={getSourceLogo(item.source)!} 
+                             alt={`Logo ${item.source}`}
+                             className="w-6 h-6 object-contain"
+                             onError={(e) => {
+                               // Hide image if loading fails
+                               (e.target as HTMLImageElement).style.display = 'none';
+                             }}
+                           />
+                         )}
+                         <span>{item.source}</span>
+                       </div>
+                     </PremiumBlur>
+                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-1">
                       <span>{item.localisation}</span>
