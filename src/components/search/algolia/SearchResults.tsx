@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Heart, Download, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Search, Lock } from 'lucide-react';
+import { Heart, Download, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Search, Lock, Copy } from 'lucide-react';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { usePermissions } from '@/hooks/usePermissions';
 import { PremiumBlur } from '@/components/ui/PremiumBlur';
@@ -302,6 +302,47 @@ export const SearchResults: React.FC = () => {
     }
   };
 
+  const handleCopyToClipboard = async () => {
+    if (selectedItems.size === 0) {
+      toast({
+        title: "Aucune sélection",
+        description: "Veuillez sélectionner au moins un facteur d'émission.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const selectedResults = hits.filter(hit => selectedItems.has(hit.objectID));
+      const headers = ["Nom", "FE", "Unité donnée d'activité", "Source", "Localisation", "Date"];
+      const tsvContent = [
+        headers.join("\t"),
+        ...selectedResults.map(hit => [
+          hit.Nom || '',
+          hit.FE || '',
+          hit['Unité donnée d\'activité'] || '',
+          hit.Source || '',
+          hit.Localisation || '',
+          hit.Date || ''
+        ].join("\t"))
+      ].join("\n");
+      
+      await navigator.clipboard.writeText(tsvContent);
+      
+      toast({
+        title: "Copié dans le presse-papier",
+        description: `${selectedItems.size} élément(s) copié(s). Vous pouvez maintenant les coller dans Excel ou Google Sheets.`,
+      });
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la copie dans le presse-papier",
+      });
+    }
+  };
+
   const handleExport = async () => {
     if (!canExport || !canExportQuota) {
       toast({
@@ -442,10 +483,16 @@ export const SearchResults: React.FC = () => {
               )}
             </div>
             {selectedItems.size > 0 && (
-              <Button onClick={handleExport} className="flex items-center gap-2 bg-slate-950 hover:bg-slate-800 text-white font-montserrat">
-                <Download className="h-4 w-4" />
-                Exporter ({selectedItems.size})
-              </Button>
+              <div className="flex gap-2">
+                <Button onClick={handleCopyToClipboard} variant="outline" className="flex items-center gap-2 font-montserrat">
+                  <Copy className="h-4 w-4" />
+                  Copier ({selectedItems.size})
+                </Button>
+                <Button onClick={handleExport} className="flex items-center gap-2 bg-slate-950 hover:bg-slate-800 text-white font-montserrat">
+                  <Download className="h-4 w-4" />
+                  Exporter ({selectedItems.size})
+                </Button>
+              </div>
             )}
           </div>
 
