@@ -604,13 +604,13 @@ export const SearchResults: React.FC = () => {
                           <div>
                             <span className="text-sm font-medium text-muted-foreground">Source</span>
                             <PremiumBlur isBlurred={shouldBlur}>
-                              <div className="flex flex-col gap-2">
-                                <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Source')} />
+                              <div className="flex items-center justify-between gap-2">
+                                <p className="text-sm flex-1" dangerouslySetInnerHTML={getHighlightedText(hit, 'Source')} />
                                 {getSourceLogo(hit.Source) && (
                                   <img 
                                     src={getSourceLogo(hit.Source)!} 
                                     alt={`Logo ${hit.Source}`}
-                                    className="w-20 h-20 object-contain"
+                                    className="w-12 h-12 object-contain flex-shrink-0"
                                   />
                                 )}
                               </div>
