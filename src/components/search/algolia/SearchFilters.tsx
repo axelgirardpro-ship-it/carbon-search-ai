@@ -173,8 +173,12 @@ const FERangeInput: React.FC = () => {
       // Gérer les objets de type Number avec des valeurs spéciales
       const parseValue = (value: any) => {
         if (typeof value === 'object' && value?._type === 'Number') {
+          const strValue = String(value.value);
+          if (strValue === '-Infinity' || strValue === 'Infinity' || strValue === 'NaN') {
+            return null;
+          }
           const numValue = parseFloat(value.value);
-          return numValue === -Infinity || numValue === Infinity || isNaN(numValue) ? null : numValue;
+          return isNaN(numValue) ? null : numValue;
         }
         if (typeof value === 'number') {
           return value === -Infinity || value === Infinity || isNaN(value) ? null : value;
@@ -185,6 +189,7 @@ const FERangeInput: React.FC = () => {
       const minValue = parseValue(startMin);
       const maxValue = parseValue(startMax);
       
+      // Seulement définir des valeurs valides
       if (minValue !== null) {
         setMin(minValue.toString());
       }
