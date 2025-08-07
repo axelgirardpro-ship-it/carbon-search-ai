@@ -252,7 +252,6 @@ const FERangeInput: React.FC = () => {
         {range && range.min !== undefined && range.max !== undefined && (
           <div className="text-xs text-muted-foreground">
             Plage actuelle: {range.min?.toLocaleString()} à {range.max?.toLocaleString()}
-            {range.min < -1000000 && <span className="text-orange-600"> ⚠️ Données aberrantes détectées</span>}
           </div>
         )}
         <div className="grid grid-cols-2 gap-2">
