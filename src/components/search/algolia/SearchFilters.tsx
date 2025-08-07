@@ -157,7 +157,8 @@ const RecentDataToggle: React.FC = () => {
 
 const FERangeInput: React.FC = () => {
   const { start, range, canRefine, refine } = useRange({
-    attribute: 'FE'
+    attribute: 'FE',
+    precision: 2
   });
 
   const [min, setMin] = React.useState('');
