@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuotaContext } from './SearchProvider';
+import ReactMarkdown from 'react-markdown';
 
 interface AlgoliaHit {
   objectID: string;
@@ -553,7 +554,19 @@ export const SearchResults: React.FC = () => {
                                <div>
                                  <span className="text-sm font-medium text-indigo-950">Description</span>
                                  <PremiumBlur isBlurred={shouldBlur}>
-                                   <p className="text-sm mt-1 text-break-words" dangerouslySetInnerHTML={getHighlightedText(hit, 'Description')} />
+                                   <div className="text-sm mt-1 text-break-words prose prose-sm max-w-none">
+                                     <ReactMarkdown 
+                                       components={{
+                                         a: ({ href, children, ...props }) => (
+                                           <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline" {...props}>
+                                             {children}
+                                           </a>
+                                         )
+                                       }}
+                                     >
+                                       {hit.Description}
+                                     </ReactMarkdown>
+                                   </div>
                                  </PremiumBlur>
                                </div>
                              )}
@@ -573,7 +586,19 @@ export const SearchResults: React.FC = () => {
                                <div>
                                  <span className="text-sm font-medium text-indigo-950">Contributeur</span>
                                  <PremiumBlur isBlurred={shouldBlur}>
-                                   <p className="text-sm mt-1 text-break-words">{hit.Contributeur}</p>
+                                   <div className="text-sm mt-1 text-break-words prose prose-sm max-w-none">
+                                     <ReactMarkdown 
+                                       components={{
+                                         a: ({ href, children, ...props }) => (
+                                           <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline" {...props}>
+                                             {children}
+                                           </a>
+                                         )
+                                       }}
+                                     >
+                                       {hit.Contributeur}
+                                     </ReactMarkdown>
+                                   </div>
                                  </PremiumBlur>
                                </div>
                              )}
@@ -581,7 +606,19 @@ export const SearchResults: React.FC = () => {
                                <div>
                                  <span className="text-sm font-medium text-indigo-950">Commentaires</span>
                                  <PremiumBlur isBlurred={shouldBlur}>
-                                   <p className="text-sm mt-1 text-break-words">{hit.Commentaires}</p>
+                                   <div className="text-sm mt-1 text-break-words prose prose-sm max-w-none">
+                                     <ReactMarkdown 
+                                       components={{
+                                         a: ({ href, children, ...props }) => (
+                                           <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline" {...props}>
+                                             {children}
+                                           </a>
+                                         )
+                                       }}
+                                     >
+                                       {hit.Commentaires}
+                                     </ReactMarkdown>
+                                   </div>
                                  </PremiumBlur>
                                </div>
                              )}
