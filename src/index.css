@@ -164,4 +164,17 @@
     overflow-wrap: anywhere;
     hyphens: auto;
   }
+  
+  /* Algolia search highlighting */
+  mark, .ais-Highlight-highlighted {
+    background-color: hsl(263 76% 92%); /* Light purple */
+    color: hsl(263 76% 25%); /* Dark purple text */
+    padding: 1px 2px;
+    border-radius: 2px;
+  }
+  
+  .dark mark, .dark .ais-Highlight-highlighted {
+    background-color: hsl(263 76% 25%); /* Dark purple for dark mode */
+    color: hsl(263 76% 90%); /* Light purple text for dark mode */
+  }
 }
