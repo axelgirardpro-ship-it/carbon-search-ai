@@ -602,7 +602,7 @@ export const SearchResults: React.FC = () => {
                                   <img 
                                     src={getSourceLogo(hit.Source)!} 
                                     alt={`Logo ${hit.Source}`}
-                                    className="w-10 h-10 object-contain"
+                                    className="w-20 h-20 object-contain"
                                   />
                                 )}
                               </div>
