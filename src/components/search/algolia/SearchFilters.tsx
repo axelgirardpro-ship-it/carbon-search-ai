@@ -169,11 +169,26 @@ const FERangeInput: React.FC = () => {
       const startMin = start[0];
       const startMax = start[1];
       
-      if (typeof startMin === 'number' && startMin !== -Infinity && !isNaN(startMin)) {
-        setMin(startMin.toString());
+      // Gérer les objets de type Number avec des valeurs spéciales
+      const parseValue = (value: any) => {
+        if (typeof value === 'object' && value?._type === 'Number') {
+          const numValue = parseFloat(value.value);
+          return numValue === -Infinity || numValue === Infinity || isNaN(numValue) ? null : numValue;
+        }
+        if (typeof value === 'number') {
+          return value === -Infinity || value === Infinity || isNaN(value) ? null : value;
+        }
+        return null;
+      };
+      
+      const minValue = parseValue(startMin);
+      const maxValue = parseValue(startMax);
+      
+      if (minValue !== null) {
+        setMin(minValue.toString());
       }
-      if (typeof startMax === 'number' && startMax !== Infinity && !isNaN(startMax)) {
-        setMax(startMax.toString());
+      if (maxValue !== null) {
+        setMax(maxValue.toString());
       }
     }
   }, [start]);
