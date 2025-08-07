@@ -580,7 +580,7 @@ export const SearchResults: React.FC = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-3">
                           <div>
                             <span className="text-sm font-medium text-muted-foreground">Facteur d'émission</span>
                             <PremiumBlur isBlurred={shouldBlur}>
@@ -593,6 +593,14 @@ export const SearchResults: React.FC = () => {
                               <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Unité donnée d\'activité')} />
                             </PremiumBlur>
                           </div>
+                          {hit.Périmètre && (
+                            <div>
+                              <span className="text-sm font-medium text-muted-foreground">Périmètre</span>
+                              <PremiumBlur isBlurred={shouldBlur}>
+                                <p className="text-sm">{hit.Périmètre}</p>
+                              </PremiumBlur>
+                            </div>
+                          )}
                           <div>
                             <span className="text-sm font-medium text-muted-foreground">Source</span>
                             <PremiumBlur isBlurred={shouldBlur}>
@@ -608,17 +616,6 @@ export const SearchResults: React.FC = () => {
                               </div>
                             </PremiumBlur>
                           </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-                          {hit.Périmètre && (
-                            <div>
-                              <span className="text-sm font-medium text-muted-foreground">Périmètre</span>
-                              <PremiumBlur isBlurred={shouldBlur}>
-                                <p className="text-sm">{hit.Périmètre}</p>
-                              </PremiumBlur>
-                            </div>
-                          )}
                         </div>
 
                         <div className="flex flex-wrap gap-2">
