@@ -21,7 +21,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Heart, Download, ChevronDown } from "lucide-react";
+import { Heart, Download, ChevronDown, Copy } from "lucide-react";
 import { EmissionFactor } from "@/types/emission-factor";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +32,7 @@ interface ResultsTableProps {
   onSelectAll: () => void;
   onToggleFavorite: (id: string) => void;
   onExport: () => void;
+  onCopyToClipboard: () => void;
   isLoading?: boolean;
 }
 
@@ -42,6 +43,7 @@ export const ResultsTable = ({
   onSelectAll,
   onToggleFavorite,
   onExport,
+  onCopyToClipboard,
   isLoading = false
 }: ResultsTableProps) => {
   const { shouldBlurPremiumContent, getSourceLabel } = useEmissionFactorAccess();
@@ -210,10 +212,16 @@ export const ResultsTable = ({
         </div>
         
         {selectedItems.length > 0 && (
-          <Button onClick={onExport} variant="outline" size="sm">
-            <Download className="w-4 h-4 mr-2" />
-            Exporter la sélection
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={onCopyToClipboard} variant="outline" size="sm">
+              <Copy className="w-4 h-4 mr-2" />
+              Copier
+            </Button>
+            <Button onClick={onExport} variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" />
+              Exporter
+            </Button>
+          </div>
         )}
       </div>
 

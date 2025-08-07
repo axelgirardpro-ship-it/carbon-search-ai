@@ -109,6 +109,38 @@ const Favorites = () => {
   };
 
 
+  const handleCopyToClipboard = async () => {
+    try {
+      const selectedFavorites = filteredFavorites.filter(f => selectedItems.includes(f.id));
+      const headers = ["Nom", "FE", "Unité donnée d'activité", "Source", "Localisation", "Date"];
+      const tsvContent = [
+        headers.join("\t"),
+        ...selectedFavorites.map(f => [
+          f.nom,
+          f.fe,
+          f.uniteActivite,
+          f.source,
+          f.localisation,
+          f.date
+        ].join("\t"))
+      ].join("\n");
+      
+      await navigator.clipboard.writeText(tsvContent);
+      
+      toast({
+        title: "Copié dans le presse-papier",
+        description: `${selectedFavorites.length} élément(s) copié(s). Vous pouvez maintenant les coller dans Excel ou Google Sheets.`,
+      });
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la copie dans le presse-papier",
+      });
+    }
+  };
+
   const handleExport = async () => {
     if (!canExport) {
       toast({
@@ -194,6 +226,7 @@ const Favorites = () => {
               onSelectAll={handleSelectAll}
               onToggleFavorite={handleToggleFavorite}
               onExport={handleExport}
+              onCopyToClipboard={handleCopyToClipboard}
             />
           </div>
         ) : (
