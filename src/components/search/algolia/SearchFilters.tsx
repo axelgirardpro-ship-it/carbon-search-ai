@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRefinementList, useClearRefinements, useToggleRefinement, useRange } from 'react-instantsearch';
+import { useRefinementList, useClearRefinements, useToggleRefinement, useRange, Configure } from 'react-instantsearch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -163,6 +163,7 @@ const FERangeInput: React.FC = () => {
 
   const [min, setMin] = React.useState('');
   const [max, setMax] = React.useState('');
+  const [applied, setApplied] = React.useState<{ min?: number; max?: number }>({});
 
   // Synchroniser avec les valeurs du range seulement si elles sont valides
   React.useEffect(() => {
@@ -228,7 +229,9 @@ const FERangeInput: React.FC = () => {
     }
 
     console.log('🔎 Applying FE range', { minValue, maxValue, available: range });
-    refine([minValue, maxValue]);
+    setApplied({ min: minValue, max: maxValue });
+    // Clear internal range refinement to avoid conflicts; Configure will drive numericFilters
+    refine([undefined, undefined]);
   };
 
   const handleReset = () => {
@@ -248,6 +251,14 @@ const FERangeInput: React.FC = () => {
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-3 mt-2">
+        {(applied.min !== undefined || applied.max !== undefined) && (
+          <Configure
+            numericFilters={[
+              ...(applied.min !== undefined ? [`FE>=${applied.min}`] : []),
+              ...(applied.max !== undefined ? [`FE<=${applied.max}`] : []),
+            ]}
+          />
+        )}
         {range && range.min !== undefined && range.max !== undefined && (
           <div className="text-xs text-muted-foreground">
             Plage: {range.min?.toLocaleString()} à {range.max?.toLocaleString()}
