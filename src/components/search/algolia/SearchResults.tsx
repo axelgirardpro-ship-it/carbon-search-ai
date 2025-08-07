@@ -596,15 +596,15 @@ export const SearchResults: React.FC = () => {
                           <div>
                             <span className="text-sm font-medium text-muted-foreground">Source</span>
                             <PremiumBlur isBlurred={shouldBlur}>
-                              <div className="flex items-center gap-2">
+                              <div className="flex flex-col gap-2">
+                                <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Source')} />
                                 {getSourceLogo(hit.Source) && (
                                   <img 
                                     src={getSourceLogo(hit.Source)!} 
                                     alt={`Logo ${hit.Source}`}
-                                    className="w-5 h-5 object-contain"
+                                    className="w-10 h-10 object-contain"
                                   />
                                 )}
-                                <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Source')} />
                               </div>
                             </PremiumBlur>
                           </div>
