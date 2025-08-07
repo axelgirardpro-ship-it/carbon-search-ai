@@ -272,7 +272,7 @@ export const ResultsTable = ({
                   <TableCell>
                     <PremiumBlur isBlurred={shouldBlurPremiumContent(item.source, (item as any).isPremiumSource)}>
                       <Badge variant="outline" className="font-mono">
-                        {item.fe}
+                        {typeof item.fe === 'number' ? item.fe.toLocaleString('fr-FR', { maximumFractionDigits: 4 }) : item.fe}
                       </Badge>
                     </PremiumBlur>
                   </TableCell>
