@@ -337,7 +337,7 @@ export type Database = {
           exports_limit: number | null
           exports_used: number | null
           id: string
-          plan_type: string | null
+          plan_type: string
           reset_date: string | null
           searches_limit: number | null
           searches_used: number | null
@@ -349,7 +349,7 @@ export type Database = {
           exports_limit?: number | null
           exports_used?: number | null
           id?: string
-          plan_type?: string | null
+          plan_type?: string
           reset_date?: string | null
           searches_limit?: number | null
           searches_used?: number | null
@@ -361,7 +361,7 @@ export type Database = {
           exports_limit?: number | null
           exports_used?: number | null
           id?: string
-          plan_type?: string | null
+          plan_type?: string
           reset_date?: string | null
           searches_limit?: number | null
           searches_used?: number | null
