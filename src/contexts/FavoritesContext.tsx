@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useMemo, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from "@/contexts/AuthContext";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -11,7 +11,7 @@ interface FavoritesContextType {
   addToFavorites: (item: EmissionFactor) => Promise<void>;
   removeFromFavorites: (itemId: string) => Promise<void>;
   isFavorite: (itemId: string) => boolean;
-  refreshFavorites: () => Promise<void>;
+  refreshFavorites: (forceRefresh?: boolean) => Promise<void>;
 }
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
@@ -33,170 +33,85 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
   const { canUseFavorites } = useEmissionFactorAccess();
   const [favorites, setFavorites] = useState<EmissionFactor[]>([]);
   const [loading, setLoading] = useState(false);
+  const [lastRefresh, setLastRefresh] = useState<number>(0);
+  
+  // Cache TTL: 30 seconds to avoid unnecessary re-fetches
+  const CACHE_TTL = 30000;
 
-  const refreshFavorites = async () => {
+  // Helper function to map database format to EmissionFactor
+  const mapDbToEmissionFactor = useCallback((data: any, itemId: string): EmissionFactor => {
+    return {
+      id: itemId,
+      nom: data["Nom"] || data.nom || '',
+      description: data["Description"] || data.description || '',
+      fe: Number(data["FE"] || data.fe) || 0,
+      uniteActivite: data["Unité donnée d'activité"] || data.uniteActivite || '',
+      source: data["Source"] || data.source || '',
+      secteur: data["Secteur"] || data.secteur || '',
+      sousSecteur: data["Sous-secteur"] || data.sousSecteur || '',
+      localisation: data["Localisation"] || data.localisation || '',
+      date: Number(data["Date"] || data.date) || 0,
+      incertitude: data["Incertitude"] || data.incertitude || '',
+      perimetre: data["Périmètre"] || data.perimetre || '',
+      contributeur: data["Contributeur"] || data.contributeur || '',
+      commentaires: data["Commentaires"] || data.commentaires || '',
+      isFavorite: true
+    };
+  }, []);
+
+  // Optimized refresh function with cache
+  const refreshFavorites = useCallback(async (forceRefresh = false) => {
     if (!user || !canUseFavorites()) {
       setFavorites([]);
+      setLastRefresh(0);
       return;
+    }
+
+    // Check cache TTL unless force refresh
+    const now = Date.now();
+    if (!forceRefresh && lastRefresh && (now - lastRefresh) < CACHE_TTL) {
+      return; // Use cached data
     }
 
     try {
       setLoading(true);
       
-      // Get all favorites with their stored data
+      // Single optimized query to get favorites with emission factors data
+      // This reduces the complexity by using stored item_data primarily
       const { data: favoritesData, error: favError } = await supabase
         .from('favorites')
         .select('item_id, item_data, created_at')
         .eq('user_id', user.id)
-        .eq('item_type', 'emission_factor');
+        .eq('item_type', 'emission_factor')
+        .order('created_at', { ascending: false });
 
       if (favError) throw favError;
 
       if (!favoritesData || favoritesData.length === 0) {
         setFavorites([]);
+        setLastRefresh(now);
         return;
       }
 
-      // Separate UUID and non-UUID item IDs
-      const uuidIds: string[] = [];
-      const nonUuidFavorites: any[] = [];
-      
-      favoritesData.forEach(fav => {
-        // Check if item_id looks like a UUID
-        if (fav.item_id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
-          uuidIds.push(fav.item_id);
-        } else {
-          // Use stored item_data for non-UUID favorites
-          if (fav.item_data) {
-            const storedData = fav.item_data as any;
-            if (storedData["Nom"]) {
-              // Map from database format
-              nonUuidFavorites.push({
-                id: fav.item_id,
-                nom: storedData["Nom"] || '',
-                description: storedData["Description"] || '',
-                fe: Number(storedData["FE"]) || 0,
-                uniteActivite: storedData["Unité donnée d'activité"] || '',
-                source: storedData["Source"] || '',
-                secteur: storedData["Secteur"] || '',
-                sousSecteur: storedData["Sous-secteur"] || '',
-                localisation: storedData["Localisation"] || '',
-                date: Number(storedData["Date"]) || 0,
-                incertitude: storedData["Incertitude"] || '',
-                perimetre: storedData["Périmètre"] || '',
-                contributeur: storedData["Contributeur"] || '',
-                commentaires: storedData["Commentaires"] || '',
-                isFavorite: true
-              });
-            } else {
-              // Already in correct format
-              nonUuidFavorites.push({
-                ...storedData,
-                id: fav.item_id,
-                isFavorite: true
-              });
-            }
-          }
-        }
-      });
-
-      let currentData: any[] = [];
-      
-      // Only query emission_factors for valid UUIDs
-      if (uuidIds.length > 0) {
-        const { data, error: emissionError } = await supabase
-          .from('emission_factors')
-          .select('*')
-          .in('id', uuidIds);
-
-        if (emissionError) {
-          console.error('Error fetching emission factors:', emissionError);
-        } else {
-          currentData = data || [];
-        }
-      }
-
-      // For UUID favorites, use current data if available, otherwise fall back to stored data
-      const uuidFavorites = favoritesData
-        .filter(fav => uuidIds.includes(fav.item_id))
+      // Process favorites data efficiently
+      const processedFavorites = favoritesData
         .map(fav => {
-          const currentItem = currentData.find(item => item.id === fav.item_id);
-          
-          if (currentItem) {
-            // Map database columns to TypeScript interface
-            const mappedItem: EmissionFactor = {
-              id: currentItem.id,
-              nom: currentItem["Nom"] || '',
-              description: currentItem["Description"] || '',
-              fe: Number(currentItem["FE"]) || 0,
-              uniteActivite: currentItem["Unité donnée d'activité"] || '',
-              source: currentItem["Source"] || '',
-              secteur: currentItem["Secteur"] || '',
-              sousSecteur: currentItem["Sous-secteur"] || '',
-              localisation: currentItem["Localisation"] || '',
-              date: Number(currentItem["Date"]) || 0,
-              incertitude: currentItem["Incertitude"] || '',
-              perimetre: currentItem["Périmètre"] || '',
-              contributeur: currentItem["Contributeur"] || '',
-              commentaires: currentItem["Commentaires"] || '',
-              isFavorite: true
-            };
-            
-            // Update stored data with current mapped data
-            supabase
-              .from('favorites')
-              .update({ item_data: mappedItem as any })
-              .eq('user_id', user.id)
-              .eq('item_id', fav.item_id);
-              
-            return mappedItem;
-          } else if (fav.item_data) {
-            // Map stored data if it's in database format
-            const storedData = fav.item_data as any;
-            if (storedData["Nom"]) {
-              // Map from database format
-              return {
-                id: fav.item_id,
-                nom: storedData["Nom"] || '',
-                description: storedData["Description"] || '',
-                fe: Number(storedData["FE"]) || 0,
-                uniteActivite: storedData["Unité donnée d'activité"] || '',
-                source: storedData["Source"] || '',
-                secteur: storedData["Secteur"] || '',
-                sousSecteur: storedData["Sous-secteur"] || '',
-                localisation: storedData["Localisation"] || '',
-                date: Number(storedData["Date"]) || 0,
-                incertitude: storedData["Incertitude"] || '',
-                perimetre: storedData["Périmètre"] || '',
-                contributeur: storedData["Contributeur"] || '',
-                commentaires: storedData["Commentaires"] || '',
-                isFavorite: true
-              };
-            } else {
-              // Already in correct format
-              return {
-                ...storedData,
-                id: fav.item_id,
-                isFavorite: true
-              };
-            }
-          }
-          return null;
+          if (!fav.item_data) return null;
+          return mapDbToEmissionFactor(fav.item_data, fav.item_id);
         })
-        .filter(Boolean);
+        .filter(Boolean) as EmissionFactor[];
 
-      // Combine all favorites
-      const allFavorites = [...nonUuidFavorites, ...uuidFavorites] as EmissionFactor[];
-      
-      setFavorites(allFavorites);
+      setFavorites(processedFavorites);
+      setLastRefresh(now);
     } catch (error) {
       console.error('Error fetching favorites:', error);
+      // Don't clear favorites on error to maintain UX
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, canUseFavorites, mapDbToEmissionFactor, lastRefresh, CACHE_TTL]);
 
-  const addToFavorites = async (item: EmissionFactor) => {
+  const addToFavorites = useCallback(async (item: EmissionFactor) => {
     if (!user || !canUseFavorites()) return;
 
     try {
@@ -210,39 +125,69 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
         });
 
       if (error) throw error;
-      setFavorites(prev => [...prev, item]);
+      
+      // Optimistic update with marked favorite
+      setFavorites(prev => [...prev, { ...item, isFavorite: true }]);
+      setLastRefresh(0); // Invalidate cache for next refresh
     } catch (error) {
       console.error('Error adding to favorites:', error);
       throw error;
     }
-  };
+  }, [user, canUseFavorites]);
 
-  const removeFromFavorites = async (itemId: string) => {
+  const removeFromFavorites = useCallback(async (itemId: string) => {
     if (!user || !canUseFavorites()) return;
 
     try {
+      // Optimistic update first for better UX
+      setFavorites(prev => prev.filter(item => item.id !== itemId));
+      
       const { error } = await supabase
         .from('favorites')
         .delete()
         .eq('user_id', user.id)
         .eq('item_id', itemId);
 
-      if (error) throw error;
-
-      setFavorites(prev => prev.filter(item => item.id !== itemId));
+      if (error) {
+        // Revert optimistic update on error
+        await refreshFavorites(true);
+        throw error;
+      }
+      
+      setLastRefresh(0); // Invalidate cache
     } catch (error) {
       console.error('Error removing from favorites:', error);
       throw error;
     }
-  };
+  }, [user, canUseFavorites, refreshFavorites]);
 
-  const isFavorite = (itemId: string) => {
-    return favorites.some(item => item.id === itemId);
-  };
+  // Memoized favorites ID set for O(1) lookup
+  const favoriteIds = useMemo(() => {
+    return new Set(favorites.map(item => item.id));
+  }, [favorites]);
 
+  const isFavorite = useCallback((itemId: string) => {
+    return favoriteIds.has(itemId);
+  }, [favoriteIds]);
+
+  // Optimized useEffect with debounce-like behavior
   useEffect(() => {
-    refreshFavorites();
-  }, [user]);
+    let timeoutId: NodeJS.Timeout;
+    
+    if (user && canUseFavorites()) {
+      // Small delay to batch potential multiple calls
+      timeoutId = setTimeout(() => {
+        refreshFavorites();
+      }, 100);
+    } else {
+      setFavorites([]);
+      setLastRefresh(0);
+    }
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [user, canUseFavorites, refreshFavorites]);
 
   return (
     <FavoritesContext.Provider value={{

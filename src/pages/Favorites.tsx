@@ -5,14 +5,23 @@ import { ResultsTable } from "@/components/search/ResultsTable";
 import { Button } from "@/components/ui/button";
 import { EmissionFactor } from "@/types/emission-factor";
 import { Heart } from "lucide-react";
-import { useFavorites } from "@/contexts/FavoritesContext";
+import { useOptimizedFavorites } from "@/hooks/useOptimizedFavorites";
 import { usePermissions } from "@/hooks/usePermissions";
 import { useToast } from "@/hooks/use-toast";
 import { RoleGuard } from "@/components/ui/RoleGuard";
 import { FavoritesFilterPanel, FavoritesFilters } from "@/components/search/FavoritesFilterPanel";
+import { PerformanceMonitor } from "@/components/debug/PerformanceMonitor";
 
 const Favorites = () => {
-  const { favorites, loading, removeFromFavorites, addToFavorites } = useFavorites();
+  const { 
+    favorites, 
+    loading, 
+    removeFromFavorites, 
+    filterFavorites,
+    filterOptions,
+    stats,
+    getPerformanceMetrics
+  } = useOptimizedFavorites();
   const { canExport } = usePermissions();
   const { toast } = useToast();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -24,58 +33,15 @@ const Favorites = () => {
     importType: 'all'
   });
 
-  // Filter favorites based on filters
+  // Use optimized filtering with memoization
   const filteredFavorites = useMemo(() => {
-    return favorites.filter(favorite => {
-      // Search filter
-      if (filters.search) {
-        const searchLower = filters.search.toLowerCase();
-        const matchesSearch = favorite.nom.toLowerCase().includes(searchLower) ||
-          (favorite.description && favorite.description.toLowerCase().includes(searchLower));
-        if (!matchesSearch) return false;
-      }
+    return filterFavorites(filters);
+  }, [filterFavorites, filters]);
 
-      // Source filter
-      if (filters.source && favorite.source !== filters.source) {
-        return false;
-      }
-
-      // Location filter
-      if (filters.localisation && favorite.localisation !== filters.localisation) {
-        return false;
-      }
-
-      // Date filter
-      if (filters.date && favorite.date.toString() !== filters.date) {
-        return false;
-      }
-
-      // Import type filter
-      if (filters.importType !== 'all') {
-        const isImported = Boolean(favorite.workspace_id);
-        if (filters.importType === 'imported' && !isImported) return false;
-        if (filters.importType === 'not_imported' && isImported) return false;
-      }
-
-      return true;
-    });
-  }, [favorites, filters]);
-
-  // Get unique values for filter options
-  const availableSources = useMemo(() => 
-    [...new Set(favorites.map(f => f.source))].filter(Boolean).sort(), 
-    [favorites]
-  );
-  
-  const availableLocations = useMemo(() => 
-    [...new Set(favorites.map(f => f.localisation))].filter(Boolean).sort(), 
-    [favorites]
-  );
-  
-  const availableDates = useMemo(() => 
-    [...new Set(favorites.map(f => f.date))].filter(Boolean).sort().reverse().map(String), 
-    [favorites]
-  );
+  // Use optimized filter options
+  const availableSources = filterOptions.sources;
+  const availableLocations = filterOptions.locations;
+  const availableDates = filterOptions.dates;
 
   const handleItemSelect = (id: string) => {
     setSelectedItems(prev => 
@@ -212,14 +178,37 @@ const Favorites = () => {
             <Heart className="w-8 h-8 mr-3 text-red-500" />
             Mes favoris
           </h1>
-          <p className="text-muted-foreground">
-            Retrouvez ici tous vos facteurs d'émissions carbone favoris
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <p className="text-muted-foreground">
+              Retrouvez ici tous vos facteurs d'émissions carbone favoris
+            </p>
+            {!loading && favorites.length > 0 && (
+              <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <span className="font-semibold text-foreground">{stats.total}</span> favoris
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="font-semibold text-foreground">{stats.sources}</span> sources
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="font-semibold text-foreground">{stats.locations}</span> pays
+                </span>
+              </div>
+            )}
+          </div>
         </div>
 
         {loading ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">Chargement de vos favoris...</p>
+            <div className="flex flex-col items-center space-y-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <div className="space-y-2">
+                <p className="text-muted-foreground font-medium">Chargement de vos favoris...</p>
+                <p className="text-sm text-muted-foreground/75">
+                  Récupération des données depuis la base...
+                </p>
+              </div>
+            </div>
           </div>
         ) : favorites.length > 0 ? (
           <div>
@@ -267,6 +256,9 @@ const Favorites = () => {
           </div>
         )}
       </div>
+      
+      {/* Performance monitor - only visible in development */}
+      <PerformanceMonitor getMetrics={getPerformanceMetrics} />
     </div>
   );
 };
