@@ -514,7 +514,7 @@ export const SearchResults: React.FC = () => {
                           <div>
                             <span className="text-sm font-medium text-muted-foreground">Facteur d'émission</span>
                             <PremiumBlur isBlurred={shouldBlur}>
-                              <p className="text-lg font-bold text-indigo-950 font-montserrat">{hit.FE ? parseFloat(hit.FE.toFixed(4)).toLocaleString('fr-FR') : ''} kgCO₂eq</p>
+                              <p className="text-lg font-bold text-indigo-950 font-montserrat">{hit.FE ? (typeof hit.FE === 'number' ? parseFloat(hit.FE.toFixed(4)) : parseFloat(parseFloat(String(hit.FE)).toFixed(4))).toLocaleString('fr-FR') : ''} kgCO₂eq</p>
                             </PremiumBlur>
                           </div>
                           <div>
