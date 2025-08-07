@@ -202,7 +202,12 @@ const FERangeInput: React.FC = () => {
   const handleSubmit = () => {
     const minValue = min === '' ? undefined : parseFloat(min);
     const maxValue = max === '' ? undefined : parseFloat(max);
-    refine([minValue, maxValue]);
+    
+    // Assurer que les valeurs soient valides et dans la bonne plage
+    const validMin = minValue !== undefined && !isNaN(minValue) ? minValue : undefined;
+    const validMax = maxValue !== undefined && !isNaN(maxValue) ? maxValue : undefined;
+    
+    refine([validMin, validMax]);
   };
 
   const handleReset = () => {
