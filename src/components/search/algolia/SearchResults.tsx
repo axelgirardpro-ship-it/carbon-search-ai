@@ -15,6 +15,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuotaContext } from './SearchProvider';
 import ReactMarkdown from 'react-markdown';
+import { useSourceLogos } from '@/hooks/useSourceLogos';
 
 interface AlgoliaHit {
   objectID: string;
@@ -231,6 +232,7 @@ export const SearchResults: React.FC = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const { quotaData, canExport: canExportQuota, incrementExport } = useQuotaContext();
+  const { getSourceLogo } = useSourceLogos();
 
   // Function to sort hits based on current sort option
   const sortHits = React.useCallback((hits: AlgoliaHit[], sortKey: string): AlgoliaHit[] => {
@@ -594,7 +596,16 @@ export const SearchResults: React.FC = () => {
                           <div>
                             <span className="text-sm font-medium text-muted-foreground">Source</span>
                             <PremiumBlur isBlurred={shouldBlur}>
-                              <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Source')} />
+                              <div className="flex items-center gap-2">
+                                {getSourceLogo(hit.Source) && (
+                                  <img 
+                                    src={getSourceLogo(hit.Source)!} 
+                                    alt={`Logo ${hit.Source}`}
+                                    className="w-5 h-5 object-contain"
+                                  />
+                                )}
+                                <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Source')} />
+                              </div>
                             </PremiumBlur>
                           </div>
                         </div>
