@@ -200,14 +200,34 @@ const FERangeInput: React.FC = () => {
   }, [start]);
 
   const handleSubmit = () => {
-    const minValue = min === '' ? undefined : parseFloat(min);
-    const maxValue = max === '' ? undefined : parseFloat(max);
-    
-    // Assurer que les valeurs soient valides et dans la bonne plage
-    const validMin = minValue !== undefined && !isNaN(minValue) ? minValue : undefined;
-    const validMax = maxValue !== undefined && !isNaN(maxValue) ? maxValue : undefined;
-    
-    refine([validMin, validMax]);
+    const toNumber = (v: string) => {
+      if (v === '') return undefined;
+      const normalized = v.replace(',', '.').trim();
+      const num = Number(normalized);
+      return Number.isFinite(num) ? num : undefined;
+    };
+
+    let minValue = toNumber(min);
+    let maxValue = toNumber(max);
+
+    // Clamp to available FE range if known
+    if (range && typeof range.min === 'number' && typeof range.max === 'number') {
+      if (minValue !== undefined) minValue = Math.max(range.min, minValue);
+      if (maxValue !== undefined) maxValue = Math.min(range.max, maxValue);
+    }
+
+    // If both are defined and inverted, swap
+    if (
+      minValue !== undefined &&
+      maxValue !== undefined &&
+      minValue > maxValue
+    ) {
+      const tmp = minValue;
+      minValue = maxValue;
+      maxValue = tmp;
+    }
+
+    refine([minValue, maxValue]);
   };
 
   const handleReset = () => {
@@ -239,8 +259,10 @@ const FERangeInput: React.FC = () => {
               type="number"
               placeholder="Min"
               value={min}
-              onChange={(e) => setMin(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+              inputMode="decimal"
+              step="0.01"
+              onChange={(e) => setMin(e.target.value.replace(',', '.'))}
+              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             />
           </div>
           <div>
@@ -249,8 +271,10 @@ const FERangeInput: React.FC = () => {
               type="number"
               placeholder="Max"
               value={max}
-              onChange={(e) => setMax(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+              inputMode="decimal"
+              step="0.01"
+              onChange={(e) => setMax(e.target.value.replace(',', '.'))}
+              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             />
           </div>
         </div>
