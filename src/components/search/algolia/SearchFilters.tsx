@@ -227,6 +227,7 @@ const FERangeInput: React.FC = () => {
       maxValue = tmp;
     }
 
+    console.log('🔎 Applying FE range', { minValue, maxValue, available: range });
     refine([minValue, maxValue]);
   };
 

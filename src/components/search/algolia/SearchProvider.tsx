@@ -57,6 +57,14 @@ const searchClient = {
       };
       
       console.log(`✅ Cleaned request ${index}:`, cleanedRequest);
+      const nf = (cleanedRequest as any)?.params?.numericFilters;
+      if (nf) {
+        console.log(`🧮 numericFilters for request ${index}:`, nf);
+      }
+      const filtersStr = (cleanedRequest as any)?.params?.filters;
+      if (typeof filtersStr === 'string' && filtersStr.includes('FE')) {
+        console.log(`🧮 filters string includes FE for request ${index}:`, filtersStr);
+      }
       return cleanedRequest;
     });
     
