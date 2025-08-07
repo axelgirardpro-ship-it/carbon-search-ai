@@ -112,16 +112,37 @@ const Favorites = () => {
   const handleCopyToClipboard = async () => {
     try {
       const selectedFavorites = filteredFavorites.filter(f => selectedItems.includes(f.id));
-      const headers = ["Nom", "FE", "Unité donnée d'activité", "Source", "Localisation", "Date"];
+      const headers = [
+        "Nom", 
+        "Description", 
+        "FE", 
+        "Unité donnée d'activité", 
+        "Source", 
+        "Secteur", 
+        "Sous-secteur", 
+        "Localisation", 
+        "Date", 
+        "Incertitude", 
+        "Périmètre", 
+        "Contributeur", 
+        "Commentaires"
+      ];
       const tsvContent = [
         headers.join("\t"),
         ...selectedFavorites.map(f => [
-          f.nom,
-          f.fe,
-          f.uniteActivite,
-          f.source,
-          f.localisation,
-          f.date
+          f.nom || '',
+          f.description || '',
+          f.fe || '',
+          f.uniteActivite || '',
+          f.source || '',
+          f.secteur || '',
+          f.sousSecteur || '',
+          f.localisation || '',
+          f.date || '',
+          f.incertitude || '',
+          f.perimetre || '',
+          f.contributeur || '',
+          f.commentaires || ''
         ].join("\t"))
       ].join("\n");
       

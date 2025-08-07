@@ -314,16 +314,37 @@ export const SearchResults: React.FC = () => {
 
     try {
       const selectedResults = hits.filter(hit => selectedItems.has(hit.objectID));
-      const headers = ["Nom", "FE", "Unité donnée d'activité", "Source", "Localisation", "Date"];
+      const headers = [
+        "Nom", 
+        "Description", 
+        "FE", 
+        "Unité donnée d'activité", 
+        "Source", 
+        "Secteur", 
+        "Sous-secteur", 
+        "Localisation", 
+        "Date", 
+        "Incertitude", 
+        "Périmètre", 
+        "Contributeur", 
+        "Commentaires"
+      ];
       const tsvContent = [
         headers.join("\t"),
         ...selectedResults.map(hit => [
           hit.Nom || '',
+          hit.Description || '',
           hit.FE || '',
           hit['Unité donnée d\'activité'] || '',
           hit.Source || '',
+          hit.Secteur || '',
+          hit['Sous-secteur'] || '',
           hit.Localisation || '',
-          hit.Date || ''
+          hit.Date || '',
+          hit.Incertitude || '',
+          hit.Périmètre || '',
+          hit.Contributeur || '',
+          hit.Commentaires || ''
         ].join("\t"))
       ].join("\n");
       

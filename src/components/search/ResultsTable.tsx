@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { PremiumBlur } from "@/components/ui/PremiumBlur";
 import { useEmissionFactorAccess } from "@/hooks/useEmissionFactorAccess";
+import { useToast } from "@/hooks/use-toast";
 import {
   Table,
   TableBody,
@@ -32,7 +33,7 @@ interface ResultsTableProps {
   onSelectAll: () => void;
   onToggleFavorite: (id: string) => void;
   onExport: () => void;
-  onCopyToClipboard: () => void;
+  onCopyToClipboard?: () => void;
   isLoading?: boolean;
 }
 
@@ -47,8 +48,62 @@ export const ResultsTable = ({
   isLoading = false
 }: ResultsTableProps) => {
   const { shouldBlurPremiumContent, getSourceLabel } = useEmissionFactorAccess();
+  const { toast } = useToast();
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const handleCopyToClipboard = async () => {
+    try {
+      const selectedFavorites = results.filter(f => selectedItems.includes(f.id));
+      const headers = [
+        "Nom", 
+        "Description", 
+        "FE", 
+        "Unité donnée d'activité", 
+        "Source", 
+        "Secteur", 
+        "Sous-secteur", 
+        "Localisation", 
+        "Date", 
+        "Incertitude", 
+        "Périmètre", 
+        "Contributeur", 
+        "Commentaires"
+      ];
+      const tsvContent = [
+        headers.join("\t"),
+        ...selectedFavorites.map(f => [
+          f.nom || '',
+          f.description || '',
+          f.fe || '',
+          f.uniteActivite || '',
+          f.source || '',
+          f.secteur || '',
+          f.sousSecteur || '',
+          f.localisation || '',
+          f.date || '',
+          f.incertitude || '',
+          f.perimetre || '',
+          f.contributeur || '',
+          f.commentaires || ''
+        ].join("\t"))
+      ].join("\n");
+      
+      await navigator.clipboard.writeText(tsvContent);
+      
+      toast({
+        title: "Copié dans le presse-papier",
+        description: `${selectedFavorites.length} élément(s) copié(s). Vous pouvez maintenant les coller dans Excel ou Google Sheets.`,
+      });
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la copie dans le presse-papier",
+      });
+    }
+  };
   
   const ITEMS_PER_PAGE = 10;
   
@@ -213,7 +268,7 @@ export const ResultsTable = ({
         
         {selectedItems.length > 0 && (
           <div className="flex gap-2">
-            <Button onClick={onCopyToClipboard} variant="outline" size="sm">
+            <Button onClick={onCopyToClipboard || handleCopyToClipboard} variant="outline" size="sm">
               <Copy className="w-4 h-4 mr-2" />
               Copier
             </Button>
