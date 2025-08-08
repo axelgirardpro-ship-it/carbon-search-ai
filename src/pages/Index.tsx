@@ -73,9 +73,9 @@ const Index = () => {
       {/* Partner Logos Section */}
   <section className="py-16 bg-muted">
     <div className="container mx-auto px-4 text-center">
-      <h2 className="font-bold mb-12 text-primary">
+      <h4 className="font-bold mb-12 text-primary">
             Retrouvez les plus grandes bases françaises et internationales
-          </h2>
+          </h4>
           <div className="grid grid-cols-7 gap-8 items-center">
             <div className="flex flex-col items-center">
               <img src="/lovable-uploads/3fdbfe68-8e5e-4c44-8ac1-edd24a2d8fac.png" alt="Empreinte" className="max-h-[50px]" />
