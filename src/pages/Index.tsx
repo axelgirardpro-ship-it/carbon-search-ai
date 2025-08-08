@@ -12,7 +12,7 @@ const Index = () => {
           <div className="flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex-shrink-0">
-          <h1 className="text-2xl font-bold text-primary">DataCarb</h1>
+          <h1 className="font-bold text-primary">DataCarb</h1>
         </div>
         
         {/* Boutons de navigation */}
@@ -37,23 +37,23 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Colonne gauche : H1, Paragraphe, CTAs */}
             <div className="space-y-6 order-2 lg:order-1">
-              <h1 className="font-montserrat font-bold leading-tight text-primary-foreground text-5xl md:text-6xl">
+              <h1 className="font-bold leading-tight text-primary-foreground">
                 Le moteur de recherche<br />
                 de FE le plus puissant<br />
                 du marché
               </h1>
-              <p className="font-montserrat text-primary-foreground/90 text-lg md:text-xl">
+              <p className="text-primary-foreground/90">
                 Accédez à plus de 255 000 facteurs d'émissions français et internationaux<br />
                 agrégés et enrichis par nos experts.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/signup">
-                  <Button variant="secondary" className="px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-primary-foreground text-primary border-transparent hover:bg-primary-foreground/90">
+                  <Button variant="secondary" className="w-full sm:w-auto">
                     Tester le moteur de recherche
                   </Button>
                 </Link>
                 <Link to="/login">
-                  <Button variant="outline" className="px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">
+                  <Button variant="outline" className="w-full sm:w-auto border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">
                     Se connecter
                   </Button>
                 </Link>
@@ -73,7 +73,7 @@ const Index = () => {
       {/* Partner Logos Section */}
   <section className="py-16 bg-muted">
     <div className="container mx-auto px-4 text-center">
-      <h2 className="text-lg mb-12 text-primary">
+      <h2 className="mb-12 text-muted-foreground">
             Retrouvez les plus grandes bases françaises et internationales
           </h2>
           <div className="grid grid-cols-7 gap-8 items-center">
@@ -126,7 +126,7 @@ const Index = () => {
       {/* Interactive Demo Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-12 text-foreground">
+          <h2 className="font-bold mb-12 text-foreground">
             Découvrez la puissance<br />
             du moteur de recherche
           </h2>
@@ -153,7 +153,7 @@ const Index = () => {
       {/* Features Tabs Section */}
       <section className="py-20 px-4 bg-background">
         <div className="container mx-auto">
-  <h2 className="text-4xl font-bold text-primary text-center mb-12">
+  <h2 className="font-bold text-primary text-center mb-12">
     Un moteur de recherche<br />
     puissant et personnalisable
   </h2>
@@ -166,7 +166,7 @@ const Index = () => {
             </TabsList>
             <TabsContent value="donnees" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-      <h3 className="font-bold text-primary text-3xl">
+      <h3 className="font-bold text-primary">
         Le guichet unique de vos<br />
         données carbone
       </h3>
@@ -191,7 +191,7 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="recherche" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-    <h3 className="font-bold text-primary text-3xl">
+    <h3 className="font-bold text-primary">
       Moteur fluide et simple<br />
       d'utilisation
     </h3>
@@ -216,7 +216,7 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="personnalisation" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-    <h3 className="font-bold text-primary text-3xl">
+    <h3 className="font-bold text-primary">
       Personnalisez le moteur<br />
       selon vos besoins
     </h3>
@@ -241,7 +241,7 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="plus-loin" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-    <h3 className="font-bold text-primary text-3xl">
+    <h3 className="font-bold text-primary">
       Allez plus loin que<br />
       la recherche de FE
     </h3>
@@ -271,7 +271,7 @@ const Index = () => {
       {/* Databases Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-foreground text-center mb-12">
+          <h2 className="font-bold text-foreground text-center mb-12">
             Toutes les bases de données<br />
             sur une seule plateforme
           </h2>
