@@ -133,9 +133,6 @@ export const SearchBox: React.FC = () => {
         )}
       </div>
       
-      <div className="text-sm text-indigo-950 font-montserrat text-center">
-        {nbHits !== undefined ? `${nbHits} résultats` : 'Chargement...'}
-      </div>
     </div>
   );
 };
