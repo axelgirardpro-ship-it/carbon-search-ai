@@ -577,8 +577,7 @@ export const SearchResults: React.FC = () => {
               const shouldBlur = shouldBlurPremiumContent(hit.Source);
 
               return (
-                <Card key={hit.objectID} className="relative overflow-hidden bg-white border border-border hover:shadow-lg transition-shadow cursor-pointer"
-                      onClick={() => toggleRowExpansion(hit.objectID)}>
+                <Card key={hit.objectID} className="relative overflow-hidden bg-white border border-border hover:shadow-lg transition-shadow">
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start gap-4">
                       <div className="flex items-start gap-3 flex-1">
@@ -586,13 +585,12 @@ export const SearchResults: React.FC = () => {
                            checked={selectedItems.has(hit.objectID)}
                            onCheckedChange={() => handleItemSelect(hit.objectID)}
                            onClick={(e) => e.stopPropagation()}
-                           className="mt-1 border-indigo-950 data-[state=checked]:bg-indigo-950 data-[state=checked]:border-indigo-950"
+                           className="mt-1 cursor-pointer border-indigo-950 data-[state=checked]:bg-indigo-950 data-[state=checked]:border-indigo-950"
                          />
                         <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">
                           <h3 
-                            className="text-lg font-semibold text-primary leading-tight cursor-pointer font-montserrat"
-                            onClick={() => toggleRowExpansion(hit.objectID)}
+                            className="text-lg font-semibold text-primary leading-tight font-montserrat"
                             dangerouslySetInnerHTML={getHighlightedText(hit, 'Nom')}
                           />
                            <div className="flex items-center gap-2 ml-4">
