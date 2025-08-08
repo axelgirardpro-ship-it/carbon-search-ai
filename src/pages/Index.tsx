@@ -32,35 +32,31 @@ const Index = () => {
         </div>
       </nav>
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-muted">
+      <section className="py-20 px-4 bg-primary text-primary-foreground">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Colonne gauche : H1, Paragraphe, CTAs */}
             <div className="space-y-6 order-2 lg:order-1">
-        <h1 style={{
-          fontSize: '48px'
-        }} className="font-montserrat font-bold leading-tight text-primary text-4xl">
-          Le moteur de recherche<br />
-          de FE le plus puissant<br />
-          du marché
-        </h1>
-        <p style={{
-          fontSize: '16px'
-        }} className="font-montserrat text-foreground">
-          Accédez à plus de 255 000 facteurs d'émissions français et internationaux<br />
-          agrégés et enrichis par nos experts.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Link to="/signup">
-            <Button className="px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto">
-              Tester le moteur de recherche
-            </Button>
-          </Link>
-          <Link to="/login">
-            <Button variant="outline" className="px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto">
-              Se connecter
-            </Button>
-          </Link>
+              <h1 className="font-montserrat font-bold leading-tight text-primary-foreground text-5xl md:text-6xl">
+                Le moteur de recherche<br />
+                de FE le plus puissant<br />
+                du marché
+              </h1>
+              <p className="font-montserrat text-primary-foreground/90 text-lg md:text-xl">
+                Accédez à plus de 255 000 facteurs d'émissions français et internationaux<br />
+                agrégés et enrichis par nos experts.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/signup">
+                  <Button variant="secondary" className="px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-primary-foreground text-primary border-transparent hover:bg-primary-foreground/90">
+                    Tester le moteur de recherche
+                  </Button>
+                </Link>
+                <Link to="/login">
+                  <Button variant="outline" className="px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">
+                    Se connecter
+                  </Button>
+                </Link>
               </div>
             </div>
             
@@ -130,7 +126,7 @@ const Index = () => {
       {/* Interactive Demo Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-12 text-indigo-950">
+          <h2 className="text-4xl font-bold mb-12 text-foreground">
             Découvrez la puissance<br />
             du moteur de recherche
           </h2>
@@ -329,8 +325,8 @@ const Index = () => {
                       ) : name === "PCAF" ? (
                         <img src="/lovable-uploads/b5978785-2cff-49c0-996a-225457820050.png" alt="PCAF Logo" className="w-full h-full object-contain" />
                       ) : (
-                        <div className="w-16 h-16 bg-[#6C5CE7]/10 rounded-lg flex items-center justify-center">
-                          <div className="w-8 h-8 bg-[#6C5CE7] rounded"></div>
+                        <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+                          <div className="w-8 h-8 bg-primary rounded"></div>
                         </div>
                       )}
                     </div>
@@ -349,9 +345,9 @@ const Index = () => {
                       ) : name === "EcoInvent" ? (
                         <img src="/lovable-uploads/95586b3d-873f-4be8-a627-63fce61a19fd.png" alt="EcoInvent Logo" className="w-full h-full object-contain" />
                       ) : (
-                        <div className="w-16 h-16 bg-[#6C5CE7]/10 rounded-lg flex items-center justify-center">
-                          <div className="w-8 h-8 bg-[#6C5CE7] rounded"></div>
-                        </div>
+                         <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+                           <div className="w-8 h-8 bg-primary rounded"></div>
+                         </div>
                       )}
                     </div>
                     <span className="text-sm text-center">{name}</span>
@@ -370,23 +366,23 @@ const Index = () => {
               <img src="/lovable-uploads/aa4e0a75-7d42-444e-8f29-bd985c64a491.png" alt="Expert" className="w-80 h-80 object-cover rounded-lg" />
             </div>
             <div className="space-y-6">
-              <h2 className="text-3xl font-bold text-indigo-950">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
                 Une base de données<br />
                 structurée et enrichie par nos<br />
                 experts
               </h2>
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-semibold text-lg mb-2 text-indigo-950">Des bases de données nettoyées et structurées</h3>
-                  <p className="text-indigo-950">Nos experts nettoient et restructurent l'ensemble des bases de données intégrées afin de disposer d'un format unique de données.</p>
+                  <h3 className="font-semibold text-lg mb-2 text-foreground">Des bases de données nettoyées et structurées</h3>
+                  <p className="text-muted-foreground">Nos experts nettoient et restructurent l'ensemble des bases de données intégrées afin de disposer d'un format unique de données.</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2 text-indigo-950">Enrichissement des bases de données</h3>
-                  <p className="text-indigo-950">Vérification des facteurs par poste d'émissions, correction des effets de l'inflation, traduction des métadonnées...</p>
+                  <h3 className="font-semibold text-lg mb-2 text-foreground">Enrichissement des bases de données</h3>
+                  <p className="text-muted-foreground">Vérification des facteurs par poste d'émissions, correction des effets de l'inflation, traduction des métadonnées...</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2 text-indigo-950">Versionnage</h3>
-                  <p className="text-indigo-950">Profitez d'un versionnage d'un maintien en temps réel de la base au gré des mises à jour des différentes sources de données.</p>
+                  <h3 className="font-semibold text-lg mb-2 text-foreground">Versionnage</h3>
+                  <p className="text-muted-foreground">Profitez d'un versionnage d'un maintien en temps réel de la base au gré des mises à jour des différentes sources de données.</p>
                 </div>
               </div>
             </div>
@@ -397,77 +393,73 @@ const Index = () => {
       {/* Pricing Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-[#2D3436] text-center mb-12">
+          <h2 className="text-4xl font-bold text-foreground text-center mb-12">
             Un prix qui s'adapte<br />
             à vos besoins
           </h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Card className="p-8" style={{borderColor: '#d7caf5'}}>
+            <Card className="p-8 border border-border">
               <CardHeader className="pb-4">
                 <CardTitle className="text-xl font-semibold">STANDARD</CardTitle>
-                <div className="text-sm text-[#636E72]">À partir de</div>
-                <div className="text-4xl font-bold text-[#2D3436]">850€<span className="text-lg font-normal">/an</span></div>
-                <p className="text-[#636E72] text-sm">Profitez des datasets standards et du moteur de recherche</p>
+                <div className="text-sm text-muted-foreground">À partir de</div>
+                <div className="text-4xl font-bold text-foreground">850€<span className="text-lg font-normal">/an</span></div>
+                <p className="text-muted-foreground text-sm">Profitez des datasets standards et du moteur de recherche</p>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm">Accès au moteur de recherche</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm">Datasets standards (165k FE)</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm">Mises à jour hebdomadaires</span>
                 </div>
-                <Button className="w-full bg-slate-950 hover:bg-slate-800 text-white mt-6">
-                  En savoir plus
-                </Button>
+                <Button className="w-full mt-6">En savoir plus</Button>
               </CardContent>
             </Card>
 
-            <Card className="p-8 relative" style={{borderColor: '#d7caf5'}}>
-              <Badge className="absolute -top-3 right-4 bg-green-500 text-white">Version Beta</Badge>
+            <Card className="p-8 relative border border-border">
+              <Badge className="absolute -top-3 right-4 bg-primary text-primary-foreground">Version Beta</Badge>
               <CardHeader className="pb-4">
                 <CardTitle className="text-xl font-semibold">PREMIUM</CardTitle>
-                <div className="text-sm text-[#636E72]">À partir de</div>
-                <div className="text-4xl font-bold text-[#2D3436]">3000€<span className="text-lg font-normal">/an</span></div>
-                <p className="text-[#636E72] text-sm">Profitez des bases standards et premium et des fonctionnalités d'exports de données</p>
+                <div className="text-sm text-muted-foreground">À partir de</div>
+                <div className="text-4xl font-bold text-foreground">3000€<span className="text-lg font-normal">/an</span></div>
+                <p className="text-muted-foreground text-sm">Profitez des bases standards et premium et des fonctionnalités d'exports de données</p>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm">Accès au moteur de recherche</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm">Datasets standards (165k FE)</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm">Datasets premium (90K FE)</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm">Mises à jour hebdomadaires</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm">Gestion des favoris</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm">Export des données</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm">Assistance de nos experts</span>
                 </div>
-                <Button className="w-full bg-slate-950 hover:bg-slate-800 text-white mt-6">
-                  En savoir plus
-                </Button>
+                <Button className="w-full mt-6">En savoir plus</Button>
               </CardContent>
             </Card>
           </div>
@@ -475,23 +467,23 @@ const Index = () => {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 px-4" style={{backgroundColor: '#d7caf5'}}>
+      <section className="py-20 px-4 bg-primary">
         <div className="container mx-auto text-center">
           <div className="space-y-6 max-w-2xl mx-auto">
-            <h2 className="text-4xl font-bold text-indigo-950">
+            <h2 className="text-4xl font-bold text-primary-foreground">
               Prêt à explorer nos facteurs d'émission ?
             </h2>
-            <p className="text-indigo-950 text-lg">
+            <p className="text-primary-foreground text-lg">
               Accédez dès maintenant au moteur de recherche le plus puissant du marché
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/signup">
-                <Button className="text-white px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-slate-950 hover:bg-slate-800">
+                <Button variant="secondary" className="px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-primary-foreground text-primary border-transparent hover:bg-primary-foreground/90">
                   Tester le moteur de recherche
                 </Button>
               </Link>
               <Link to="/login">
-                <Button variant="outline" className="border-[#2D3436] px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-indigo-200 hover:bg-indigo-100 text-indigo-950">
+                <Button variant="outline" className="border-primary-foreground px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto hover:bg-primary-foreground/10 text-primary-foreground">
                   Se connecter
                 </Button>
               </Link>
@@ -500,24 +492,23 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-indigo-950 text-white py-16">
+      <footer className="bg-primary text-primary-foreground py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-      {/* Colonne 1 - Logo et description */}
-      <div className="space-y-4">
-        <h3 className="text-2xl font-bold">DataCarb</h3>
-        <p className="text-muted-foreground">
-          Le moteur de recherche de facteurs d'émission le plus puissant du marché.
-        </p>
-        <div className="flex space-x-4">
-                <Button variant="ghost" size="sm" className="text-indigo-200 hover:text-white hover:bg-indigo-800 p-2">
+            {/* Colonne 1 - Logo et description */}
+            <div className="space-y-4">
+              <h3 className="text-2xl font-bold">DataCarb</h3>
+              <p className="text-primary-foreground/80">
+                Le moteur de recherche de facteurs d'émission le plus puissant du marché.
+              </p>
+              <div className="flex space-x-4">
+                <Button variant="ghost" size="sm" className="p-2 text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10">
                   <Twitter className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="sm" className="text-indigo-200 hover:text-white hover:bg-indigo-800 p-2">
+                <Button variant="ghost" size="sm" className="p-2 text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10">
                   <Linkedin className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="sm" className="text-indigo-200 hover:text-white hover:bg-indigo-800 p-2">
+                <Button variant="ghost" size="sm" className="p-2 text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10">
                   <Mail className="h-4 w-4" />
                 </Button>
               </div>
@@ -526,51 +517,51 @@ const Index = () => {
             {/* Colonne 2 - Produit */}
             <div className="space-y-4">
               <h4 className="text-lg font-semibold">Produit</h4>
-              <ul className="space-y-2 text-indigo-200">
-                <li><Link to="/features" className="hover:text-white transition-colors">Fonctionnalités</Link></li>
-                <li><Link to="/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
-                <li><Link to="/demo" className="hover:text-white transition-colors">Démo</Link></li>
-                <li><Link to="/integrations" className="hover:text-white transition-colors">Intégrations</Link></li>
+              <ul className="space-y-2 text-primary-foreground/80">
+                <li><Link to="/features" className="hover:text-primary-foreground transition-colors">Fonctionnalités</Link></li>
+                <li><Link to="/pricing" className="hover:text-primary-foreground transition-colors">Tarifs</Link></li>
+                <li><Link to="/demo" className="hover:text-primary-foreground transition-colors">Démo</Link></li>
+                <li><Link to="/integrations" className="hover:text-primary-foreground transition-colors">Intégrations</Link></li>
               </ul>
             </div>
 
             {/* Colonne 3 - Support */}
             <div className="space-y-4">
               <h4 className="text-lg font-semibold">Support</h4>
-              <ul className="space-y-2 text-indigo-200">
-                <li><Link to="/help" className="hover:text-white transition-colors">Centre d'aide</Link></li>
-                <li><Link to="/documentation" className="hover:text-white transition-colors">Documentation</Link></li>
-                <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                <li><Link to="/status" className="hover:text-white transition-colors">Statut</Link></li>
+              <ul className="space-y-2 text-primary-foreground/80">
+                <li><Link to="/help" className="hover:text-primary-foreground transition-colors">Centre d'aide</Link></li>
+                <li><Link to="/documentation" className="hover:text-primary-foreground transition-colors">Documentation</Link></li>
+                <li><Link to="/contact" className="hover:text-primary-foreground transition-colors">Contact</Link></li>
+                <li><Link to="/status" className="hover:text-primary-foreground transition-colors">Statut</Link></li>
               </ul>
             </div>
 
             {/* Colonne 4 - Entreprise */}
             <div className="space-y-4">
               <h4 className="text-lg font-semibold">Entreprise</h4>
-              <ul className="space-y-2 text-indigo-200">
-                <li><Link to="/about" className="hover:text-white transition-colors">À propos</Link></li>
-                <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-                <li><Link to="/careers" className="hover:text-white transition-colors">Carrières</Link></li>
-                <li><Link to="/press" className="hover:text-white transition-colors">Presse</Link></li>
+              <ul className="space-y-2 text-primary-foreground/80">
+                <li><Link to="/about" className="hover:text-primary-foreground transition-colors">À propos</Link></li>
+                <li><Link to="/blog" className="hover:text-primary-foreground transition-colors">Blog</Link></li>
+                <li><Link to="/careers" className="hover:text-primary-foreground transition-colors">Carrières</Link></li>
+                <li><Link to="/press" className="hover:text-primary-foreground transition-colors">Presse</Link></li>
               </ul>
             </div>
           </div>
 
           {/* Séparateur et copyright */}
-  <div className="border-t border-border mt-12 pt-8">
-    <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-      <div className="text-muted-foreground text-sm">
-        © 2024 DataCarb. Tous droits réservés.
+          <div className="border-t border-border mt-12 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+              <div className="text-primary-foreground/80 text-sm">
+                © 2024 DataCarb. Tous droits réservés.
               </div>
-              <div className="flex space-x-6 text-sm text-indigo-200">
-                <Link to="/privacy" className="hover:text-white transition-colors">
+              <div className="flex space-x-6 text-sm text-primary-foreground/80">
+                <Link to="/privacy" className="hover:text-primary-foreground transition-colors">
                   Politique de confidentialité
                 </Link>
-                <Link to="/terms" className="hover:text-white transition-colors">
+                <Link to="/terms" className="hover:text-primary-foreground transition-colors">
                   Conditions d'utilisation
                 </Link>
-                <Link to="/cookies" className="hover:text-white transition-colors">
+                <Link to="/cookies" className="hover:text-primary-foreground transition-colors">
                   Cookies
                 </Link>
               </div>
