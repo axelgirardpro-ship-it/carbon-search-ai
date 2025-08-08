@@ -10,24 +10,24 @@ const Index = () => {
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-indigo-950">SAMI</h1>
-            </div>
-            
-            {/* Boutons de navigation */}
-            <div className="flex items-center space-x-4">
-              <Link to="/signup">
-                <Button variant="outline" className="border-indigo-950 text-indigo-950 hover:bg-indigo-50">
-                  S'inscrire
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button className="bg-slate-950 hover:bg-slate-800 text-white">
-                  Se connecter
-                </Button>
-              </Link>
-            </div>
+        {/* Logo */}
+        <div className="flex-shrink-0">
+          <h1 className="text-2xl font-bold text-primary">DataCarb</h1>
+        </div>
+        
+        {/* Boutons de navigation */}
+        <div className="flex items-center space-x-4">
+          <Link to="/signup">
+            <Button variant="outline">
+              S'inscrire
+            </Button>
+          </Link>
+          <Link to="/login">
+            <Button>
+              Se connecter
+            </Button>
+          </Link>
+        </div>
           </div>
         </div>
       </nav>
@@ -39,30 +39,30 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Colonne gauche : H1, Paragraphe, CTAs */}
             <div className="space-y-6 order-2 lg:order-1">
-              <h1 style={{
-              fontSize: '48px'
-            }} className="font-montserrat font-bold leading-tight text-indigo-950 text-4xl">
-                Le moteur de recherche<br />
-                de FE le plus puissant<br />
-                du marché
-              </h1>
-              <p style={{
-              fontSize: '16px'
-            }} className="font-montserrat text-indigo-950">
-                Accédez à plus de 255 000 facteurs d'émissions français et internationaux<br />
-                agrégés et enrichis par nos experts.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/signup">
-                  <Button className="text-white px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-slate-950 hover:bg-slate-800">
-                    Tester le moteur de recherche
-                  </Button>
-                </Link>
-                <Link to="/login">
-                  <Button variant="outline" className="border-[#2D3436] px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-indigo-200 hover:bg-indigo-100 text-indigo-950">
-                    Se connecter
-                  </Button>
-                </Link>
+        <h1 style={{
+          fontSize: '48px'
+        }} className="font-montserrat font-bold leading-tight text-primary text-4xl">
+          Le moteur de recherche<br />
+          de FE le plus puissant<br />
+          du marché
+        </h1>
+        <p style={{
+          fontSize: '16px'
+        }} className="font-montserrat text-foreground">
+          Accédez à plus de 255 000 facteurs d'émissions français et internationaux<br />
+          agrégés et enrichis par nos experts.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Link to="/signup">
+            <Button className="px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto">
+              Tester le moteur de recherche
+            </Button>
+          </Link>
+          <Link to="/login">
+            <Button variant="outline" className="px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto">
+              Se connecter
+            </Button>
+          </Link>
               </div>
             </div>
             
@@ -77,9 +77,9 @@ const Index = () => {
       </section>
 
       {/* Partner Logos Section */}
-      <section className="py-16 bg-[#F8F9FA]">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-lg mb-12 text-indigo-950">
+  <section className="py-16 bg-[hsl(var(--muted))]">
+    <div className="container mx-auto px-4 text-center">
+      <h2 className="text-lg mb-12 text-primary">
             Retrouvez les plus grandes bases françaises et internationales
           </h2>
           <div className="grid grid-cols-7 gap-8 items-center">
@@ -159,12 +159,12 @@ const Index = () => {
       {/* Features Tabs Section */}
       <section className="py-20 px-4 bg-white">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-indigo-950 text-center mb-12">
-            Un moteur de recherche<br />
-            puissant et personnalisable
-          </h2>
-          <Tabs defaultValue="donnees" className="max-w-6xl mx-auto">
-            <TabsList className="grid w-full grid-cols-4 mb-12 bg-[#d7caf5] rounded-full items-center">
+  <h2 className="text-4xl font-bold text-primary text-center mb-12">
+    Un moteur de recherche<br />
+    puissant et personnalisable
+  </h2>
+  <Tabs defaultValue="donnees" className="max-w-6xl mx-auto">
+    <TabsList className="grid w-full grid-cols-4 mb-12 bg-[hsl(var(--homepage-violet))] rounded-full items-center">
               <TabsTrigger value="donnees" className="rounded-full">Données</TabsTrigger>
               <TabsTrigger value="recherche" className="rounded-full">Recherche</TabsTrigger>
               <TabsTrigger value="personnalisation" className="rounded-full">Personnalisation</TabsTrigger>
@@ -172,24 +172,24 @@ const Index = () => {
             </TabsList>
             <TabsContent value="donnees" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-                <h3 className="font-bold text-indigo-950 text-3xl">
-                  Le guichet unique de vos<br />
-                  données carbone
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Une donnée structurée</h4>
-                    <p className="text-indigo-950">Une structuration unique et homogène de plus de 20 bases de<br />données de références internationales.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Une donnée à jour</h4>
-                    <p className="text-indigo-950">Une mise à jour en continu des bases pour une garantie de<br />qualité des FE.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">+ 250K FE à disposition</h4>
-                    <p className="text-indigo-950">Plus de 250k FE génériques et spécifiques en cumulé,<br />disponibles au sein d'une structure commune.</p>
-                  </div>
-                </div>
+      <h3 className="font-bold text-primary text-3xl">
+        Le guichet unique de vos<br />
+        données carbone
+      </h3>
+      <div className="space-y-4">
+        <div>
+          <h4 className="font-semibold mb-2 text-primary">Une donnée structurée</h4>
+          <p className="text-foreground">Une structuration unique et homogène de plus de 20 bases de<br />données de références internationales.</p>
+        </div>
+        <div>
+          <h4 className="font-semibold mb-2 text-primary">Une donnée à jour</h4>
+          <p className="text-foreground">Une mise à jour en continu des bases pour une garantie de<br />qualité des FE.</p>
+        </div>
+        <div>
+          <h4 className="font-semibold mb-2 text-primary">+ 250K FE à disposition</h4>
+          <p className="text-foreground">Plus de 250k FE génériques et spécifiques en cumulé,<br />disponibles au sein d'une structure commune.</p>
+        </div>
+      </div>
               </div>
               <div className="bg-white rounded-lg p-6">
                 <img src="/lovable-uploads/71d74bc4-61b0-4e95-befc-12b9508a15e4.png" alt="Interface base de données" className="w-full h-auto" />
@@ -197,24 +197,24 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="recherche" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-                <h3 className="font-bold text-indigo-950 text-3xl">
-                  Moteur fluide et simple<br />
-                  d'utilisation
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Recherche intelligente</h4>
-                    <p className="text-indigo-950">Recherchez par mots-clés, codes, catégories ou filtres<br />avancés pour trouver rapidement vos FE.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Interface intuitive</h4>
-                    <p className="text-indigo-950">Navigation simple et rapide avec des suggestions<br />automatiques et tri personnalisable.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Résultats précis</h4>
-                    <p className="text-indigo-950">Algorithme optimisé pour vous proposer les facteurs<br />d'émission les plus pertinents selon vos critères.</p>
-                  </div>
-                </div>
+    <h3 className="font-bold text-primary text-3xl">
+      Moteur fluide et simple<br />
+      d'utilisation
+    </h3>
+    <div className="space-y-4">
+      <div>
+        <h4 className="font-semibold mb-2 text-primary">Recherche intelligente</h4>
+        <p className="text-foreground">Recherchez par mots-clés, codes, catégories ou filtres<br />avancés pour trouver rapidement vos FE.</p>
+      </div>
+      <div>
+        <h4 className="font-semibold mb-2 text-primary">Interface intuitive</h4>
+        <p className="text-foreground">Navigation simple et rapide avec des suggestions<br />automatiques et tri personnalisable.</p>
+      </div>
+      <div>
+        <h4 className="font-semibold mb-2 text-primary">Résultats précis</h4>
+        <p className="text-foreground">Algorithme optimisé pour vous proposer les facteurs<br />d'émission les plus pertinents selon vos critères.</p>
+      </div>
+    </div>
               </div>
               <div className="bg-white rounded-lg p-6">
                 <img src="/lovable-uploads/501e99e2-29fe-4086-8d1f-9bd8028d151d.png" alt="Interface de recherche" className="w-full h-auto" />
@@ -222,24 +222,24 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="personnalisation" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-                <h3 className="font-bold text-indigo-950 text-3xl">
-                  Personnalisez le moteur<br />
-                  selon vos besoins
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Favoris et collections</h4>
-                    <p className="text-indigo-950">Sauvegardez vos FE préférés et créez des collections<br />thématiques pour un accès rapide.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Filtres personnalisés</h4>
-                    <p className="text-indigo-950">Configurez des filtres selon vos secteurs d'activité<br />et vos besoins métier spécifiques.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Données sur-mesure</h4>
-                    <p className="text-indigo-950">Intégrez vos propres FE spécifiques et créez votre<br />base de données personnalisée.</p>
-                  </div>
-                </div>
+    <h3 className="font-bold text-primary text-3xl">
+      Personnalisez le moteur<br />
+      selon vos besoins
+    </h3>
+    <div className="space-y-4">
+      <div>
+        <h4 className="font-semibold mb-2 text-primary">Favoris et collections</h4>
+        <p className="text-foreground">Sauvegardez vos FE préférés et créez des collections<br />thématiques pour un accès rapide.</p>
+      </div>
+      <div>
+        <h4 className="font-semibold mb-2 text-primary">Filtres personnalisés</h4>
+        <p className="text-foreground">Configurez des filtres selon vos secteurs d'activité<br />et vos besoins métier spécifiques.</p>
+      </div>
+      <div>
+        <h4 className="font-semibold mb-2 text-primary">Données sur-mesure</h4>
+        <p className="text-foreground">Intégrez vos propres FE spécifiques et créez votre<br />base de données personnalisée.</p>
+      </div>
+    </div>
               </div>
               <div className="bg-white rounded-lg p-6">
                 <img src="/lovable-uploads/e3feeaa6-9229-46a9-a227-0700f479943f.png" alt="Interface de personnalisation" className="w-full h-auto" />
@@ -247,24 +247,24 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="plus-loin" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-                <h3 className="font-bold text-indigo-950 text-3xl">
-                  Allez plus loin que<br />
-                  la recherche de FE
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Réalisez des benchmarks approfondis</h4>
-                    <p className="text-indigo-950">Positionnez facilement un produit ou une entreprise par<br />rapport à des concurrents et des moyennes sectorielles de marché.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Plan d'action et décarbonation</h4>
-                    <p className="text-indigo-950">Identifiez rapidement les bénéfices de changements de produits,<br />relocalisation, de fournisseurs (achats responsables), etc.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-indigo-950">Support expert</h4>
-                    <p className="text-indigo-950">Bénéficiez de l'accompagnement de nos experts<br />carbone pour optimiser vos calculs.</p>
-                  </div>
-                </div>
+    <h3 className="font-bold text-primary text-3xl">
+      Allez plus loin que<br />
+      la recherche de FE
+    </h3>
+    <div className="space-y-4">
+      <div>
+        <h4 className="font-semibold mb-2 text-primary">Réalisez des benchmarks approfondis</h4>
+        <p className="text-foreground">Positionnez facilement un produit ou une entreprise par<br />rapport à des concurrents et des moyennes sectorielles de marché.</p>
+      </div>
+      <div>
+        <h4 className="font-semibold mb-2 text-primary">Plan d'action et décarbonation</h4>
+        <p className="text-foreground">Identifiez rapidement les bénéfices de changements de produits,<br />relocalisation, de fournisseurs (achats responsables), etc.</p>
+      </div>
+      <div>
+        <h4 className="font-semibold mb-2 text-primary">Support expert</h4>
+        <p className="text-foreground">Bénéficiez de l'accompagnement de nos experts<br />carbone pour optimiser vos calculs.</p>
+      </div>
+    </div>
               </div>
               <div className="bg-white rounded-lg p-6">
                 <img src="/lovable-uploads/d9ebca49-6f11-4b52-a6b0-07a9d348c5b2.png" alt="Interface avancée" className="w-full h-auto" />
@@ -506,13 +506,13 @@ const Index = () => {
       <footer className="bg-indigo-950 text-white py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Colonne 1 - Logo et description */}
-            <div className="space-y-4">
-              <h3 className="text-2xl font-bold">SAMI</h3>
-              <p className="text-indigo-200">
-                Le moteur de recherche de facteurs d'émission le plus puissant du marché.
-              </p>
-              <div className="flex space-x-4">
+      {/* Colonne 1 - Logo et description */}
+      <div className="space-y-4">
+        <h3 className="text-2xl font-bold">DataCarb</h3>
+        <p className="text-muted-foreground">
+          Le moteur de recherche de facteurs d'émission le plus puissant du marché.
+        </p>
+        <div className="flex space-x-4">
                 <Button variant="ghost" size="sm" className="text-indigo-200 hover:text-white hover:bg-indigo-800 p-2">
                   <Twitter className="h-4 w-4" />
                 </Button>
@@ -560,10 +560,10 @@ const Index = () => {
           </div>
 
           {/* Séparateur et copyright */}
-          <div className="border-t border-indigo-800 mt-12 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <div className="text-indigo-200 text-sm">
-                © 2024 SAMI. Tous droits réservés.
+  <div className="border-t border-border mt-12 pt-8">
+    <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+      <div className="text-muted-foreground text-sm">
+        © 2024 DataCarb. Tous droits réservés.
               </div>
               <div className="flex space-x-6 text-sm text-indigo-200">
                 <Link to="/privacy" className="hover:text-white transition-colors">

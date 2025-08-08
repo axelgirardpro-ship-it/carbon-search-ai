@@ -133,11 +133,11 @@ const Admin = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2 flex items-center homepage-text">
-            <Shield className="w-8 h-8 mr-3 text-indigo-950" />
+            <Shield className="w-8 h-8 mr-3 text-primary" />
             Console d'administration
           </h1>
           <p className="text-muted-foreground">
-            Gestion avancée de la plateforme EcoSearch
+            Gestion avancée de la plateforme DataCarb
           </p>
           <div className="mt-4">
             <Badge variant="default" className="mr-2 bg-gradient-to-r from-purple-600 to-blue-600">

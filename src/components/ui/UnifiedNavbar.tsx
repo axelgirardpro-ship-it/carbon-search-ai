@@ -21,12 +21,12 @@ export const UnifiedNavbar = () => {
   };
 
   return (
-    <nav className="border-b border-violet-200">
+    <nav className="border-b border-border bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link to={user ? "/search" : "/"} className="text-2xl font-bold homepage-text">
-              SAMI
+            <Link to={user ? "/search" : "/"} className="text-2xl font-bold text-primary">
+              DataCarb
             </Link>
           </div>
           
@@ -36,60 +36,60 @@ export const UnifiedNavbar = () => {
                 <div className="hidden md:block">
                   <NavbarQuotaWidget quotaData={quotaData} isLoading={isLoading} isAtLimit={isAtLimit} />
                 </div>
-                <Link to="/search">
-                  <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
-                    Recherche
-                  </Button>
-                </Link>
-                {canUseFavorites() ? (
-                  <Link to="/favorites">
-                    <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
-                      Favoris
-                    </Button>
-                  </Link>
-                ) : (
-                  <Button 
-                    variant="ghost" 
-                    className="homepage-text opacity-50 cursor-not-allowed"
-                    disabled
-                    title="Fonctionnalité disponible uniquement avec le plan Premium"
-                  >
-                    <Lock className="h-4 w-4 mr-2" />
-                    Favoris
-                  </Button>
-                )}
-                {isSupraAdmin && (
-                  <Link to="/import">
-                    <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
-                      Import
-                    </Button>
-                  </Link>
-                )}
-                <Link to="/settings">
-                  <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
-                    Paramètres
-                  </Button>
-                </Link>
-                <Button 
-                  onClick={handleSignOut}
-                  variant="outline" 
-                  className="border-slate-950 text-slate-950 hover:bg-slate-950 hover:text-white"
-                >
-                  Se déconnecter
+            <Link to="/search">
+              <Button variant="ghost" className="text-foreground hover:bg-primary/10 hover:text-primary">
+                Recherche
+              </Button>
+            </Link>
+            {canUseFavorites() ? (
+              <Link to="/favorites">
+                <Button variant="ghost" className="text-foreground hover:bg-primary/10 hover:text-primary">
+                  Favoris
                 </Button>
+              </Link>
+            ) : (
+              <Button 
+                variant="ghost" 
+                className="text-foreground opacity-50 cursor-not-allowed"
+                disabled
+                title="Fonctionnalité disponible uniquement avec le plan Premium"
+              >
+                <Lock className="h-4 w-4 mr-2" />
+                Favoris
+              </Button>
+            )}
+            {isSupraAdmin && (
+              <Link to="/import">
+                <Button variant="ghost" className="text-foreground hover:bg-primary/10 hover:text-primary">
+                  Import
+                </Button>
+              </Link>
+            )}
+            <Link to="/settings">
+              <Button variant="ghost" className="text-foreground hover:bg-primary/10 hover:text-primary">
+                Paramètres
+              </Button>
+            </Link>
+            <Button 
+              onClick={handleSignOut}
+              variant="outline" 
+              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+            >
+              Se déconnecter
+            </Button>
               </>
             ) : (
               <>
-                <Link to="/signup">
-                  <Button variant="ghost" className="homepage-text hover:bg-violet-100 hover:text-indigo-950">
-                    S'inscrire
-                  </Button>
-                </Link>
-                <Link to="/login">
-                  <Button className="homepage-button">
-                    Se connecter
-                  </Button>
-                </Link>
+            <Link to="/signup">
+              <Button variant="ghost" className="text-foreground hover:bg-primary/10 hover:text-primary">
+                S'inscrire
+              </Button>
+            </Link>
+            <Link to="/login">
+              <Button>
+                Se connecter
+              </Button>
+            </Link>
               </>
             )}
           </div>

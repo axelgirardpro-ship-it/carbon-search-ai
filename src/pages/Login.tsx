@@ -91,11 +91,11 @@ const LoginForm = () => {
         <Card>
           <CardHeader className="text-center">
             <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-4">
-              <span className="text-primary-foreground font-bold text-lg">EC</span>
+              <span className="text-primary-foreground font-bold text-lg">DC</span>
             </div>
             <CardTitle className="text-2xl">Se connecter</CardTitle>
             <CardDescription>
-              Connectez-vous à votre compte EcoSearch
+              Connectez-vous à votre compte DataCarb
             </CardDescription>
           </CardHeader>
           <CardContent>
