@@ -23,14 +23,14 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
   if (isLoading) {
     return (
       <div className="flex items-center space-x-2">
-        <div className="h-6 w-20 bg-gray-200 rounded animate-pulse"></div>
+        <div className="h-6 w-20 bg-muted rounded animate-pulse"></div>
       </div>
     );
   }
 
   if (!quotaData) {
     return (
-      <div className="flex items-center space-x-2 text-red-600">
+      <div className="flex items-center space-x-2 text-destructive">
         <AlertCircle className="h-4 w-4" />
         <span className="text-sm">Erreur</span>
       </div>
@@ -59,9 +59,9 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
   };
 
   const getPlanColor = () => {
-    if (planType === 'premium') return 'text-yellow-600';
-    if (planType === 'standard') return 'text-blue-600';
-    return isAtLimit ? 'text-red-600' : 'text-gray-600';
+    if (planType === 'premium') return 'text-accent';
+    if (planType === 'standard') return 'text-primary';
+    return isAtLimit ? 'text-destructive' : 'text-muted-foreground';
   };
 
   const getSearchDisplay = () => {
@@ -82,14 +82,14 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-sm font-medium transition-colors ${getPlanColor()} hover:bg-violet-100 ${isAtLimit ? 'bg-red-50' : ''}`}
+        className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-sm font-medium transition-colors ${getPlanColor()} hover:bg-muted ${isAtLimit ? 'bg-destructive/10' : ''}`}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
         {getPlanIcon()}
         <span className="whitespace-nowrap">{getPlanLabel()}</span>
         {isAtLimit && (
-          <AlertTriangle className="h-3 w-3 text-red-500" />
+          <AlertTriangle className="h-3 w-3 text-destructive" />
         )}
         <ChevronDown className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
@@ -103,11 +103,11 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
           />
           
           {/* Dropdown Menu */}
-          <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 z-20">
+          <div className="absolute right-0 mt-2 w-72 bg-popover rounded-lg shadow-lg border border-border z-20">
             <div className="p-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-2">
-                  <h3 className="font-semibold text-gray-900">Plan {getPlanLabel()}</h3>
+                  <h3 className="font-semibold text-foreground">Plan {getPlanLabel()}</h3>
                   {getPlanIcon()}
                 </div>
                 {isAtLimit && (
@@ -122,17 +122,17 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
                 {/* Recherches */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Recherches</span>
-                    <span className={`text-sm font-medium ${searchProgress >= 100 ? 'text-red-600' : 'text-gray-600'}`}>
+                    <span className="text-sm font-medium text-muted-foreground">Recherches</span>
+                    <span className={`text-sm font-medium ${searchProgress >= 100 ? 'text-destructive' : 'text-muted-foreground'}`}>
                       {getSearchDisplay()}
                     </span>
                   </div>
                   {!isPremiumOrStandard && searchesLimit !== null && (
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-muted rounded-full h-2">
                       <div
                         className={`h-2 rounded-full transition-all ${
-                          searchProgress >= 100 ? 'bg-red-500' : 
-                          searchProgress > 80 ? 'bg-yellow-500' : 'bg-green-500'
+                          searchProgress >= 100 ? 'bg-destructive' : 
+                          searchProgress > 80 ? 'bg-amber-500' : 'bg-success'
                         }`}
                         style={{ width: `${Math.min(searchProgress, 100)}%` }}
                       />
@@ -143,17 +143,17 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
                 {/* Exports */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Exports Excel</span>
-                    <span className={`text-sm font-medium ${exportProgress >= 100 ? 'text-red-600' : 'text-gray-600'}`}>
+                    <span className="text-sm font-medium text-muted-foreground">Exports Excel</span>
+                    <span className={`text-sm font-medium ${exportProgress >= 100 ? 'text-destructive' : 'text-muted-foreground'}`}>
                       {getExportDisplay()}
                     </span>
                   </div>
                   {!isPremiumOrStandard && exportsLimit !== null && exportsLimit > 0 && (
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-muted rounded-full h-2">
                       <div
                         className={`h-2 rounded-full transition-all ${
-                          exportProgress >= 100 ? 'bg-red-500' : 
-                          exportProgress > 80 ? 'bg-yellow-500' : 'bg-green-500'
+                          exportProgress >= 100 ? 'bg-destructive' : 
+                          exportProgress > 80 ? 'bg-amber-500' : 'bg-success'
                         }`}
                         style={{ width: `${Math.min(exportProgress, 100)}%` }}
                       />
@@ -163,16 +163,16 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
 
                 {/* Message d'information selon le plan */}
                 {isAtLimit && planType === 'freemium' && (
-                  <div className="mt-4 p-3 bg-red-50 rounded-md border border-red-200">
-                    <p className="text-xs text-red-700 leading-relaxed">
+                  <div className="mt-4 p-3 bg-destructive/10 rounded-md border border-destructive/20">
+                    <p className="text-xs text-destructive leading-relaxed">
                       Vous avez atteint vos limites mensuelles. Contactez l'administrateur pour augmenter votre plan.
                     </p>
                   </div>
                 )}
 
                 {!isAtLimit && planType === 'freemium' && (
-                  <div className="mt-4 p-3 bg-gray-50 rounded-md">
-                    <p className="text-xs text-gray-600 leading-relaxed">
+                  <div className="mt-4 p-3 bg-muted rounded-md">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                       Contactez votre administrateur pour augmenter vos limites.
                     </p>
                   </div>
