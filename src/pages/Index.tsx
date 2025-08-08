@@ -393,7 +393,7 @@ const Index = () => {
       {/* Pricing Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-foreground text-center mb-12">
+          <h2 className="font-bold text-primary text-center mb-12">
             Un prix qui s'adapte<br />
             à vos besoins
           </h2>
