@@ -364,7 +364,7 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
-              <img src="/lovable-uploads/aa4e0a75-7d42-444e-8f29-bd985c64a491.png" alt="Expert" className="w-80 h-80 object-cover rounded-lg" />
+              <img src="/lovable-uploads/aa4e0a75-7d42-444e-8f29-bd985c64a491.png" alt="Expert" className="w-full max-w-md h-96 object-cover rounded-lg" />
             </div>
             <div className="space-y-6">
               <h2 className="font-bold text-primary">
