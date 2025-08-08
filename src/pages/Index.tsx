@@ -76,7 +76,7 @@ const Index = () => {
       <h4 className="font-bold mb-12 text-primary">
             Retrouvez les plus grandes bases françaises et internationales
           </h4>
-          <div className="grid grid-cols-7 gap-8 items-center">
+          <div className="grid grid-cols-7 gap-8 items-center logo-primary">
             <div className="flex flex-col items-center">
               <img src="/lovable-uploads/3fdbfe68-8e5e-4c44-8ac1-edd24a2d8fac.png" alt="Empreinte" className="max-h-[50px]" />
             </div>
@@ -281,7 +281,7 @@ const Index = () => {
               <TabsTrigger value="premium" className="rounded-full">Datasets premium</TabsTrigger>
             </TabsList>
             <TabsContent value="standards">
-              <div className="grid grid-cols-7 gap-8">
+              <div className="grid grid-cols-7 gap-8 logo-primary">
                 {["AIB", "Agribalyse", "BEIS", "Base Carbone", "Base Impacts", "CCF", "Climate Trace", "EEA", "EPA", "Exiobase", "EcoInvent", "Ecobalyse", "Electricity Maps", "Ember", "GESPoint5", "GLEC", "Kering", "OMEGA TP", "Open CEDA", "PCAF"].map((name, index) => <div key={index} className="flex flex-col items-center space-y-2">
                     <div className="w-16 h-16 rounded-lg flex items-center justify-center">
                       {name === "AIB" ? (
@@ -335,7 +335,7 @@ const Index = () => {
               </div>
             </TabsContent>
             <TabsContent value="premium">
-              <div className="grid grid-cols-7 gap-8">
+              <div className="grid grid-cols-7 gap-8 logo-primary">
                 {["Inies", "Eco-platform", "EcoInvent"].map((name, index) => <div key={index} className="flex flex-col items-center space-y-2">
                     <div className="w-16 h-16 rounded-lg flex items-center justify-center">
                       {name === "Inies" ? (

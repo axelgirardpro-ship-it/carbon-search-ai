@@ -223,4 +223,27 @@
     background-color: hsl(263 76% 25%); /* Dark purple for dark mode */
     color: hsl(263 76% 90%); /* Light purple text for dark mode */
   }
+
+  /* Logo color utilities */
+  .logo-primary,
+  .logo-primary img {
+    filter:
+      brightness(0)
+      saturate(100%)
+      sepia(100%)
+      hue-rotate(217deg)
+      brightness(0.55)
+      contrast(1.1);
+  }
+
+  .dark .logo-primary,
+  .dark .logo-primary img {
+    filter:
+      brightness(0)
+      saturate(100%)
+      sepia(100%)
+      hue-rotate(217deg)
+      brightness(0.8)
+      contrast(1.2);
+  }
 }
