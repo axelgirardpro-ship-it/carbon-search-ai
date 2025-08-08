@@ -48,7 +48,7 @@ const Index = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/signup">
-                  <Button className="w-full sm:w-auto">
+                  <Button variant="hero" className="w-full sm:w-auto">
                     Tester le moteur de recherche
                   </Button>
                 </Link>
@@ -478,7 +478,7 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/signup">
-                <Button variant="secondary" className="px-8 py-3 rounded-md font-semibold font-montserrat w-full sm:w-auto bg-primary-foreground text-primary border-transparent hover:bg-primary-foreground/90">
+                <Button variant="hero" className="w-full sm:w-auto">
                   Tester le moteur de recherche
                 </Button>
               </Link>
