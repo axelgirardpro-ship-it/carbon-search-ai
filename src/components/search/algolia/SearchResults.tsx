@@ -577,15 +577,17 @@ export const SearchResults: React.FC = () => {
               const shouldBlur = shouldBlurPremiumContent(hit.Source);
 
               return (
-                <Card key={hit.objectID} className="relative overflow-hidden bg-white border border-border hover:shadow-lg transition-shadow">
+                <Card key={hit.objectID} className="relative overflow-hidden bg-white border border-border hover:shadow-lg transition-shadow cursor-pointer"
+                      onClick={() => toggleRowExpansion(hit.objectID)}>
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start gap-4">
                       <div className="flex items-start gap-3 flex-1">
-                        <Checkbox
-                          checked={selectedItems.has(hit.objectID)}
-                          onCheckedChange={() => handleItemSelect(hit.objectID)}
-                          className="mt-1 border-indigo-950 data-[state=checked]:bg-indigo-950 data-[state=checked]:border-indigo-950"
-                        />
+                         <Checkbox
+                           checked={selectedItems.has(hit.objectID)}
+                           onCheckedChange={() => handleItemSelect(hit.objectID)}
+                           onClick={(e) => e.stopPropagation()}
+                           className="mt-1 border-indigo-950 data-[state=checked]:bg-indigo-950 data-[state=checked]:border-indigo-950"
+                         />
                         <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">
                           <h3 
@@ -593,29 +595,35 @@ export const SearchResults: React.FC = () => {
                             onClick={() => toggleRowExpansion(hit.objectID)}
                             dangerouslySetInnerHTML={getHighlightedText(hit, 'Nom')}
                           />
-                          <div className="flex items-center gap-2 ml-4">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => canUseFavorites() ? handleFavoriteToggle(hit) : undefined}
-                              disabled={!canUseFavorites()}
-                              className={`${isFav ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-foreground'} ${!canUseFavorites() ? 'opacity-50 cursor-not-allowed' : ''}`}
-                              title={!canUseFavorites() ? "Fonctionnalité disponible uniquement avec le plan Premium" : ""}
-                            >
-                              {!canUseFavorites() ? (
-                                <Lock className="h-4 w-4" />
-                              ) : (
-                                <Heart className={`h-4 w-4 ${isFav ? 'fill-current' : ''}`} />
-                              )}
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => toggleRowExpansion(hit.objectID)}
-                            >
-                              {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                            </Button>
-                          </div>
+                           <div className="flex items-center gap-2 ml-4">
+                             <Button
+                               variant="ghost"
+                               size="sm"
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 canUseFavorites() ? handleFavoriteToggle(hit) : undefined;
+                               }}
+                               disabled={!canUseFavorites()}
+                               className={`${isFav ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-foreground'} ${!canUseFavorites() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                               title={!canUseFavorites() ? "Fonctionnalité disponible uniquement avec le plan Premium" : ""}
+                             >
+                               {!canUseFavorites() ? (
+                                 <Lock className="h-4 w-4" />
+                               ) : (
+                                 <Heart className={`h-4 w-4 ${isFav ? 'fill-current' : ''}`} />
+                               )}
+                             </Button>
+                             <Button
+                               variant="ghost"
+                               size="sm"
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 toggleRowExpansion(hit.objectID);
+                               }}
+                             >
+                               {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                             </Button>
+                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-3">
