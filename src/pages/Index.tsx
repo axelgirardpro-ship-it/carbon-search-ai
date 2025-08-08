@@ -48,7 +48,7 @@ const Index = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/signup">
-                  <Button variant="secondary" className="w-full sm:w-auto">
+                  <Button className="w-full sm:w-auto">
                     Tester le moteur de recherche
                   </Button>
                 </Link>
@@ -73,7 +73,7 @@ const Index = () => {
       {/* Partner Logos Section */}
   <section className="py-16 bg-muted">
     <div className="container mx-auto px-4 text-center">
-      <h2 className="mb-12 text-muted-foreground">
+      <h2 className="mb-12 text-primary">
             Retrouvez les plus grandes bases françaises et internationales
           </h2>
           <div className="grid grid-cols-7 gap-8 items-center">
@@ -126,7 +126,7 @@ const Index = () => {
       {/* Interactive Demo Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="font-bold mb-12 text-foreground">
+          <h2 className="font-bold mb-12 text-primary">
             Découvrez la puissance<br />
             du moteur de recherche
           </h2>
@@ -271,7 +271,7 @@ const Index = () => {
       {/* Databases Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <h2 className="font-bold text-foreground text-center mb-12">
+          <h2 className="font-bold text-primary text-center mb-12">
             Toutes les bases de données<br />
             sur une seule plateforme
           </h2>
