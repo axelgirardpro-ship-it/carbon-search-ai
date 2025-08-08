@@ -73,7 +73,7 @@ const Index = () => {
       {/* Partner Logos Section */}
   <section className="py-16 bg-muted">
     <div className="container mx-auto px-4 text-center">
-      <h2 className="mb-12 text-primary">
+      <h2 className="font-bold mb-12 text-primary">
             Retrouvez les plus grandes bases françaises et internationales
           </h2>
           <div className="grid grid-cols-7 gap-8 items-center">
