@@ -297,10 +297,8 @@ export const SearchFilters: React.FC = () => {
   return (
     <Card className="bg-background border border-border">
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-montserrat text-indigo-950">FILTRER PAR :</CardTitle>
-          <ClearRefinementsWidget />
-        </div>
+        <CardTitle className="text-lg font-montserrat text-indigo-950">FILTRER PAR :</CardTitle>
+        <ClearRefinementsWidget />
       </CardHeader>
       <CardContent className="space-y-6">
         <Collapsible defaultOpen>
