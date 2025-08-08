@@ -423,7 +423,6 @@ const Index = () => {
             </Card>
 
             <Card className="p-8 relative border border-border">
-              <Badge className="absolute -top-3 right-4 bg-primary text-primary-foreground">Version Beta</Badge>
               <CardHeader className="pb-4">
                 <CardTitle className="text-xl font-semibold">PREMIUM</CardTitle>
                 <div className="text-sm text-muted-foreground">À partir de</div>
