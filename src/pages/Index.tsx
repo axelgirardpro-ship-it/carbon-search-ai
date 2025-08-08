@@ -366,22 +366,22 @@ const Index = () => {
               <img src="/lovable-uploads/aa4e0a75-7d42-444e-8f29-bd985c64a491.png" alt="Expert" className="w-80 h-80 object-cover rounded-lg" />
             </div>
             <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+              <h2 className="font-bold text-primary">
                 Une base de données<br />
                 structurée et enrichie par nos<br />
                 experts
               </h2>
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-semibold text-lg mb-2 text-foreground">Des bases de données nettoyées et structurées</h3>
+                  <h3 className="font-semibold mb-2 text-primary">Des bases de données nettoyées et structurées</h3>
                   <p className="text-muted-foreground">Nos experts nettoient et restructurent l'ensemble des bases de données intégrées afin de disposer d'un format unique de données.</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2 text-foreground">Enrichissement des bases de données</h3>
+                  <h3 className="font-semibold mb-2 text-primary">Enrichissement des bases de données</h3>
                   <p className="text-muted-foreground">Vérification des facteurs par poste d'émissions, correction des effets de l'inflation, traduction des métadonnées...</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2 text-foreground">Versionnage</h3>
+                  <h3 className="font-semibold mb-2 text-primary">Versionnage</h3>
                   <p className="text-muted-foreground">Profitez d'un versionnage d'un maintien en temps réel de la base au gré des mises à jour des différentes sources de données.</p>
                 </div>
               </div>
