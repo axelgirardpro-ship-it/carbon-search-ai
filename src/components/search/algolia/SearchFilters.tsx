@@ -63,7 +63,7 @@ const RefinementList: React.FC<RefinementListProps> = ({
     <Collapsible defaultOpen>
       <CollapsibleTrigger asChild>
         <Button variant="ghost" className="w-full justify-between p-0 h-auto text-indigo-950 hover:bg-white hover:text-indigo-950">
-          <h3 className="font-medium font-montserrat text-indigo-950">{title}</h3>
+          <h5 className="text-base font-semibold font-montserrat text-primary">{title}</h5>
           <Filter className="h-4 w-4 text-indigo-950" />
         </Button>
       </CollapsibleTrigger>
@@ -244,7 +244,7 @@ const FERangeInput: React.FC = () => {
     <Collapsible defaultOpen>
       <CollapsibleTrigger asChild>
         <Button variant="ghost" className="w-full justify-between p-0 h-auto text-indigo-950 bg-transparent hover:bg-transparent">
-          <h3 className="font-medium font-montserrat text-indigo-950">Facteur d'émission (FE)</h3>
+          <h5 className="text-base font-semibold font-montserrat text-primary">Facteur d'émission (FE)</h5>
           <Filter className="h-4 w-4 text-indigo-950" />
         </Button>
       </CollapsibleTrigger>
@@ -307,7 +307,7 @@ export const SearchFilters: React.FC = () => {
               variant="ghost" 
               className="w-full justify-between p-0 h-auto text-indigo-950 bg-transparent hover:bg-transparent"
             >
-              <h3 className="font-medium font-montserrat text-indigo-950">Données récentes</h3>
+              <h5 className="text-base font-semibold font-montserrat text-primary">Données récentes</h5>
               <Filter className="h-4 w-4 text-indigo-950" />
             </Button>
           </CollapsibleTrigger>

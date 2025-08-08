@@ -32,9 +32,7 @@ const Index = () => {
         </div>
       </nav>
       {/* Hero Section */}
-      <section className="py-20 px-4" style={{
-      backgroundColor: '#d7caf5'
-    }}>
+      <section className="py-20 px-4 bg-muted">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Colonne gauche : H1, Paragraphe, CTAs */}
@@ -164,7 +162,7 @@ const Index = () => {
     puissant et personnalisable
   </h2>
   <Tabs defaultValue="donnees" className="max-w-6xl mx-auto">
-    <TabsList className="grid w-full grid-cols-4 mb-12 bg-[hsl(var(--homepage-violet))] rounded-full items-center">
+    <TabsList className="grid w-full grid-cols-4 mb-12 bg-muted rounded-full items-center">
               <TabsTrigger value="donnees" className="rounded-full">Données</TabsTrigger>
               <TabsTrigger value="recherche" className="rounded-full">Recherche</TabsTrigger>
               <TabsTrigger value="personnalisation" className="rounded-full">Personnalisation</TabsTrigger>
@@ -277,12 +275,12 @@ const Index = () => {
       {/* Databases Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-[#2D3436] text-center mb-12">
+          <h2 className="text-4xl font-bold text-foreground text-center mb-12">
             Toutes les bases de données<br />
             sur une seule plateforme
           </h2>
           <Tabs defaultValue="standards" className="max-w-6xl mx-auto">
-            <TabsList className="grid w-full grid-cols-2 mb-12 bg-[#d7caf5] rounded-full items-center">
+            <TabsList className="grid w-full grid-cols-2 mb-12 bg-muted rounded-full items-center">
               <TabsTrigger value="standards" className="rounded-full">Datasets standards</TabsTrigger>
               <TabsTrigger value="premium" className="rounded-full">Datasets premium</TabsTrigger>
             </TabsList>

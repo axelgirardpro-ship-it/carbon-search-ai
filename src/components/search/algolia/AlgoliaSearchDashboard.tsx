@@ -12,7 +12,7 @@ const AlgoliaSearchContent: React.FC = () => {
       <UnifiedNavbar />
       
       {/* Hero Section */}
-      <section className="py-20 px-4" style={{backgroundColor: '#d7caf5'}}>
+      <section className="py-20 px-4 bg-background">
         <div className="container mx-auto px-4">
           <div className="flex justify-center">
             {/* SearchBox - très large */}
