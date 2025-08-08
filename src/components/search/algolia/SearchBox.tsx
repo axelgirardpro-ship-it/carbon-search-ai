@@ -81,8 +81,9 @@ export const SearchBox: React.FC = () => {
             )}
           </div>
           <Button 
+            variant="hero"
             onClick={handleSearch}
-            className="bg-slate-950 hover:bg-slate-800 text-white font-montserrat h-20 px-10 text-xl rounded-xl"
+            className="h-20 px-10 text-xl rounded-xl"
           >
             Rechercher
           </Button>
