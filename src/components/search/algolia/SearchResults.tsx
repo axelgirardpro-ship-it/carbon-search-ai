@@ -589,7 +589,7 @@ export const SearchResults: React.FC = () => {
                         <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">
                           <h3 
-                            className="text-lg font-semibold text-indigo-950 leading-tight cursor-pointer font-montserrat"
+                            className="text-lg font-semibold text-primary leading-tight cursor-pointer font-montserrat"
                             onClick={() => toggleRowExpansion(hit.objectID)}
                             dangerouslySetInnerHTML={getHighlightedText(hit, 'Nom')}
                           />
@@ -618,47 +618,50 @@ export const SearchResults: React.FC = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-3">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-3">
                           <div>
                             <span className="text-sm font-medium text-muted-foreground">Facteur d'émission</span>
                             <PremiumBlur isBlurred={shouldBlur}>
-                              <p className="text-lg font-bold text-indigo-950 font-montserrat">{hit.FE ? (typeof hit.FE === 'number' ? parseFloat(hit.FE.toFixed(4)) : parseFloat(parseFloat(String(hit.FE)).toFixed(4))).toLocaleString('fr-FR') : ''} kgCO₂eq</p>
+                              <p className="text-2xl font-bold text-primary font-montserrat">{hit.FE ? (typeof hit.FE === 'number' ? parseFloat(hit.FE.toFixed(4)) : parseFloat(parseFloat(String(hit.FE)).toFixed(4))).toLocaleString('fr-FR') : ''} kgCO₂eq</p>
                             </PremiumBlur>
-                          </div>
-                          <div>
-                            <span className="text-sm font-medium text-muted-foreground">Unité</span>
-                            <PremiumBlur isBlurred={shouldBlur}>
-                              <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Unité donnée d\'activité')} />
-                            </PremiumBlur>
-                          </div>
-                          {hit.Périmètre && (
-                            <div>
-                              <span className="text-sm font-medium text-muted-foreground">Périmètre</span>
+                            <div className="mt-2">
+                              <span className="text-sm font-medium text-muted-foreground">Unité</span>
                               <PremiumBlur isBlurred={shouldBlur}>
-                                <p className="text-sm">{hit.Périmètre}</p>
+                                <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Unité donnée d\'activité')} />
                               </PremiumBlur>
                             </div>
-                          )}
-                          <div>
-                            <span className="text-sm font-medium text-muted-foreground">Source</span>
-                            <PremiumBlur isBlurred={shouldBlur}>
-                              <div className="flex items-center justify-between gap-2">
-                                <p className="text-sm flex-1" dangerouslySetInnerHTML={getHighlightedText(hit, 'Source')} />
-                                {getSourceLogo(hit.Source) && (
-                                  <img 
-                                    src={getSourceLogo(hit.Source)!} 
-                                    alt={`Logo ${hit.Source}`}
-                                    className="w-12 h-12 object-contain flex-shrink-0"
-                                  />
-                                )}
+                          </div>
+                          <div className="grid grid-cols-1 gap-3">
+                            {hit.Périmètre && (
+                              <div>
+                                <span className="text-sm font-medium text-muted-foreground">Périmètre</span>
+                                <PremiumBlur isBlurred={shouldBlur}>
+                                  <p className="text-sm">{hit.Périmètre}</p>
+                                </PremiumBlur>
                               </div>
-                            </PremiumBlur>
+                            )}
+                            <div>
+                              <span className="text-sm font-medium text-muted-foreground">Source</span>
+                              <PremiumBlur isBlurred={shouldBlur}>
+                                <div className="flex items-center justify-between gap-2">
+                                  <p className="text-sm flex-1" dangerouslySetInnerHTML={getHighlightedText(hit, 'Source')} />
+                                  {getSourceLogo(hit.Source) && (
+                                    <img 
+                                      src={getSourceLogo(hit.Source)!} 
+                                      alt={`Logo ${hit.Source}`}
+                                      className="w-12 h-12 object-contain flex-shrink-0"
+                                    />
+                                  )}
+                                </div>
+                              </PremiumBlur>
+                            </div>
                           </div>
                         </div>
 
                         <div className="flex flex-wrap gap-2">
-                          <Badge variant="outline">{hit.Localisation}</Badge>
-                          <Badge variant="outline">{hit.Date}</Badge>
+                          {hit.Localisation && <Badge variant="outline">{hit.Localisation}</Badge>}
+                          {hit.Date && <Badge variant="outline">{hit.Date}</Badge>}
+                          {hit.Secteur && <Badge variant="outline">{hit.Secteur}</Badge>}
                           {hit['Sous-secteur'] && <Badge variant="secondary">{hit['Sous-secteur']}</Badge>}
                         </div>
 
