@@ -5,9 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle, Facebook, Twitter, Linkedin, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 const Index = () => {
-  return <div className="min-h-screen bg-white">
+  return <div className="min-h-screen bg-background">
       {/* Navigation Bar */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <nav className="bg-background border-b border-border sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
         {/* Logo */}
@@ -71,7 +71,7 @@ const Index = () => {
       </section>
 
       {/* Partner Logos Section */}
-  <section className="py-16 bg-[hsl(var(--muted))]">
+  <section className="py-16 bg-muted">
     <div className="container mx-auto px-4 text-center">
       <h2 className="text-lg mb-12 text-primary">
             Retrouvez les plus grandes bases françaises et internationales
@@ -151,7 +151,7 @@ const Index = () => {
       </section>
 
       {/* Features Tabs Section */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-background">
         <div className="container mx-auto">
   <h2 className="text-4xl font-bold text-primary text-center mb-12">
     Un moteur de recherche<br />
@@ -359,7 +359,7 @@ const Index = () => {
       </section>
 
       {/* Expert Section */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-background">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
