@@ -493,23 +493,25 @@ export const SearchResults: React.FC = () => {
     }
   };
 
+  const mapHitToEmissionFactor = (hit: AlgoliaHit) => ({
+    id: hit.objectID,
+    nom: hit.Nom,
+    description: hit.Description,
+    fe: hit.FE,
+    uniteActivite: hit['Unité donnée d\'activité'],
+    source: hit.Source,
+    secteur: hit.Secteur,
+    sousSecteur: hit['Sous-secteur'],
+    localisation: hit.Localisation,
+    date: hit.Date,
+    incertitude: hit.Incertitude,
+    perimetre: hit.Périmètre,
+    contributeur: hit.Contributeur,
+    commentaires: hit.Commentaires
+  });
+
   const handleFavoriteToggle = async (hit: AlgoliaHit) => {
-    const emissionFactor = {
-      id: hit.objectID,
-      nom: hit.Nom,
-      description: hit.Description,
-      fe: hit.FE,
-      uniteActivite: hit['Unité donnée d\'activité'],
-      source: hit.Source,
-      secteur: hit.Secteur,
-      sousSecteur: hit['Sous-secteur'],
-      localisation: hit.Localisation,
-      date: hit.Date,
-      incertitude: hit.Incertitude,
-      perimetre: hit.Périmètre,
-      contributeur: hit.Contributeur,
-      commentaires: hit.Commentaires
-    };
+    const emissionFactor = mapHitToEmissionFactor(hit);
     
     if (isFavorite(hit.objectID)) {
       await removeFromFavorites(hit.objectID);
@@ -518,6 +520,33 @@ export const SearchResults: React.FC = () => {
     }
   };
 
+  const handleAddSelectedToFavorites = async () => {
+    if (!canUseFavorites()) {
+      toast({
+        title: "Fonctionnalité Premium",
+        description: "L'ajout aux favoris est disponible avec le plan Premium.",
+      });
+      return;
+    }
+
+    const selectedHits = hits.filter((h) => selectedItems.has(h.objectID));
+    const toAdd = selectedHits.filter((h) => !isFavorite(h.objectID));
+
+    if (toAdd.length === 0) {
+      toast({
+        title: "Déjà en favoris",
+        description: "Tous les éléments sélectionnés sont déjà dans vos favoris.",
+      });
+      return;
+    }
+
+    await Promise.all(toAdd.map((h) => addToFavorites(mapHitToEmissionFactor(h))));
+
+    toast({
+      title: "Favoris mis à jour",
+      description: `${toAdd.length} élément${toAdd.length > 1 ? 's' : ''} ajouté${toAdd.length > 1 ? 's' : ''} aux favoris`,
+    });
+  };
   return (
     <div className="space-y-6">
       <StateResults />
@@ -548,6 +577,15 @@ export const SearchResults: React.FC = () => {
                 <Button onClick={handleCopyToClipboard} variant="outline" className="flex items-center gap-2 font-montserrat">
                   <Copy className="h-4 w-4" />
                   Copier ({selectedItems.size})
+                </Button>
+                <Button
+                  onClick={handleAddSelectedToFavorites}
+                  className="flex items-center gap-2 font-montserrat"
+                  disabled={!canUseFavorites()}
+                  title={!canUseFavorites() ? "Fonctionnalité disponible uniquement avec le plan Premium" : ""}
+                >
+                  <Heart className="h-4 w-4" />
+                  Ajouter aux favoris ({selectedItems.size})
                 </Button>
                 <Button onClick={handleExport} className="flex items-center gap-2 bg-slate-950 hover:bg-slate-800 text-white font-montserrat">
                   <Download className="h-4 w-4" />
