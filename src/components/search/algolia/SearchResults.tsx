@@ -640,19 +640,19 @@ export const SearchResults: React.FC = () => {
                                 </PremiumBlur>
                               </div>
                             )}
-                            <div>
-                              <span className="text-sm font-medium text-muted-foreground">Source</span>
-                              <PremiumBlur isBlurred={shouldBlur}>
-                                <div className="flex items-center justify-between gap-2">
-                                  <p className="text-sm flex-1" dangerouslySetInnerHTML={getHighlightedText(hit, 'Source')} />
-                                  {getSourceLogo(hit.Source) && (
-                                    <img 
-                                      src={getSourceLogo(hit.Source)!} 
-                                      alt={`Logo ${hit.Source}`}
-                                      className="w-12 h-12 object-contain flex-shrink-0"
-                                    />
-                                  )}
-                                </div>
+                             <div>
+                               <span className="text-sm font-medium text-muted-foreground">Source</span>
+                               <PremiumBlur isBlurred={shouldBlur}>
+                                 <div className="flex items-center gap-2">
+                                   {getSourceLogo(hit.Source) && (
+                                     <img 
+                                       src={getSourceLogo(hit.Source)!}
+                                       alt={`Logo ${hit.Source}`}
+                                       className="w-6 h-6 object-contain flex-shrink-0"
+                                     />
+                                   )}
+                                   <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Source')} />
+                                 </div>
                               </PremiumBlur>
                             </div>
                           </div>
