@@ -12,7 +12,7 @@ export const SearchStats: React.FC = () => {
             {nbSortedHits?.toLocaleString()} résultats pertinents sur {nbHits?.toLocaleString()}
           </span>
         ) : (
-          <span>{nbHits?.toLocaleString()} résultat{nbHits > 1 ? 's' : ''} trouvé{nbHits > 1 ? 's' : ''}</span>
+          <span className="font-semibold">{nbHits?.toLocaleString()} résultat{nbHits > 1 ? 's' : ''} trouvé{nbHits > 1 ? 's' : ''}</span>
         )}
       </div>
       <div>
