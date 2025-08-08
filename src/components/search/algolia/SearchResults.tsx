@@ -560,7 +560,7 @@ export const SearchResults: React.FC = () => {
           {/* Header avec contrôles de tri et pagination */}
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
               <div className="text-sm text-indigo-950 font-montserrat">
-                {hits.length} résultat{hits.length > 1 ? 's' : ''} trouvé{hits.length > 1 ? 's' : ''}
+                {hits.length} résultat{hits.length > 1 ? 's' : ''} affiché{hits.length > 1 ? 's' : ''}
               </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <SortByComponent onSortChange={handleSortChange} currentSort={currentSort} />
