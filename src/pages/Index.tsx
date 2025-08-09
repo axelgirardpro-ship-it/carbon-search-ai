@@ -497,7 +497,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Colonne 1 - Logo et description */}
             <div className="space-y-4">
-              <h3 className="text-2xl font-bold">DataCarb</h3>
+              <img src="/lovable-uploads/c6b4664d-1aaa-4f65-a4be-d336b3e5040c.png" alt="DataCarb" className="h-12" />
               <p className="text-primary-foreground/80">
                 Le moteur de recherche de facteurs d'émission le plus puissant du marché.
               </p>
