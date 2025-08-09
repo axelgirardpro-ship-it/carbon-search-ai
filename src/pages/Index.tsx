@@ -13,7 +13,7 @@ const Index = () => {
           <div className="flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex-shrink-0">
-          <img src="/lovable-uploads/415a981c-a454-47dc-a601-b214f6e857d0.png" alt="DataCarb" className="h-20" />
+          <img src="/lovable-uploads/415a981c-a454-47dc-a601-b214f6e857d0.png" alt="DataCarb" className="h-16" />
         </div>
         
         {/* Boutons de navigation */}
