@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRefinementList, useClearRefinements, useToggleRefinement, useRange } from 'react-instantsearch';
+import { useRefinementList, useClearRefinements, useToggleRefinement, useRange, usePagination } from 'react-instantsearch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -160,6 +160,7 @@ const FERangeInput: React.FC = () => {
     attribute: 'FE',
     precision: 2
   });
+  const { refine: refinePage } = usePagination();
 
   const [min, setMin] = React.useState('');
   const [max, setMax] = React.useState('');
@@ -230,12 +231,14 @@ const FERangeInput: React.FC = () => {
 
     console.log('🔎 Applying FE range', { minValue, maxValue, available: range });
     refine([minValue, maxValue]);
+    refinePage(0);
   };
 
   const handleReset = () => {
     setMin('');
     setMax('');
     refine([undefined, undefined]);
+    refinePage(0);
   };
 
   console.log('FERangeInput - canRefine:', canRefine, 'range:', range, 'start:', start);
