@@ -56,11 +56,35 @@ const searchClient = {
         params: cleanedParams
       };
       
-      // Préserver numericFilters (y compris FE) pour appliquer le filtre avant pagination
+      // Retirer uniquement les numericFilters concernant FE pour éviter le conflit "managed vs advanced"
+      const paramsAny: any = (cleanedRequest as any).params || {};
+      const nf = paramsAny.numericFilters;
+      if (Array.isArray(nf)) {
+        const hasFE = (s: string) => /\bFE\b/.test(s);
+        const cleanedNumericFilters = nf
+          .map((group: any) => {
+            if (Array.isArray(group)) {
+              const sub = group.filter((item: any) => typeof item === 'string' ? !hasFE(item) : true);
+              return sub;
+            }
+            return typeof group === 'string' ? (hasFE(group) ? null : group) : group;
+          })
+          .filter((g: any) => g && (!Array.isArray(g) || g.length > 0));
+
+        if (cleanedNumericFilters.length !== nf.length) {
+          console.log(`🧹 Removed FE numericFilters from request ${index}:`, nf, '=>', cleanedNumericFilters);
+        }
+        if (cleanedNumericFilters.length > 0) {
+          paramsAny.numericFilters = cleanedNumericFilters;
+        } else {
+          delete paramsAny.numericFilters;
+        }
+      }
+
       console.log(`✅ Cleaned request ${index}:`, cleanedRequest);
       const nfAfter = (cleanedRequest as any)?.params?.numericFilters;
       if (nfAfter) {
-        console.log(`🧮 numericFilters for request ${index}:`, nfAfter);
+        console.log(`🧮 numericFilters for request ${index} (after FE cleanup):`, nfAfter);
       }
       const filtersStr = (cleanedRequest as any)?.params?.filters;
       if (typeof filtersStr === 'string' && filtersStr.includes('FE')) {
