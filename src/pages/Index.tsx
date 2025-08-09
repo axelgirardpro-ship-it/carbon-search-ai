@@ -277,7 +277,7 @@ const Index = () => {
             sur une seule plateforme
           </h2>
           <Tabs defaultValue="standards" className="max-w-6xl mx-auto">
-            <TabsList className="grid w-full grid-cols-2 mb-12 bg-primary rounded-full items-center">
+            <TabsList className="grid w-full grid-cols-2 mb-12 bg-[#CEC3FF] rounded-full items-center">
               <TabsTrigger value="standards" className="rounded-full">Datasets standards</TabsTrigger>
               <TabsTrigger value="premium" className="rounded-full">Datasets premium</TabsTrigger>
             </TabsList>
