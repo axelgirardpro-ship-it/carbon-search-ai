@@ -13,7 +13,7 @@ const Index = () => {
           <div className="flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex-shrink-0">
-          <h1 className="font-bold">DataCarb</h1>
+          <h1 className="font-bold text-primary">DataCarb</h1>
         </div>
         
         {/* Boutons de navigation */}
@@ -72,9 +72,9 @@ const Index = () => {
       </section>
 
       {/* Partner Logos Section */}
-  <section className="py-16 bg-background">
+  <section className="py-16 bg-muted">
     <div className="container mx-auto px-4 text-center">
-      <h4 className="font-bold mb-12">
+      <h4 className="font-bold mb-12 text-[#4b5dff]">
             Retrouvez les plus grandes bases françaises et internationales
           </h4>
           <div className="grid grid-cols-7 gap-8 items-center">
@@ -127,7 +127,7 @@ const Index = () => {
       {/* Interactive Demo Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="font-bold mb-12">
+          <h2 className="font-bold mb-12 text-primary">
             Découvrez la puissance<br />
             du moteur de recherche
           </h2>
@@ -154,7 +154,7 @@ const Index = () => {
       {/* Features Tabs Section */}
       <section className="py-20 px-4 bg-background">
         <div className="container mx-auto">
-  <h2 className="font-bold text-center mb-12">
+  <h2 className="font-bold text-primary text-center mb-12">
     Un moteur de recherche<br />
     puissant et personnalisable
   </h2>
@@ -167,7 +167,7 @@ const Index = () => {
             </TabsList>
             <TabsContent value="donnees" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-      <h3 className="font-bold">
+      <h3 className="font-bold text-primary">
         Le guichet unique de vos<br />
         données carbone
       </h3>
@@ -192,7 +192,7 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="recherche" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-    <h3 className="font-bold">
+    <h3 className="font-bold text-primary">
       Moteur fluide et simple<br />
       d'utilisation
     </h3>
@@ -217,7 +217,7 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="personnalisation" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-    <h3 className="font-bold">
+    <h3 className="font-bold text-primary">
       Personnalisez le moteur<br />
       selon vos besoins
     </h3>
@@ -242,7 +242,7 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="plus-loin" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-    <h3 className="font-bold">
+    <h3 className="font-bold text-primary">
       Allez plus loin que<br />
       la recherche de FE
     </h3>
@@ -272,7 +272,7 @@ const Index = () => {
       {/* Databases Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <h2 className="font-bold text-center mb-12">
+          <h2 className="font-bold text-primary text-center mb-12">
             Toutes les bases de données<br />
             sur une seule plateforme
           </h2>
@@ -285,51 +285,9 @@ const Index = () => {
               <div className="grid grid-cols-7 gap-8">
                 {["AIB", "Agribalyse", "BEIS", "Base Carbone", "Base Impacts", "CCF", "Climate Trace", "EEA", "EPA", "Exiobase", "EcoInvent", "Ecobalyse", "Electricity Maps", "Ember", "GESPoint5", "GLEC", "Kering", "OMEGA TP", "Open CEDA", "PCAF"].map((name, index) => <div key={index} className="flex flex-col items-center space-y-2">
                     <div className="w-16 h-16 rounded-lg flex items-center justify-center">
-                      {name === "AIB" ? (
-                        <MonoLogo src="/lovable-uploads/04c097ec-c73b-4fb8-8788-7db8dce6aae6.png" alt="AIB Logo" className="w-full h-full" />
-                      ) : name === "Agribalyse" ? (
-                        <MonoLogo src="/lovable-uploads/fda086b7-f932-4837-beff-453157e04098.png" alt="Agribalyse Logo" className="w-full h-full" />
-                      ) : name === "BEIS" ? (
-                        <MonoLogo src="/lovable-uploads/6a36c45c-748d-4f7b-83c3-06ab2651649f.png" alt="BEIS Logo" className="w-full h-full" />
-                      ) : name === "Base Carbone" ? (
-                        <MonoLogo src="/lovable-uploads/e9be0482-b48d-476b-8536-b92ea3b88ea5.png" alt="Base Carbone Logo" className="w-full h-full" />
-                      ) : name === "Base Impacts" ? (
-                        <MonoLogo src="/lovable-uploads/8351c94f-afcc-498e-b8fa-73f47451686a.png" alt="Base Impacts Logo" className="w-full h-full" />
-                      ) : name === "CCF" ? (
-                        <MonoLogo src="/lovable-uploads/c9bb06bc-2cc4-4420-9704-4c9f16118e97.png" alt="CCF Logo" className="w-full h-full" />
-                      ) : name === "Climate Trace" ? (
-                        <MonoLogo src="/lovable-uploads/47300cd4-f205-4264-a5b0-6f1406b312f8.png" alt="Climate Trace Logo" className="w-full h-full" />
-                      ) : name === "EEA" ? (
-                        <MonoLogo src="/lovable-uploads/d2dffb4b-f32d-43ed-82bf-b071db714f91.png" alt="European Environment Agency Logo" className="w-full h-full" />
-                      ) : name === "EPA" ? (
-                        <MonoLogo src="/lovable-uploads/75c9eac2-554f-4bb0-9719-08a698c80e1d.png" alt="US EPA Logo" className="w-full h-full" />
-                      ) : name === "Exiobase" ? (
-                        <MonoLogo src="/lovable-uploads/373cff1a-5089-4167-b40a-38ff4d50cc36.png" alt="Exiobase Logo" className="w-full h-full" />
-                      ) : name === "EcoInvent" ? (
-                        <MonoLogo src="/lovable-uploads/5cc1caa1-f312-4760-849c-0b4ec3ab5f76.png" alt="EcoInvent Logo" className="w-full h-full" />
-                      ) : name === "Ecobalyse" ? (
-                        <MonoLogo src="/lovable-uploads/f775ed4f-912f-41cf-9ade-08338aadf665.png" alt="Ecobalyse Logo" className="w-full h-full" />
-                      ) : name === "Electricity Maps" ? (
-                        <MonoLogo src="/lovable-uploads/0cc5974c-e436-42f5-9776-ad4cd768b072.png" alt="Electricity Maps Logo" className="w-full h-full" />
-                      ) : name === "Ember" ? (
-                        <MonoLogo src="/lovable-uploads/88e14343-4589-4e34-b420-395130de1641.png" alt="Ember Logo" className="w-full h-full" />
-                      ) : name === "GESPoint5" ? (
-                        <MonoLogo src="/lovable-uploads/8de84824-fb1b-441b-a7c2-50b92b4072e2.png" alt="1point5 Logo" className="w-full h-full" />
-                      ) : name === "GLEC" ? (
-                        <MonoLogo src="/lovable-uploads/a5f3dea0-840a-4eed-b0ce-58ef94a75d67.png" alt="GLEC Logo" className="w-full h-full" />
-                      ) : name === "Kering" ? (
-                        <MonoLogo src="/lovable-uploads/faa38581-8c17-443c-b8de-77a4ffc6c72e.png" alt="Kering Logo" className="w-full h-full" />
-                      ) : name === "OMEGA TP" ? (
-                        <MonoLogo src="/lovable-uploads/4cce460f-a743-4cdf-9fdf-215ba86522d8.png" alt="OMEGA TP Logo" className="w-full h-full" />
-                      ) : name === "Open CEDA" ? (
-                        <MonoLogo src="/lovable-uploads/6bd2c0d0-f9d1-4f7d-853f-cc2a7932bff5.png" alt="Open CEDA Logo" className="w-full h-full" />
-                      ) : name === "PCAF" ? (
-                        <MonoLogo src="/lovable-uploads/b5978785-2cff-49c0-996a-225457820050.png" alt="PCAF Logo" className="w-full h-full" />
-                      ) : (
-                        <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+                      {name === "AIB" ? <MonoLogo src="/lovable-uploads/04c097ec-c73b-4fb8-8788-7db8dce6aae6.png" alt="AIB Logo" className="w-full h-full" /> : name === "Agribalyse" ? <MonoLogo src="/lovable-uploads/fda086b7-f932-4837-beff-453157e04098.png" alt="Agribalyse Logo" className="w-full h-full" /> : name === "BEIS" ? <MonoLogo src="/lovable-uploads/6a36c45c-748d-4f7b-83c3-06ab2651649f.png" alt="BEIS Logo" className="w-full h-full" /> : name === "Base Carbone" ? <MonoLogo src="/lovable-uploads/e9be0482-b48d-476b-8536-b92ea3b88ea5.png" alt="Base Carbone Logo" className="w-full h-full" /> : name === "Base Impacts" ? <MonoLogo src="/lovable-uploads/8351c94f-afcc-498e-b8fa-73f47451686a.png" alt="Base Impacts Logo" className="w-full h-full" /> : name === "CCF" ? <MonoLogo src="/lovable-uploads/c9bb06bc-2cc4-4420-9704-4c9f16118e97.png" alt="CCF Logo" className="w-full h-full" /> : name === "Climate Trace" ? <MonoLogo src="/lovable-uploads/47300cd4-f205-4264-a5b0-6f1406b312f8.png" alt="Climate Trace Logo" className="w-full h-full" /> : name === "EEA" ? <MonoLogo src="/lovable-uploads/d2dffb4b-f32d-43ed-82bf-b071db714f91.png" alt="European Environment Agency Logo" className="w-full h-full" /> : name === "EPA" ? <MonoLogo src="/lovable-uploads/75c9eac2-554f-4bb0-9719-08a698c80e1d.png" alt="US EPA Logo" className="w-full h-full" /> : name === "Exiobase" ? <MonoLogo src="/lovable-uploads/373cff1a-5089-4167-b40a-38ff4d50cc36.png" alt="Exiobase Logo" className="w-full h-full" /> : name === "EcoInvent" ? <MonoLogo src="/lovable-uploads/5cc1caa1-f312-4760-849c-0b4ec3ab5f76.png" alt="EcoInvent Logo" className="w-full h-full" /> : name === "Ecobalyse" ? <MonoLogo src="/lovable-uploads/f775ed4f-912f-41cf-9ade-08338aadf665.png" alt="Ecobalyse Logo" className="w-full h-full" /> : name === "Electricity Maps" ? <MonoLogo src="/lovable-uploads/0cc5974c-e436-42f5-9776-ad4cd768b072.png" alt="Electricity Maps Logo" className="w-full h-full" /> : name === "Ember" ? <MonoLogo src="/lovable-uploads/88e14343-4589-4e34-b420-395130de1641.png" alt="Ember Logo" className="w-full h-full" /> : name === "GESPoint5" ? <MonoLogo src="/lovable-uploads/8de84824-fb1b-441b-a7c2-50b92b4072e2.png" alt="1point5 Logo" className="w-full h-full" /> : name === "GLEC" ? <MonoLogo src="/lovable-uploads/a5f3dea0-840a-4eed-b0ce-58ef94a75d67.png" alt="GLEC Logo" className="w-full h-full" /> : name === "Kering" ? <MonoLogo src="/lovable-uploads/faa38581-8c17-443c-b8de-77a4ffc6c72e.png" alt="Kering Logo" className="w-full h-full" /> : name === "OMEGA TP" ? <MonoLogo src="/lovable-uploads/4cce460f-a743-4cdf-9fdf-215ba86522d8.png" alt="OMEGA TP Logo" className="w-full h-full" /> : name === "Open CEDA" ? <MonoLogo src="/lovable-uploads/6bd2c0d0-f9d1-4f7d-853f-cc2a7932bff5.png" alt="Open CEDA Logo" className="w-full h-full" /> : name === "PCAF" ? <MonoLogo src="/lovable-uploads/b5978785-2cff-49c0-996a-225457820050.png" alt="PCAF Logo" className="w-full h-full" /> : <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
                           <div className="w-8 h-8 bg-primary rounded"></div>
-                        </div>
-                      )}
+                        </div>}
                     </div>
                     <span className="text-sm text-center">{name}</span>
                   </div>)}
@@ -339,17 +297,9 @@ const Index = () => {
               <div className="grid grid-cols-7 gap-8">
                 {["Inies", "Eco-platform", "EcoInvent"].map((name, index) => <div key={index} className="flex flex-col items-center space-y-2">
                     <div className="w-16 h-16 rounded-lg flex items-center justify-center">
-                      {name === "Inies" ? (
-                        <MonoLogo src="/lovable-uploads/59011962-91d0-4310-a1a6-4ce1c3bbb4b6.png" alt="Inies Logo" className="w-full h-full" />
-                      ) : name === "Eco-platform" ? (
-                        <MonoLogo src="/lovable-uploads/7d492fef-d5aa-4fa5-9732-938c9b53680d.png" alt="Eco-platform Logo" className="w-full h-full" />
-                      ) : name === "EcoInvent" ? (
-                        <MonoLogo src="/lovable-uploads/95586b3d-873f-4be8-a627-63fce61a19fd.png" alt="EcoInvent Logo" className="w-full h-full" />
-                      ) : (
-                         <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+                      {name === "Inies" ? <MonoLogo src="/lovable-uploads/59011962-91d0-4310-a1a6-4ce1c3bbb4b6.png" alt="Inies Logo" className="w-full h-full" /> : name === "Eco-platform" ? <MonoLogo src="/lovable-uploads/7d492fef-d5aa-4fa5-9732-938c9b53680d.png" alt="Eco-platform Logo" className="w-full h-full" /> : name === "EcoInvent" ? <MonoLogo src="/lovable-uploads/95586b3d-873f-4be8-a627-63fce61a19fd.png" alt="EcoInvent Logo" className="w-full h-full" /> : <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
                            <div className="w-8 h-8 bg-primary rounded"></div>
-                         </div>
-                      )}
+                         </div>}
                     </div>
                     <span className="text-sm text-center">{name}</span>
                   </div>)}
@@ -367,7 +317,7 @@ const Index = () => {
               <img src="/lovable-uploads/aa4e0a75-7d42-444e-8f29-bd985c64a491.png" alt="Expert" className="w-full max-w-md h-96 object-cover rounded-lg" />
             </div>
             <div className="space-y-6">
-              <h2 className="font-bold">
+              <h2 className="font-bold text-primary">
                 Une base de données<br />
                 structurée et enrichie par nos<br />
                 experts
@@ -394,7 +344,7 @@ const Index = () => {
       {/* Pricing Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <h2 className="font-bold text-center mb-12">
+          <h2 className="font-bold text-primary text-center mb-12">
             Un prix qui s'adapte<br />
             à vos besoins
           </h2>
