@@ -82,7 +82,7 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-sm font-medium transition-colors ${getPlanColor()} hover:bg-muted ${isAtLimit ? 'bg-destructive/10' : ''}`}
+        className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 ${isAtLimit ? 'bg-destructive hover:bg-destructive/90' : ''}`}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
