@@ -21,7 +21,7 @@
     --secondary-foreground: 251 21% 14%;
 
     --muted: 252 100% 89%;
-    --muted-foreground: 251 12% 69%; /* #ADA9BB - Gris lavande */
+    --muted-foreground: 251 15% 45%; /* Gris plus foncé pour meilleure lisibilité */
 
     --accent: 170 50% 53%; /* #4ABEA1 - Vert turquoise */
     --accent-foreground: 232 39% 98%;
@@ -81,7 +81,7 @@
     --secondary-foreground: 251 21% 14%;
 
     --muted: 251 21% 20%;
-    --muted-foreground: 251 12% 69%;
+    --muted-foreground: 251 15% 75%; /* Gris plus clair pour mode sombre */
 
     --accent: 170 50% 53%; /* #4ABEA1 - Vert turquoise */
     --accent-foreground: 232 39% 98%;
@@ -142,14 +142,14 @@
   }
   p {
     font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
-    font-weight: 400;
+    font-weight: 500; /* Augmentation du font-weight pour meilleure lisibilité */
     font-size: 16px;
     line-height: 150%;
     color: hsl(var(--foreground));
   }
   small, .caption {
     font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
-    font-weight: 400;
+    font-weight: 500; /* Augmentation du font-weight pour meilleure lisibilité */
     font-size: 14px;
     line-height: 140%;
     color: hsl(var(--muted-foreground));
