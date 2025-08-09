@@ -4,45 +4,45 @@
 
 @layer base {
   :root {
-    /* DataCarb Design System - HSL tokens */
-    --background: 210 20% 98%; /* #F9FAFB */
-    --foreground: 222 47% 11%; /* #111827 */
+    /* DataCarb Design System - Nouvelle charte graphique */
+    --background: 253 100% 99%; /* #FDFAFF - Blanc cassé */
+    --foreground: 251 21% 14%; /* #1C1A27 - Anthracite */
 
-    --card: 210 20% 98%;
-    --card-foreground: 222 47% 11%;
+    --card: 253 100% 99%;
+    --card-foreground: 251 21% 14%;
 
-    --popover: 210 20% 98%;
-    --popover-foreground: 222 47% 11%;
+    --popover: 253 100% 99%;
+    --popover-foreground: 251 21% 14%;
 
-    --primary: 217 60% 29%; /* #1E2A78 */
-    --primary-foreground: 0 0% 100%; /* White */
+    --primary: 235 100% 64%; /* #4B5DFF - Bleu principal */
+    --primary-foreground: 253 100% 99%;
 
-    --secondary: 210 20% 98%; /* Light gray surfaces */
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 252 100% 89%; /* #CEC3FF - Lavande claire */
+    --secondary-foreground: 251 21% 14%;
 
-    --muted: 210 20% 98%;
-    --muted-foreground: 100 9% 41%; /* #667260 */
+    --muted: 252 100% 89%;
+    --muted-foreground: 251 12% 69%; /* #ADA9BB - Gris lavande */
 
-    --accent: 208 92% 59%; /* #3682F6 */
-    --accent-foreground: 0 0% 100%;
+    --accent: 170 50% 53%; /* #4ABEA1 - Vert turquoise */
+    --accent-foreground: 253 100% 99%;
 
-    --success: 160 84% 39%; /* #10B981 */
-    --success-foreground: 0 0% 100%;
+    --success: 170 50% 53%;
+    --success-foreground: 253 100% 99%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 253 100% 99%;
 
-    --border: 210 20% 90%;
-    --input: 210 20% 90%;
-    --ring: 217 60% 29%;
+    --border: 252 100% 89%;
+    --input: 252 100% 89%;
+    --ring: 235 100% 64%;
 
     --radius: 0.375rem;
 
     /* Homepage helpers mapped to brand */
-    --homepage-violet: 217 60% 95%; /* Light brand tint */
-    --homepage-text: 217 60% 29%; /* Primary */
-    --homepage-button: 217 60% 29%; /* Primary button */
-    --homepage-bg: 0 0% 100%; /* White */
+    --homepage-violet: 252 100% 89%; /* Lavande claire */
+    --homepage-text: 251 21% 14%; /* Anthracite */
+    --homepage-button: 235 100% 64%; /* Bleu principal */
+    --homepage-bg: 253 100% 99%; /* Blanc cassé */
     
     /* Shadows */
     --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.2);
@@ -54,60 +54,60 @@
     --transition-bounce: all 0.4s ease-in-out;
 
     /* Sidebar */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 217 60% 29%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 60% 95%;
-    --sidebar-accent-foreground: 217 60% 29%;
-    --sidebar-border: 210 20% 90%;
-    --sidebar-ring: 208 92% 59%;
+    --sidebar-background: 253 100% 99%;
+    --sidebar-foreground: 251 21% 14%;
+    --sidebar-primary: 235 100% 64%;
+    --sidebar-primary-foreground: 253 100% 99%;
+    --sidebar-accent: 252 100% 89%;
+    --sidebar-accent-foreground: 251 21% 14%;
+    --sidebar-border: 252 100% 89%;
+    --sidebar-ring: 235 100% 64%;
   }
 
   .dark {
-    --background: 222 47% 11%; /* #0F172A */
-    --foreground: 210 40% 98%;
+    --background: 251 21% 14%; /* #1C1A27 - Anthracite */
+    --foreground: 253 100% 99%;
 
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
+    --card: 251 21% 14%;
+    --card-foreground: 253 100% 99%;
 
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 251 21% 14%;
+    --popover-foreground: 253 100% 99%;
 
-    --primary: 217 60% 29%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 235 100% 64%; /* #4B5DFF - Bleu principal */
+    --primary-foreground: 253 100% 99%;
 
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 252 100% 89%; /* #CEC3FF - Lavande claire */
+    --secondary-foreground: 251 21% 14%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 210 20% 80%;
+    --muted: 251 21% 20%;
+    --muted-foreground: 251 12% 69%;
 
-    --accent: 208 92% 59%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 170 50% 53%; /* #4ABEA1 - Vert turquoise */
+    --accent-foreground: 253 100% 99%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 253 100% 99%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 208 92% 59%;
+    --border: 251 21% 20%;
+    --input: 251 21% 20%;
+    --ring: 235 100% 64%;
 
     /* Dark mode helpers */
-    --homepage-violet: 217 33% 20%;
-    --homepage-text: 0 0% 90%;
-    --homepage-button: 0 0% 98%;
-    --homepage-bg: 222 47% 11%;
+    --homepage-violet: 251 21% 20%;
+    --homepage-text: 253 100% 99%;
+    --homepage-button: 235 100% 64%;
+    --homepage-bg: 251 21% 14%;
 
     /* Dark sidebar */
-    --sidebar-background: 222 33% 13%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 208 92% 59%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 33% 20%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 222 33% 20%;
-    --sidebar-ring: 208 92% 59%;
+    --sidebar-background: 251 21% 14%;
+    --sidebar-foreground: 253 100% 99%;
+    --sidebar-primary: 235 100% 64%;
+    --sidebar-primary-foreground: 253 100% 99%;
+    --sidebar-accent: 251 21% 20%;
+    --sidebar-accent-foreground: 253 100% 99%;
+    --sidebar-border: 251 21% 20%;
+    --sidebar-ring: 235 100% 64%;
   }
 }
 
@@ -122,23 +122,23 @@
   h1 {
     font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
     font-weight: 700;
-    font-size: 40px;
+    font-size: 36px; /* 36px / Bold */
     line-height: 120%;
-    color: hsl(var(--primary));
+    color: hsl(var(--foreground));
   }
   h2 {
     font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
     font-weight: 600;
-    font-size: 32px;
+    font-size: 28px; /* 28px / Semi-Bold */
     line-height: 120%;
-    color: hsl(var(--primary));
+    color: hsl(var(--foreground));
   }
   h3 {
     font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
     font-weight: 600;
-    font-size: 24px;
+    font-size: 22px; /* 22px / Semi-Bold */
     line-height: 130%;
-    color: hsl(var(--primary));
+    color: hsl(var(--foreground));
   }
   p {
     font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
