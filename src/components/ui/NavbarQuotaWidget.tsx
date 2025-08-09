@@ -23,7 +23,7 @@ export const NavbarQuotaWidget: React.FC<NavbarQuotaWidgetProps> = ({ quotaData,
   if (isLoading) {
     return (
       <div className="flex items-center space-x-2">
-        <div className="h-6 w-20 bg-muted rounded animate-pulse"></div>
+        <div className="h-6 w-20 bg-primary/20 rounded animate-pulse"></div>
       </div>
     );
   }
