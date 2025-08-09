@@ -552,7 +552,7 @@ const Index = () => {
           <div className="border-t border-border mt-12 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="text-primary-foreground/80 text-sm">
-                © 2024 DataCarb. Tous droits réservés.
+                © 2025 DataCarb. Tous droits réservés.
               </div>
               <div className="flex space-x-6 text-sm text-primary-foreground/80">
                 <Link to="/privacy" className="hover:text-primary-foreground transition-colors">
