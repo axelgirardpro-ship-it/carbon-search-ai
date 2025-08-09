@@ -76,12 +76,12 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen homepage-violet-bg flex items-center justify-center p-4">
+    <div className="min-h-screen bg-primary flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-6">
           <Link 
             to="/" 
-            className="inline-flex items-center homepage-text hover:opacity-80 transition-colors"
+            className="inline-flex items-center text-primary-foreground hover:opacity-80 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Retour à l'accueil
@@ -90,8 +90,8 @@ const LoginForm = () => {
 
         <Card>
           <CardHeader className="text-center">
-            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-4">
-              <span className="text-primary-foreground font-bold text-lg">DC</span>
+            <div className="w-12 h-12 mx-auto mb-4">
+              <img src="/lovable-uploads/8c10071b-a5e9-495c-ac9b-f3cf48b467a1.png" alt="DataCarb" className="w-full h-full object-contain" />
             </div>
             <CardTitle className="text-2xl">Se connecter</CardTitle>
             <CardDescription>
