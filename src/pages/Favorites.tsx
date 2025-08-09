@@ -4,7 +4,7 @@ import { UnifiedNavbar } from "@/components/ui/UnifiedNavbar";
 import { ResultsTable } from "@/components/search/ResultsTable";
 import { Button } from "@/components/ui/button";
 import { EmissionFactor } from "@/types/emission-factor";
-import { Heart } from "lucide-react";
+import { Heart, HeartOff } from "lucide-react";
 import { useOptimizedFavorites } from "@/hooks/useOptimizedFavorites";
 import { usePermissions } from "@/hooks/usePermissions";
 import { useToast } from "@/hooks/use-toast";
@@ -17,6 +17,7 @@ const Favorites = () => {
     favorites, 
     loading, 
     removeFromFavorites, 
+    batchRemoveFavorites,
     filterFavorites,
     filterOptions,
     stats,
@@ -73,7 +74,25 @@ const Favorites = () => {
       });
     }
   };
-
+  
+  const handleRemoveSelectedFromFavorites = async () => {
+    const toRemove = selectedItems.slice();
+    if (toRemove.length === 0) return;
+    try {
+      await batchRemoveFavorites(toRemove);
+      setSelectedItems([]);
+      toast({
+        title: "Favoris mis à jour",
+        description: `${toRemove.length} élément${toRemove.length > 1 ? 's' : ''} retiré${toRemove.length > 1 ? 's' : ''} des favoris.`,
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Erreur lors de la suppression des favoris sélectionnés",
+      });
+    }
+  };
 
   const handleCopyToClipboard = async () => {
     try {
@@ -219,7 +238,15 @@ const Favorites = () => {
               availableLocations={availableLocations}
               availableDates={availableDates}
             />
-            <div className="mb-4">
+            <div className="mb-4 flex flex-wrap gap-2">
+              <Button
+                variant="destructive"
+                onClick={handleRemoveSelectedFromFavorites}
+                disabled={selectedItems.length === 0}
+              >
+                <HeartOff className="w-4 h-4 mr-2" />
+                Retirer des favoris ({selectedItems.length})
+              </Button>
               <RoleGuard requirePermission="canExport">
                 <Button 
                   onClick={handleExport}
