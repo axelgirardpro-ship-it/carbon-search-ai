@@ -25,8 +25,8 @@ export const UnifiedNavbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link to={user ? "/search" : "/"} className="text-2xl font-bold text-primary">
-              DataCarb
+            <Link to={user ? "/search" : "/"} className="flex items-center">
+              <img src="/lovable-uploads/6c4e21a7-850d-42ab-8370-017b8e71d180.png" alt="DataCarb" className="h-10" />
             </Link>
           </div>
           
@@ -42,7 +42,7 @@ export const UnifiedNavbar = () => {
               </Button>
             </Link>
             {canUseFavorites() ? (
-              <Link to="/favorites">
+              <Link to="/favoris">
                 <Button variant="ghost" className="text-foreground hover:bg-primary/10 hover:text-primary">
                   Favoris
                 </Button>

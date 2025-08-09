@@ -86,7 +86,8 @@ const App = () => (
                     <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
                     <Route path="/dev" element={<PublicRoute><DevLogin /></PublicRoute>} />
                     <Route path="/search" element={<ProtectedRoute><SearchDashboard /></ProtectedRoute>} />
-                    <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+                    <Route path="/favoris" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+                    <Route path="/favorites" element={<Navigate to="/favoris" replace />} />
                     <Route path="/import" element={<ProtectedRoute><Import /></ProtectedRoute>} />
                     <Route path="/settings" element={<ProtectedRoute><SimplifiedSettings /></ProtectedRoute>} />
                     <Route path="/debug" element={<ProtectedRoute><Debug /></ProtectedRoute>} />
