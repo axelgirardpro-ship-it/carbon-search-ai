@@ -49,15 +49,15 @@ export const FavoritesFilterPanel = ({
   );
 
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 bg-primary border-primary">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center">
+          <CardTitle className="flex items-center text-primary-foreground">
             <Search className="w-5 h-5 mr-2" />
             Filtres de recherche
           </CardTitle>
           {hasActiveFilters && (
-            <Button variant="ghost" size="sm" onClick={clearFilters}>
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="text-primary-foreground hover:bg-primary-foreground/10">
               <X className="w-4 h-4 mr-2" />
               Effacer les filtres
             </Button>
@@ -67,7 +67,7 @@ export const FavoritesFilterPanel = ({
       <CardContent className="space-y-4">
         {/* Search Bar */}
         <div className="space-y-2">
-          <Label htmlFor="search">Rechercher</Label>
+          <Label htmlFor="search" className="text-primary-foreground">Rechercher</Label>
           <Input
             id="search"
             placeholder="Rechercher dans les favoris..."
@@ -80,7 +80,7 @@ export const FavoritesFilterPanel = ({
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Source Filter */}
           <div className="space-y-2">
-            <Label>Source</Label>
+            <Label className="text-primary-foreground">Source</Label>
             <Select value={filters.source || 'all'} onValueChange={(value) => updateFilter('source', value === 'all' ? '' : value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Toutes les sources" />
@@ -98,7 +98,7 @@ export const FavoritesFilterPanel = ({
 
           {/* Location Filter */}
           <div className="space-y-2">
-            <Label>Localisation</Label>
+            <Label className="text-primary-foreground">Localisation</Label>
             <Select value={filters.localisation || 'all'} onValueChange={(value) => updateFilter('localisation', value === 'all' ? '' : value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Toutes les localisations" />
@@ -116,7 +116,7 @@ export const FavoritesFilterPanel = ({
 
           {/* Date Filter */}
           <div className="space-y-2">
-            <Label>Date</Label>
+            <Label className="text-primary-foreground">Date</Label>
             <Select value={filters.date || 'all'} onValueChange={(value) => updateFilter('date', value === 'all' ? '' : value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Toutes les dates" />
@@ -134,7 +134,7 @@ export const FavoritesFilterPanel = ({
 
           {/* Import Type Filter */}
           <div className="space-y-2">
-            <Label>Type d'import</Label>
+            <Label className="text-primary-foreground">Type d'import</Label>
             <Select value={filters.importType} onValueChange={(value) => updateFilter('importType', value as FavoritesFilters['importType'])}>
               <SelectTrigger>
                 <SelectValue placeholder="Tous les types" />
@@ -151,7 +151,7 @@ export const FavoritesFilterPanel = ({
         {/* Active Filters Display */}
         {hasActiveFilters && (
           <div className="flex flex-wrap gap-2 pt-2">
-            <span className="text-sm text-muted-foreground">Filtres actifs:</span>
+            <span className="text-sm text-primary-foreground/80">Filtres actifs:</span>
             {filters.search && (
               <Badge variant="secondary" className="flex items-center gap-1">
                 Recherche: "{filters.search}"
