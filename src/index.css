@@ -124,21 +124,21 @@
     font-weight: 700;
     font-size: 36px; /* 36px / Bold */
     line-height: 120%;
-    color: hsl(var(--foreground));
+    color: hsl(251, 21%, 14%); /* #1C1A27 - Anthracite */
   }
   h2 {
     font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
     font-weight: 600;
     font-size: 28px; /* 28px / Semi-Bold */
     line-height: 120%;
-    color: hsl(var(--foreground));
+    color: hsl(251, 21%, 14%); /* #1C1A27 - Anthracite */
   }
   h3 {
     font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
     font-weight: 600;
     font-size: 22px; /* 22px / Semi-Bold */
     line-height: 130%;
-    color: hsl(var(--foreground));
+    color: hsl(251, 21%, 14%); /* #1C1A27 - Anthracite */
   }
   p {
     font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
