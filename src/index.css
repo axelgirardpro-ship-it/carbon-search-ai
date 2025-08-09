@@ -5,17 +5,17 @@
 @layer base {
   :root {
     /* DataCarb Design System - Nouvelle charte graphique */
-    --background: 253 100% 99%; /* #FDFAFF - Blanc cassé */
+    --background: 232 39% 98%; /* #f5f6fc - Blanc cassé */
     --foreground: 251 21% 14%; /* #1C1A27 - Anthracite */
 
-    --card: 253 100% 99%;
+    --card: 232 39% 98%;
     --card-foreground: 251 21% 14%;
 
-    --popover: 253 100% 99%;
+    --popover: 232 39% 98%;
     --popover-foreground: 251 21% 14%;
 
     --primary: 235 100% 64%; /* #4B5DFF - Bleu principal */
-    --primary-foreground: 253 100% 99%;
+    --primary-foreground: 232 39% 98%;
 
     --secondary: 252 100% 89%; /* #CEC3FF - Lavande claire */
     --secondary-foreground: 251 21% 14%;
@@ -24,13 +24,13 @@
     --muted-foreground: 251 12% 69%; /* #ADA9BB - Gris lavande */
 
     --accent: 170 50% 53%; /* #4ABEA1 - Vert turquoise */
-    --accent-foreground: 253 100% 99%;
+    --accent-foreground: 232 39% 98%;
 
     --success: 170 50% 53%;
-    --success-foreground: 253 100% 99%;
+    --success-foreground: 232 39% 98%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 253 100% 99%;
+    --destructive-foreground: 232 39% 98%;
 
     --border: 252 100% 89%;
     --input: 252 100% 89%;
@@ -42,7 +42,7 @@
     --homepage-violet: 252 100% 89%; /* Lavande claire */
     --homepage-text: 251 21% 14%; /* Anthracite */
     --homepage-button: 235 100% 64%; /* Bleu principal */
-    --homepage-bg: 253 100% 99%; /* Blanc cassé */
+    --homepage-bg: 232 39% 98%; /* #f5f6fc - Blanc cassé */
     
     /* Shadows */
     --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.2);
@@ -54,10 +54,10 @@
     --transition-bounce: all 0.4s ease-in-out;
 
     /* Sidebar */
-    --sidebar-background: 253 100% 99%;
+    --sidebar-background: 232 39% 98%;
     --sidebar-foreground: 251 21% 14%;
     --sidebar-primary: 235 100% 64%;
-    --sidebar-primary-foreground: 253 100% 99%;
+    --sidebar-primary-foreground: 232 39% 98%;
     --sidebar-accent: 252 100% 89%;
     --sidebar-accent-foreground: 251 21% 14%;
     --sidebar-border: 252 100% 89%;
