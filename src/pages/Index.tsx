@@ -159,7 +159,7 @@ const Index = () => {
     puissant et personnalisable
   </h2>
   <Tabs defaultValue="donnees" className="max-w-6xl mx-auto">
-    <TabsList className="grid w-full grid-cols-4 mb-12 bg-muted rounded-full items-center">
+    <TabsList className="grid w-full grid-cols-4 mb-12 bg-primary rounded-full items-center">
               <TabsTrigger value="donnees" className="rounded-full">Données</TabsTrigger>
               <TabsTrigger value="recherche" className="rounded-full">Recherche</TabsTrigger>
               <TabsTrigger value="personnalisation" className="rounded-full">Personnalisation</TabsTrigger>
