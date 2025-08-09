@@ -13,7 +13,7 @@ const Index = () => {
           <div className="flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex-shrink-0">
-          <h1 className="font-bold text-primary">DataCarb</h1>
+          <h1 className="font-bold">DataCarb</h1>
         </div>
         
         {/* Boutons de navigation */}
@@ -74,7 +74,7 @@ const Index = () => {
       {/* Partner Logos Section */}
   <section className="py-16 bg-muted">
     <div className="container mx-auto px-4 text-center">
-      <h4 className="font-bold mb-12 text-primary">
+      <h4 className="font-bold mb-12">
             Retrouvez les plus grandes bases françaises et internationales
           </h4>
           <div className="grid grid-cols-7 gap-8 items-center">
@@ -127,7 +127,7 @@ const Index = () => {
       {/* Interactive Demo Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="font-bold mb-12 text-primary">
+          <h2 className="font-bold mb-12">
             Découvrez la puissance<br />
             du moteur de recherche
           </h2>
@@ -154,7 +154,7 @@ const Index = () => {
       {/* Features Tabs Section */}
       <section className="py-20 px-4 bg-background">
         <div className="container mx-auto">
-  <h2 className="font-bold text-primary text-center mb-12">
+  <h2 className="font-bold text-center mb-12">
     Un moteur de recherche<br />
     puissant et personnalisable
   </h2>
@@ -167,7 +167,7 @@ const Index = () => {
             </TabsList>
             <TabsContent value="donnees" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-      <h3 className="font-bold text-primary">
+      <h3 className="font-bold">
         Le guichet unique de vos<br />
         données carbone
       </h3>
@@ -192,7 +192,7 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="recherche" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-    <h3 className="font-bold text-primary">
+    <h3 className="font-bold">
       Moteur fluide et simple<br />
       d'utilisation
     </h3>
@@ -217,7 +217,7 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="personnalisation" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-    <h3 className="font-bold text-primary">
+    <h3 className="font-bold">
       Personnalisez le moteur<br />
       selon vos besoins
     </h3>
@@ -242,7 +242,7 @@ const Index = () => {
             </TabsContent>
             <TabsContent value="plus-loin" className="grid lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-6">
-    <h3 className="font-bold text-primary">
+    <h3 className="font-bold">
       Allez plus loin que<br />
       la recherche de FE
     </h3>
@@ -272,7 +272,7 @@ const Index = () => {
       {/* Databases Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <h2 className="font-bold text-primary text-center mb-12">
+          <h2 className="font-bold text-center mb-12">
             Toutes les bases de données<br />
             sur une seule plateforme
           </h2>
@@ -367,7 +367,7 @@ const Index = () => {
               <img src="/lovable-uploads/aa4e0a75-7d42-444e-8f29-bd985c64a491.png" alt="Expert" className="w-full max-w-md h-96 object-cover rounded-lg" />
             </div>
             <div className="space-y-6">
-              <h2 className="font-bold text-primary">
+              <h2 className="font-bold">
                 Une base de données<br />
                 structurée et enrichie par nos<br />
                 experts
@@ -394,7 +394,7 @@ const Index = () => {
       {/* Pricing Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <h2 className="font-bold text-primary text-center mb-12">
+          <h2 className="font-bold text-center mb-12">
             Un prix qui s'adapte<br />
             à vos besoins
           </h2>
