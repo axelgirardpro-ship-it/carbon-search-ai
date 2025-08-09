@@ -665,12 +665,12 @@ export const SearchResults: React.FC = () => {
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-3">
                           <div>
-                            <span className="text-sm font-medium text-muted-foreground">Facteur d'émission</span>
+                            <span className="text-sm font-medium text-foreground">Facteur d'émission</span>
                             <PremiumBlur isBlurred={shouldBlur}>
                               <p className="text-2xl font-bold text-primary font-montserrat">{hit.FE ? (typeof hit.FE === 'number' ? parseFloat(hit.FE.toFixed(4)) : parseFloat(parseFloat(String(hit.FE)).toFixed(4))).toLocaleString('fr-FR') : ''} kgCO₂eq</p>
                             </PremiumBlur>
                             <div className="mt-2">
-                              <span className="text-sm font-medium text-muted-foreground">Unité</span>
+                              <span className="text-sm font-medium text-foreground">Unité</span>
                               <PremiumBlur isBlurred={shouldBlur}>
                                 <p className="text-sm" dangerouslySetInnerHTML={getHighlightedText(hit, 'Unité donnée d\'activité')} />
                               </PremiumBlur>
@@ -679,14 +679,14 @@ export const SearchResults: React.FC = () => {
                           <div className="grid grid-cols-1 gap-3">
                             {hit.Périmètre && (
                               <div>
-                                <span className="text-sm font-medium text-muted-foreground">Périmètre</span>
+                                <span className="text-sm font-medium text-foreground">Périmètre</span>
                                 <PremiumBlur isBlurred={shouldBlur}>
                                   <p className="text-sm">{hit.Périmètre}</p>
                                 </PremiumBlur>
                               </div>
                             )}
                              <div>
-                               <span className="text-sm font-medium text-muted-foreground">Source</span>
+                               <span className="text-sm font-medium text-foreground">Source</span>
                                <PremiumBlur isBlurred={shouldBlur}>
                                  <div className="flex items-center gap-2">
                                    {getSourceLogo(hit.Source) && (
