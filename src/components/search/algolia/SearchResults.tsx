@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHits, useHitsPerPage, usePagination, useSearchBox } from 'react-instantsearch';
+import { useHits, useHitsPerPage, usePagination, useSearchBox, useRange } from 'react-instantsearch';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -260,13 +260,48 @@ export const SearchResults: React.FC = () => {
     });
   }, []);
 
-  // Use hits directly from Algolia (server-side filtered and paginated)
-  // FE numeric refinements are applied via the FERangeInput widget in SearchFilters.tsx
+  // FE range from widget to filter client-side
+  const { start: feStart } = useRange({ attribute: 'FE', precision: 2 });
 
-  // Apply sorting to server-filtered, paginated hits
+  const filteredHits = React.useMemo(() => {
+    // Parse potential special Number objects coming from InstantSearch state
+    const parseValue = (value: any): number | undefined => {
+      if (typeof value === 'object' && value?._type === 'Number') {
+        const s = String(value.value);
+        if (s === '-Infinity' || s === 'Infinity' || s === 'NaN') return undefined;
+        const n = parseFloat(value.value);
+        return Number.isFinite(n) ? n : undefined;
+      }
+      if (typeof value === 'number') {
+        return Number.isFinite(value) ? value : undefined;
+      }
+      return undefined;
+    };
+
+    let min: number | undefined;
+    let max: number | undefined;
+    if (feStart && Array.isArray(feStart)) {
+      const minV = parseValue(feStart[0]);
+      const maxV = parseValue(feStart[1]);
+      if (typeof minV === 'number') min = minV;
+      if (typeof maxV === 'number') max = maxV;
+    }
+
+    if (min === undefined && max === undefined) return originalHits;
+
+    return originalHits.filter((hit) => {
+      const fe = typeof hit.FE === 'number' ? hit.FE : Number(hit.FE);
+      if (!Number.isFinite(fe)) return false;
+      if (min !== undefined && fe < min) return false;
+      if (max !== undefined && fe > max) return false;
+      return true;
+    });
+  }, [originalHits, feStart]);
+
+  // Apply sorting to client-filtered hits
   const hits = React.useMemo(() => {
-    return sortHits(originalHits, currentSort);
-  }, [originalHits, currentSort, sortHits]);
+    return sortHits(filteredHits, currentSort);
+  }, [filteredHits, currentSort, sortHits]);
 
   const handleSortChange = (sortKey: string) => {
     setCurrentSort(sortKey);
