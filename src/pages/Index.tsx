@@ -173,15 +173,15 @@ const Index = () => {
       </h3>
       <div className="space-y-4">
         <div>
-          <h4 className="font-semibold mb-2 text-primary">Une donnée structurée</h4>
+          <h4 className="font-semibold mb-2">Une donnée structurée</h4>
           <p className="text-foreground">Une structuration unique et homogène de plus de 20 bases de<br />données de références internationales.</p>
         </div>
         <div>
-          <h4 className="font-semibold mb-2 text-primary">Une donnée à jour</h4>
+          <h4 className="font-semibold mb-2">Une donnée à jour</h4>
           <p className="text-foreground">Une mise à jour en continu des bases pour une garantie de<br />qualité des FE.</p>
         </div>
         <div>
-          <h4 className="font-semibold mb-2 text-primary">+ 250K FE à disposition</h4>
+          <h4 className="font-semibold mb-2">+ 250K FE à disposition</h4>
           <p className="text-foreground">Plus de 250k FE génériques et spécifiques en cumulé,<br />disponibles au sein d'une structure commune.</p>
         </div>
       </div>
@@ -198,15 +198,15 @@ const Index = () => {
     </h3>
     <div className="space-y-4">
       <div>
-        <h4 className="font-semibold mb-2 text-primary">Recherche intelligente</h4>
+        <h4 className="font-semibold mb-2">Recherche intelligente</h4>
         <p className="text-foreground">Recherchez par mots-clés, codes, catégories ou filtres<br />avancés pour trouver rapidement vos FE.</p>
       </div>
       <div>
-        <h4 className="font-semibold mb-2 text-primary">Interface intuitive</h4>
+        <h4 className="font-semibold mb-2">Interface intuitive</h4>
         <p className="text-foreground">Navigation simple et rapide avec des suggestions<br />automatiques et tri personnalisable.</p>
       </div>
       <div>
-        <h4 className="font-semibold mb-2 text-primary">Résultats précis</h4>
+        <h4 className="font-semibold mb-2">Résultats précis</h4>
         <p className="text-foreground">Algorithme optimisé pour vous proposer les facteurs<br />d'émission les plus pertinents selon vos critères.</p>
       </div>
     </div>
@@ -223,15 +223,15 @@ const Index = () => {
     </h3>
     <div className="space-y-4">
       <div>
-        <h4 className="font-semibold mb-2 text-primary">Favoris et collections</h4>
+        <h4 className="font-semibold mb-2">Favoris et collections</h4>
         <p className="text-foreground">Sauvegardez vos FE préférés et créez des collections<br />thématiques pour un accès rapide.</p>
       </div>
       <div>
-        <h4 className="font-semibold mb-2 text-primary">Filtres personnalisés</h4>
+        <h4 className="font-semibold mb-2">Filtres personnalisés</h4>
         <p className="text-foreground">Configurez des filtres selon vos secteurs d'activité<br />et vos besoins métier spécifiques.</p>
       </div>
       <div>
-        <h4 className="font-semibold mb-2 text-primary">Données sur-mesure</h4>
+        <h4 className="font-semibold mb-2">Données sur-mesure</h4>
         <p className="text-foreground">Intégrez vos propres FE spécifiques et créez votre<br />base de données personnalisée.</p>
       </div>
     </div>
@@ -248,15 +248,15 @@ const Index = () => {
     </h3>
     <div className="space-y-4">
       <div>
-        <h4 className="font-semibold mb-2 text-primary">Réalisez des benchmarks approfondis</h4>
+        <h4 className="font-semibold mb-2">Réalisez des benchmarks approfondis</h4>
         <p className="text-foreground">Positionnez facilement un produit ou une entreprise par<br />rapport à des concurrents et des moyennes sectorielles de marché.</p>
       </div>
       <div>
-        <h4 className="font-semibold mb-2 text-primary">Plan d'action et décarbonation</h4>
+        <h4 className="font-semibold mb-2">Plan d'action et décarbonation</h4>
         <p className="text-foreground">Identifiez rapidement les bénéfices de changements de produits,<br />relocalisation, de fournisseurs (achats responsables), etc.</p>
       </div>
       <div>
-        <h4 className="font-semibold mb-2 text-primary">Support expert</h4>
+        <h4 className="font-semibold mb-2">Support expert</h4>
         <p className="text-foreground">Bénéficiez de l'accompagnement de nos experts<br />carbone pour optimiser vos calculs.</p>
       </div>
     </div>
