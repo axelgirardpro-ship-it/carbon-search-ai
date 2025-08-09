@@ -174,15 +174,15 @@ const Index = () => {
       <div className="space-y-4">
         <div>
           <h4 className="font-semibold mb-2">Une donnée structurée</h4>
-          <p className="text-foreground">Une structuration unique et homogène de plus de 20 bases de<br />données de références internationales.</p>
+          <p className="font-medium">Une structuration unique et homogène de plus de 20 bases de<br />données de références internationales.</p>
         </div>
         <div>
           <h4 className="font-semibold mb-2">Une donnée à jour</h4>
-          <p className="text-foreground">Une mise à jour en continu des bases pour une garantie de<br />qualité des FE.</p>
+          <p className="font-medium">Une mise à jour en continu des bases pour une garantie de<br />qualité des FE.</p>
         </div>
         <div>
           <h4 className="font-semibold mb-2">+ 250K FE à disposition</h4>
-          <p className="text-foreground">Plus de 250k FE génériques et spécifiques en cumulé,<br />disponibles au sein d'une structure commune.</p>
+          <p className="font-medium">Plus de 250k FE génériques et spécifiques en cumulé,<br />disponibles au sein d'une structure commune.</p>
         </div>
       </div>
               </div>
@@ -199,15 +199,15 @@ const Index = () => {
     <div className="space-y-4">
       <div>
         <h4 className="font-semibold mb-2">Recherche intelligente</h4>
-        <p className="text-foreground">Recherchez par mots-clés, codes, catégories ou filtres<br />avancés pour trouver rapidement vos FE.</p>
+        <p className="font-medium">Recherchez par mots-clés, codes, catégories ou filtres<br />avancés pour trouver rapidement vos FE.</p>
       </div>
       <div>
         <h4 className="font-semibold mb-2">Interface intuitive</h4>
-        <p className="text-foreground">Navigation simple et rapide avec des suggestions<br />automatiques et tri personnalisable.</p>
+        <p className="font-medium">Navigation simple et rapide avec des suggestions<br />automatiques et tri personnalisable.</p>
       </div>
       <div>
         <h4 className="font-semibold mb-2">Résultats précis</h4>
-        <p className="text-foreground">Algorithme optimisé pour vous proposer les facteurs<br />d'émission les plus pertinents selon vos critères.</p>
+        <p className="font-medium">Algorithme optimisé pour vous proposer les facteurs<br />d'émission les plus pertinents selon vos critères.</p>
       </div>
     </div>
               </div>
@@ -224,15 +224,15 @@ const Index = () => {
     <div className="space-y-4">
       <div>
         <h4 className="font-semibold mb-2">Favoris et collections</h4>
-        <p className="text-foreground">Sauvegardez vos FE préférés et créez des collections<br />thématiques pour un accès rapide.</p>
+        <p className="font-medium">Sauvegardez vos FE préférés et créez des collections<br />thématiques pour un accès rapide.</p>
       </div>
       <div>
         <h4 className="font-semibold mb-2">Filtres personnalisés</h4>
-        <p className="text-foreground">Configurez des filtres selon vos secteurs d'activité<br />et vos besoins métier spécifiques.</p>
+        <p className="font-medium">Configurez des filtres selon vos secteurs d'activité<br />et vos besoins métier spécifiques.</p>
       </div>
       <div>
         <h4 className="font-semibold mb-2">Données sur-mesure</h4>
-        <p className="text-foreground">Intégrez vos propres FE spécifiques et créez votre<br />base de données personnalisée.</p>
+        <p className="font-medium">Intégrez vos propres FE spécifiques et créez votre<br />base de données personnalisée.</p>
       </div>
     </div>
               </div>
@@ -249,15 +249,15 @@ const Index = () => {
     <div className="space-y-4">
       <div>
         <h4 className="font-semibold mb-2">Réalisez des benchmarks approfondis</h4>
-        <p className="text-foreground">Positionnez facilement un produit ou une entreprise par<br />rapport à des concurrents et des moyennes sectorielles de marché.</p>
+        <p className="font-medium">Positionnez facilement un produit ou une entreprise par<br />rapport à des concurrents et des moyennes sectorielles de marché.</p>
       </div>
       <div>
         <h4 className="font-semibold mb-2">Plan d'action et décarbonation</h4>
-        <p className="text-foreground">Identifiez rapidement les bénéfices de changements de produits,<br />relocalisation, de fournisseurs (achats responsables), etc.</p>
+        <p className="font-medium">Identifiez rapidement les bénéfices de changements de produits,<br />relocalisation, de fournisseurs (achats responsables), etc.</p>
       </div>
       <div>
         <h4 className="font-semibold mb-2">Support expert</h4>
-        <p className="text-foreground">Bénéficiez de l'accompagnement de nos experts<br />carbone pour optimiser vos calculs.</p>
+        <p className="font-medium">Bénéficiez de l'accompagnement de nos experts<br />carbone pour optimiser vos calculs.</p>
       </div>
     </div>
               </div>
@@ -374,16 +374,16 @@ const Index = () => {
               </h2>
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-semibold mb-2 text-primary">Des bases de données nettoyées et structurées</h3>
-                  <p className="text-muted-foreground">Nos experts nettoient et restructurent l'ensemble des bases de données intégrées afin de disposer d'un format unique de données.</p>
+                  <h3 className="font-bold mb-2">Des bases de données nettoyées et structurées</h3>
+                  <p className="font-medium">Nos experts nettoient et restructurent l'ensemble des bases de données intégrées afin de disposer d'un format unique de données.</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2 text-primary">Enrichissement des bases de données</h3>
-                  <p className="text-muted-foreground">Vérification des facteurs par poste d'émissions, correction des effets de l'inflation, traduction des métadonnées...</p>
+                  <h3 className="font-bold mb-2">Enrichissement des bases de données</h3>
+                  <p className="font-medium">Vérification des facteurs par poste d'émissions, correction des effets de l'inflation, traduction des métadonnées...</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2 text-primary">Versionnage</h3>
-                  <p className="text-muted-foreground">Profitez d'un versionnage d'un maintien en temps réel de la base au gré des mises à jour des différentes sources de données.</p>
+                  <h3 className="font-bold mb-2">Versionnage</h3>
+                  <p className="font-medium">Profitez d'un versionnage d'un maintien en temps réel de la base au gré des mises à jour des différentes sources de données.</p>
                 </div>
               </div>
             </div>
