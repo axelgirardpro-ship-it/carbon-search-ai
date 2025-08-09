@@ -66,16 +66,16 @@
 
   .dark {
     --background: 251 21% 14%; /* #1C1A27 - Anthracite */
-    --foreground: 253 100% 99%;
+    --foreground: 232 39% 98%;
 
     --card: 251 21% 14%;
-    --card-foreground: 253 100% 99%;
+    --card-foreground: 232 39% 98%;
 
     --popover: 251 21% 14%;
-    --popover-foreground: 253 100% 99%;
+    --popover-foreground: 232 39% 98%;
 
     --primary: 235 100% 64%; /* #4B5DFF - Bleu principal */
-    --primary-foreground: 253 100% 99%;
+    --primary-foreground: 232 39% 98%;
 
     --secondary: 252 100% 89%; /* #CEC3FF - Lavande claire */
     --secondary-foreground: 251 21% 14%;
@@ -84,10 +84,10 @@
     --muted-foreground: 251 12% 69%;
 
     --accent: 170 50% 53%; /* #4ABEA1 - Vert turquoise */
-    --accent-foreground: 253 100% 99%;
+    --accent-foreground: 232 39% 98%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 253 100% 99%;
+    --destructive-foreground: 232 39% 98%;
 
     --border: 251 21% 20%;
     --input: 251 21% 20%;
@@ -95,17 +95,17 @@
 
     /* Dark mode helpers */
     --homepage-violet: 251 21% 20%;
-    --homepage-text: 253 100% 99%;
+    --homepage-text: 232 39% 98%;
     --homepage-button: 235 100% 64%;
     --homepage-bg: 251 21% 14%;
 
     /* Dark sidebar */
     --sidebar-background: 251 21% 14%;
-    --sidebar-foreground: 253 100% 99%;
+    --sidebar-foreground: 232 39% 98%;
     --sidebar-primary: 235 100% 64%;
-    --sidebar-primary-foreground: 253 100% 99%;
+    --sidebar-primary-foreground: 232 39% 98%;
     --sidebar-accent: 251 21% 20%;
-    --sidebar-accent-foreground: 253 100% 99%;
+    --sidebar-accent-foreground: 232 39% 98%;
     --sidebar-border: 251 21% 20%;
     --sidebar-ring: 235 100% 64%;
   }
